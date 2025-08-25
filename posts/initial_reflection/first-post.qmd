@@ -1,0 +1,30 @@
+---
+title: "Intial Reflection"
+description: "Inital Refelection and Goals for my semester in MicroPs"
+author: "Sadhvi Narayanan"
+date: "8/24/25"
+categories:
+  - reflection
+  # - labreport
+draft: false
+---
+
+Hello Everyone! This is my first blog post on my intial reflections and goals I have for this semester with MicroPs. 
+I am excited to work with microprocessors to build various projects throughout the semester.
+
+Some of my goals for this semester include:
+
+- **Build a good understanding of embedded systems**: I want to get  comfortable reading datasheets, working with GPIOs, and understanding how microcontrollers interact with external hardware. I also want to understand how different systems can be connected and can communicate with each other in a synchronus way.  
+
+- **Build confidence in programming microcontrollers**: I want to get more experience in writing the code to interact with microcontrollers effectively, and be able to control various aspects of it through software. I also want to sharpen my debugging skills.  
+
+- **Improve my design thought-process**: I want to be thoughtful with the way I design and craft my project to make sure it is optimal and scalable.
+
+- **Connect learnings and labs to real-world applications**: I want to use whatever we learn and build through this class to connect it to applications outside, and build better intuition for how some complex systems work. 
+
+- **Collaborate with classmates**: I know some projects can be challenging and require a team effort, so I want to get to know other classmates and collaborate with them throughout the course.  
+
+- **Build a cool final projcet**: I hope to use all the skills we've picked up along the way, and other learning we've encountered to build a cool, novel, exciting final project that I am really proud of!  
+
+- **Make sure I understand all the concepts**: I want to make sure I understand everything that is being taught, and reach out in case something is unclear to me, or if I have any doubts.
+

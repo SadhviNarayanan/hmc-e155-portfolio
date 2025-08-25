@@ -14,5 +14,7 @@ about:
 
 Sadhvi Narayanan is a junior at Harvey Mudd College. She is majoring in CS, but is also interested in Computer Engineering which is why she is taking MicroProcessors. In her free time she enjoys baking, watching tv shows, spending time outdoors, and convincing herself to go for runs (but she never actually executes them).
 
+Email: sanarayanan@g.hmc.edu
+
 <!-- ![](images/headshot.jpeg)
 [Link to Github](https://github.com/SadhviNarayanan) -->
