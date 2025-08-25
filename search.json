@@ -1,0 +1,72 @@
+[
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "E155 Blog",
+    "section": "",
+    "text": "Intial Reflection\n\n\nInital Refelection and Goals for my semester in MicroPs\n\n\n\n\n\nAug 24, 2025\n\n\nSadhvi Narayanan\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "E155 Portfolio",
+    "section": "",
+    "text": "Sadhvi Narayanan is a junior at Harvey Mudd College. She is majoring in CS, but is also interested in Computer Engineering which is why she is taking MicroProcessors. In her free time she enjoys baking, watching tv shows, spending time outdoors, and convincing herself to go for runs (but she never actually executes them).\nEmail: sanarayanan@g.hmc.edu"
+  },
+  {
+    "objectID": "posts/initial_reflection/first-post.html",
+    "href": "posts/initial_reflection/first-post.html",
+    "title": "Intial Reflection",
+    "section": "",
+    "text": "Hello Everyone! This is my first blog post on my intial reflections and goals I have for this semester with MicroPs. I am excited to work with microprocessors to build various projects throughout the semester.\nSome of my goals for this semester include:\n\nBuild a good understanding of embedded systems: I want to get comfortable reading datasheets, working with GPIOs, and understanding how microcontrollers interact with external hardware. I also want to understand how different systems can be connected and can communicate with each other in a synchronus way.\nBuild confidence in programming microcontrollers: I want to get more experience in writing the code to interact with microcontrollers effectively, and be able to control various aspects of it through software. I also want to sharpen my debugging skills.\nImprove my design thought-process: I want to be thoughtful with the way I design and craft my project to make sure it is optimal and scalable.\nConnect learnings and labs to real-world applications: I want to use whatever we learn and build through this class to connect it to applications outside, and build better intuition for how some complex systems work.\nCollaborate with classmates: I know some projects can be challenging and require a team effort, so I want to get to know other classmates and collaborate with them throughout the course.\nBuild a cool final projcet: I hope to use all the skills we’ve picked up along the way, and other learning we’ve encountered to build a cool, novel, exciting final project that I am really proud of!\nMake sure I understand all the concepts: I want to make sure I understand everything that is being taught, and reach out in case something is unclear to me, or if I have any doubts."
+  },
+  {
+    "objectID": "labs.html#lab-2---multiplexed-7-segment-display",
+    "href": "labs.html#lab-2---multiplexed-7-segment-display",
+    "title": "E155 Labs",
+    "section": "Lab 2 - Multiplexed 7-Segment Display",
+    "text": "Lab 2 - Multiplexed 7-Segment Display"
+  },
+  {
+    "objectID": "labs.html#lab-3---keypad-scanner",
+    "href": "labs.html#lab-3---keypad-scanner",
+    "title": "E155 Labs",
+    "section": "Lab 3 - Keypad Scanner",
+    "text": "Lab 3 - Keypad Scanner"
+  },
+  {
+    "objectID": "labs.html#lab-4---digital-audio",
+    "href": "labs.html#lab-4---digital-audio",
+    "title": "E155 Labs",
+    "section": "Lab 4 - Digital Audio",
+    "text": "Lab 4 - Digital Audio"
+  },
+  {
+    "objectID": "labs.html#lab-5---interrupts",
+    "href": "labs.html#lab-5---interrupts",
+    "title": "E155 Labs",
+    "section": "Lab 5 - Interrupts",
+    "text": "Lab 5 - Interrupts"
+  },
+  {
+    "objectID": "labs.html#lab-6---the-internet-of-things-and-serial-peripheral-interface",
+    "href": "labs.html#lab-6---the-internet-of-things-and-serial-peripheral-interface",
+    "title": "E155 Labs",
+    "section": "Lab 6 - The Internet of Things and Serial Peripheral Interface",
+    "text": "Lab 6 - The Internet of Things and Serial Peripheral Interface"
+  },
+  {
+    "objectID": "labs.html#lab-7---the-advanced-encryption-standard-aes",
+    "href": "labs.html#lab-7---the-advanced-encryption-standard-aes",
+    "title": "E155 Labs",
+    "section": "Lab 7 - The Advanced Encryption Standard (AES)",
+    "text": "Lab 7 - The Advanced Encryption Standard (AES)"
+  },
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "E155 Resources",
+    "section": "",
+    "text": "These are the resources used in E155!\nLink to Course Website"
+  }
+]
