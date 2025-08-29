@@ -25,49 +25,63 @@
     "href": "labs/lab1/lab1.html",
     "title": "Lab 1 Report",
     "section": "",
-    "text": "These are the resources used in E155!\nLink to Course Website"
+    "text": "Introduction\nIn this lab, we built out motherboard with the FPGA and the microcontroller through soldering, and tested our board by loading designs onto our FPGA nad microcontroller. We implemented a design on the FPGA to test the on-board high-speed oscillator by blinking one of the on-board LEDs. And we implemented a program on the microcontroller to light an LED. Overall, the main goal after creating our boards was to create a seven segment display. We wrote verilog to convert a 4-bit hex inputted through a switch into display using 7-segments. We did this by programming pins on the FPGA based on the switches, and then connecting this to a physical build of a seven-segment display on a breadboard to observe the numbers. We also used the switches to light other LEDs on the FPGA, and like described earlier, we used the on-board high-speed oscillator to blind an on-board led at 2.4Hz.\n\n\nDesign and Testing Methodology\nThere were two different steps associated with the hardware component of the design, with the first one being the soldering of the components. There were two main parts to soldering the components to the motherboard - we had to solder on the SMD components, and the THT components as well. We also soldered on the FPGA and micro-controller as well. After the soldering was done, we proceeded to test our board. We first loaded a test program to the FPGA which uses the high-speed oscillator (HSOSC) from the iCE40 UltraPlus primitve library. Here, this library is used to generate a clock signal at 24Mhz, and then counter was implemented in order to produce a blinking frequency of 1.5Hz, so that we could see it on the LEDs. This was developed with a clock-divider module. After this, we uploaded another program to our FPGA which toggles pin P25 at around 1Hz, and if switch SW7 is on, then P25 is connected to PA9 which will see LED D3 blinking. We then, uploaded a program to our MCU unit, which reads the value of the toggled LED from the FPGA and echoes it to another pin which then causes LED D2 blinking. We then implemented the 7-segment code in verilog, which was essetially a decoder. Along with this, we programmed some switch inputs to control 3 other on-board FPGA LEDs using combinational logic, and using the HSOSC to take teh 24MHz signal and convert it into a 2.4Hz signal which was reflected in a blinking LED. I then used an oscilliscope to test the frequency of the blinking LED and it was exactly 2.4Hz. [IMAGE HERE] After this, we had to build the 7-segment LED display on a breadboard. After looking at the specs, I was able to apply power to one of the middle pins on either side, and ground the respective other pins in order to turn on that respective segment. Each non-power pin on the displaywas then hooked to ground through a 10kohm resistor. I made sure to connect the programmed pins from the FPGA to the seven-segment display. In order to test this, I created a self-checking testbench which ran through all posisble inputs and made sure the outputs were as expected.\n\n\nTechnical Documentation:\nThe source code for the project can be found in the associated Github repository"
+  },
+  {
+    "objectID": "labs.html",
+    "href": "labs.html",
+    "title": "E155 Labs",
+    "section": "",
+    "text": "Lab Report"
+  },
+  {
+    "objectID": "labs.html#lab-1---board-assembly-and-testing",
+    "href": "labs.html#lab-1---board-assembly-and-testing",
+    "title": "E155 Labs",
+    "section": "",
+    "text": "Lab Report"
   },
   {
     "objectID": "labs.html#lab-2---multiplexed-7-segment-display",
     "href": "labs.html#lab-2---multiplexed-7-segment-display",
     "title": "E155 Labs",
     "section": "Lab 2 - Multiplexed 7-Segment Display",
-    "text": "Lab 2 - Multiplexed 7-Segment Display"
+    "text": "Lab 2 - Multiplexed 7-Segment Display\nLab Report"
   },
   {
     "objectID": "labs.html#lab-3---keypad-scanner",
     "href": "labs.html#lab-3---keypad-scanner",
     "title": "E155 Labs",
     "section": "Lab 3 - Keypad Scanner",
-    "text": "Lab 3 - Keypad Scanner"
+    "text": "Lab 3 - Keypad Scanner\nLab Report"
   },
   {
     "objectID": "labs.html#lab-4---digital-audio",
     "href": "labs.html#lab-4---digital-audio",
     "title": "E155 Labs",
     "section": "Lab 4 - Digital Audio",
-    "text": "Lab 4 - Digital Audio"
+    "text": "Lab 4 - Digital Audio\nLab Report"
   },
   {
     "objectID": "labs.html#lab-5---interrupts",
     "href": "labs.html#lab-5---interrupts",
     "title": "E155 Labs",
     "section": "Lab 5 - Interrupts",
-    "text": "Lab 5 - Interrupts"
+    "text": "Lab 5 - Interrupts\nLab Report"
   },
   {
     "objectID": "labs.html#lab-6---the-internet-of-things-and-serial-peripheral-interface",
     "href": "labs.html#lab-6---the-internet-of-things-and-serial-peripheral-interface",
     "title": "E155 Labs",
     "section": "Lab 6 - The Internet of Things and Serial Peripheral Interface",
-    "text": "Lab 6 - The Internet of Things and Serial Peripheral Interface"
+    "text": "Lab 6 - The Internet of Things and Serial Peripheral Interface\nLab Report"
   },
   {
     "objectID": "labs.html#lab-7---the-advanced-encryption-standard-aes",
     "href": "labs.html#lab-7---the-advanced-encryption-standard-aes",
     "title": "E155 Labs",
     "section": "Lab 7 - The Advanced Encryption Standard (AES)",
-    "text": "Lab 7 - The Advanced Encryption Standard (AES)"
+    "text": "Lab 7 - The Advanced Encryption Standard (AES)\nLab Report"
   },
   {
     "objectID": "resources.html",

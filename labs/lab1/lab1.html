@@ -116,8 +116,16 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a></li>
+  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation:</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -141,10 +149,20 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>These are the resources used in E155!</p>
-<p><a href="https://hmc-e155.github.io/">Link to Course Website</a></p>
+<section id="introduction" class="level3">
+<h3 class="anchored" data-anchor-id="introduction">Introduction</h3>
+<p>In this lab, we built out motherboard with the FPGA and the microcontroller through soldering, and tested our board by loading designs onto our FPGA nad microcontroller. We implemented a design on the FPGA to test the on-board high-speed oscillator by blinking one of the on-board LEDs. And we implemented a program on the microcontroller to light an LED. Overall, the main goal after creating our boards was to create a seven segment display. We wrote verilog to convert a 4-bit hex inputted through a switch into display using 7-segments. We did this by programming pins on the FPGA based on the switches, and then connecting this to a physical build of a seven-segment display on a breadboard to observe the numbers. We also used the switches to light other LEDs on the FPGA, and like described earlier, we used the on-board high-speed oscillator to blind an on-board led at 2.4Hz.</p>
+</section>
+<section id="design-and-testing-methodology" class="level3">
+<h3 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h3>
+<p>There were two different steps associated with the hardware component of the design, with the first one being the soldering of the components. There were two main parts to soldering the components to the motherboard - we had to solder on the SMD components, and the THT components as well. We also soldered on the FPGA and micro-controller as well. After the soldering was done, we proceeded to test our board. We first loaded a test program to the FPGA which uses the high-speed oscillator (HSOSC) from the iCE40 UltraPlus primitve library. Here, this library is used to generate a clock signal at 24Mhz, and then counter was implemented in order to produce a blinking frequency of 1.5Hz, so that we could see it on the LEDs. This was developed with a clock-divider module. After this, we uploaded another program to our FPGA which toggles pin P25 at around 1Hz, and if switch SW7 is on, then P25 is connected to PA9 which will see LED D3 blinking. We then, uploaded a program to our MCU unit, which reads the value of the toggled LED from the FPGA and echoes it to another pin which then causes LED D2 blinking. We then implemented the 7-segment code in verilog, which was essetially a decoder. Along with this, we programmed some switch inputs to control 3 other on-board FPGA LEDs using combinational logic, and using the HSOSC to take teh 24MHz signal and convert it into a 2.4Hz signal which was reflected in a blinking LED. I then used an oscilliscope to test the frequency of the blinking LED and it was exactly 2.4Hz. [IMAGE HERE] After this, we had to build the 7-segment LED display on a breadboard. After looking at the specs, I was able to apply power to one of the middle pins on either side, and ground the respective other pins in order to turn on that respective segment. Each non-power pin on the displaywas then hooked to ground through a 10kohm resistor. I made sure to connect the programmed pins from the FPGA to the seven-segment display. In order to test this, I created a self-checking testbench which ran through all posisble inputs and made sure the outputs were as expected.</p>
+</section>
+<section id="technical-documentation" class="level3">
+<h3 class="anchored" data-anchor-id="technical-documentation">Technical Documentation:</h3>
+<p>The source code for the project can be found in the associated <a href="https://github.com/SadhviNarayanan/e155-lab1/tree/lab1-mcu">Github repository</a></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
