@@ -219,20 +219,26 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/chat_code.png" class="img-fluid figure-img"></p>
-<figcaption>Figure 7: Initial ChatGPT response</figcaption>
+<p><img src="images/ai_lab2.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 7: Second ChatGPT response after a prompt</figcaption>
 </figure>
 </div>
-<p>Figure 7 shows the result of entering the prompt into ChatGPT.</p>
-<p>After entering this project into Lattice, and synthesiszing it, it seemed to have run with no errors, meaning at least the verilog syntax was correct. Additionally, it seems like most of the logic is correct for the counter, and it even accounted for dividing the period by 2 in order to toggle two times in each period. Figure 8 shows the successful response.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/lattice_chat.png" class="img-fluid figure-img"></p>
-<figcaption>Figure 8: Lattice Synthesis Result</figcaption>
+<p><img src="images/ai2_lab2.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 8: ChatGPT Seven segment response</figcaption>
 </figure>
 </div>
-<p>Overall, I would say that the quality of this verilog is really nice, with a very exact counter. This was similar to how I learned it in E85 last semester for my music lab, and therefore how I implemented it myself. The LLM did generate some constructs like parameter int, which I have never used before. The code did synthesize the first time around, which is impressive. However, this is also a common application of clock dividing, so it must have been trained on a lot of relevant data. There were very small errors such as bit truncation for optimization.</p>
-<p>Next time I use LLM in my workflow, it is important to understand how to prompt the model, it is important to give it the constraints you are working under, and even providing specific library names are important. I was really surprised when the LLM picked up on the HSOSC library and the documentation for the syntax.</p>
+<p>Figure 7 shows the result of entering the prompt into ChatGPT - after some additional prompting. Initially it created two different instances of the module, because it maybe missed out on the idea of multiplexing, but after I prompted it to only instantiate one module, it created the output above which looks correct to me, and it synthesized fine.</p>
+<p>Figure 8 shows the seven segment display decoder code that it generated, which also compiled fine and seems optimized and reasonable.</p>
+<p>Overall, I would rate the quality of this code pretty good since it seems to be optimal in all the assignments, module interaction, and clock multiplexing that it does. In terms of verilog contstructs that were unknown to me, I did not see anything striking - I have used almost everything used in the AI version. However, the AI did make the counter a little different to mine, with the addition, and counter limit check under the same else conditional, however this was just a design decision. The AI code synthesized both times, I tried it, however the first time there was a logic gap in the way it did the time multiplexing. One important thing is that it is not running at the right frequency, it is running too fast since it is just using the HSOSC, so this would be something that might need more prompting. In terms of warning messages, I just got the expression size 32 bits truncated to fit in target size 16, but I have also been getting this warning message as well. The next time, I might give it a little more context on what I have available, and perhaps define some of the terms I am using - although this shouldn’t have been necessary. Also, it did not use the HSOSC oscillator that I am using because it did not have the context of the lab, and what we were using.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/2ai1.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 10: ChatGPT output after giving it related files</figcaption>
+</figure>
+</div>
+<p>The output of the LLM after providing it with my seven segment decoder and the HSOSC code, is outlined in figure 10. This code good quality, but it did change quite a bit in terms of structure from the previous version. Again, the frequency is not correct as it is going too fast. It also split up the different parts of the code like the PNP enable signals, and the seg calcualtions into different stages which might make it more readable, but it is still functionally correct. There were no warning messages from this that were alarming - it is just interesting that it changed the structure into different units based on my lab 1 code that I had provided.</p>
 
 
 </section>
