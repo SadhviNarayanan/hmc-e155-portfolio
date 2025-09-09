@@ -31,7 +31,7 @@ The source code for the project can be found in the associated [Github repositor
 The block diagram in Figure 2 demonstrates the overall design and architecture of the design. The top-level module incldes three sub-modules - the HSOSC (high-speed oscillator block), the clock, and the seven_segment module in order to convert hex digits to seven segments. The clock is essentially the clock divider which is taking care of toggling the clock at 60Hz. We can see the internal logic of the muxes as well, in order to multiplex the values given to the seven-segment module, based on the generated clock.
 
 ### Schematic
-![Figure 3: Schematic of the physical circuit](images/schematic.jpg)
+![Figure 3: Schematic of the physical circuit](images/schematic.jpeg)
 Figure 3 demonstrates the physical layout of the design. We have internal 100k-ohm pullup resistors in order to ensure the pins aren't floating. We then have the DIP switch on the right connected to around a 420 ohm pull-down resistor on the left, and then power to the right. We have each of our PNP transistors connected to a 3.3V collecter, and a 330-ohm resistor in order to limit the current going into the transistor base. Each of our segments was connected to a pin, with two segments mapping to one pin due ot the shared seven-segment module. Each segment was connected to a 170 ohm resistor to limit the current going into the LED's, while not exceeding the maximum current that can be driven by an FPGA pin. Our adder-sum LED's are each connected to a 100ohm resistor to limit the current through the diodes to around 13mA, which is within its possible range.
 
 ![Figure 4: Current Calculations](images/current_cal.jpeg)
