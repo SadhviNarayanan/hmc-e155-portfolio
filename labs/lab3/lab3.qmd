@@ -18,7 +18,7 @@ I made all my testbenches assert based so it was easy to check for various input
 
 I made sure to calculate appropriate resistor values based on the maximum drivable current as well for all my pins.
 
-![Figure 1: Image of the physical setup](images/physcial_design.jpg)
+![Figure 1: Image of the physical setup](images/physical_design.jpg)
 
 Figure 1 shows the physical implementation the breadboard with the time-multiplexed segment visible, along with the keypad wired up.
 
@@ -49,19 +49,21 @@ In Figure 4 we can see all the calculations performed to ensure we are not drawi
 
 In Figure 5, we can see the main FSM diagram going through SCAN, DEBOUNCE_WAIT, and CAPTURE. In Figure 6, we see the state transition diagram table. In Figure 7, we have the main FSM output table. In Figure 8, we have the Keypad scanner FSM transition table and output table. I didn't include a diagram of the counter FSM since that is self-explanatory.
 
-TODO: include tradeoffs here.
+Tradeoffs:
+There may be some tradeoffs with my strategy and others, right from how I partioned my blocks versus how my debouncing strategy could have been implented. 
+For debouncing, I have one counter that counts to a fixed amount, and after this it assumes that debouncing affects are mitigated, and proceeds to the next stage. However, if I have a partcicularly bad switch which debounces for longer, then my strategy might not account for that time interval, and could fail. Additionally, if I have the same design, but have a switch with almost no debouncing, then I could be waiting for longer than I need to be. One design tradeoff I kept here was consistency and simplicity of the design - I could have alternatively, had a counter which checks how many consecutive high's I get, and if it passes a certain threshold, then I would move on. However, this implementation also has the limitation of setting the appropriate threshold. Additionally, I have one state which does all the scanning logic, whereas I could have 4 different states for scanning, each of which applies power to one row. My strategy is easy in the sense of I turn on an enable in my SCAN state and it hits all the cols to read the rows through another FSM. This design gives me another piece of hardware potentially, with an external counter - but it is really small and should not have much of an effect, compared to 4 state counters within my main FSM. However, in the CAPTURE state, when I need to check if a button is released, I essentially only need to apply power to the column in which I detected the press in, so have a single state to account for putting power to just that column would have been easy overall, rather than having a conditional, but overall I don't see much of a design hit with this approach. I also like how I have enables which I set as output signals in my FSM, and it automatically triggers a clock counter/clock divider module to take care of it, and then when that module asserts a high, it continues. This makes the design separation really easy, and a lot easier to test, debug, and isloate.
 
 
 ## Results and Discussion
-![Figure 9:  A screenshot of a QuestaSim simulation demonstrating the clock toggling at the right frequency and asserting a done signal.](images/lab2_clock_tb.png)
+![Figure 9:  A screenshot of a QuestaSim simulation demonstrating the clock toggling at the right frequency and asserting a done signal.](images/testbench_clock.png)
 
-![Figure 10:  A screenshot showing the keypad scanner module toggling through the columns and reading the stabillized value two clock cycles after](images/enable_check.png)
+![Figure 10:  A screenshot showing the keypad scanner module toggling through the columns and reading the stabillized value two clock cycles after](images/testbench_keypad_scanner.png)
 
-![Figure 11:  A screenshot of a QuestaSim simulation for the number capture, which is combinational logic to convert the row and column pressed to a 4-bit hex number.](images/lab2_full_test.png)
+![Figure 11:  A screenshot of a QuestaSim simulation for the number capture, which is combinational logic to convert the row and column pressed to a 4-bit hex number.](images/testbench_number_capture.png)
 
-![Figure 12:  A screenshot of a QuestaSim simulation for the FSM through SCAN, DEBOUNCE_WAIT, and CAPTURE.](images/lab2_full_test.png)
+![Figure 12:  A screenshot of a QuestaSim simulation for the FSM through SCAN, DEBOUNCE_WAIT, and CAPTURE.](images/testbench_state_fsm.png)
 
-![Figure 13:  A screenshot of a QuestaSim simulation for the top level module.](images/lab2_full_test.png)
+![Figure 13:  A screenshot of a QuestaSim simulation for the top level module.](images/testbench_lab3_sn.png)
 
 I was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components. 
 
@@ -74,22 +76,14 @@ The overall design, after all the testing, successfully time-multiplexes the sev
 I spent a total of 30 hours working on this lab - I also spent a lot of time helping others.
 
 ## AI Prototype Summary TODO
-![Figure 14: Second ChatGPT response after a prompt](images/ai_lab2.png)
+![Figure 14: Second ChatGPT response after a prompt](images/ai.png)
 
-![Figure 15: ChatGPT Seven segment response](images/ai2_lab2.png)
+Figure 14 shows the result of entering the prompt into ChatGPT - this seems to have synthesized, and has the same states as me, but some of the transition conditions are really interesting, and I definitely feel like logically there is some issue with it moving to the states at the wrong time, because it hasn't thought through the exact logic for transitioning.
+Modularizing the prompts gave it more space to have it be more detailed in some of the logic implementation, and made it easier to understand, but overall in the initial prompt, it wasn't that difficult to follow. However, the last prompt was easier to read, and it was more similar to a more traditional transition and fsm. 
+Prototype A, did not modularize the design in the way I thought it would - but it had the main ways I broke mine up, however I had more modules. It didn't make any illogical splits, but overall it was near and clear.
+ChatGPT used clog2 for a counter logic which was something I did not think about, and it created functions within the module which was something I don't have exposure to.
 
-Figure 14 shows the result of entering the prompt into ChatGPT - after some additional prompting. Initially it created two different instances of the module, because it maybe missed out on the idea of multiplexing, but after I prompted it to only instantiate one module, it created the output above which looks correct to me, and it synthesized fine.
-
-Figure 15 shows the seven segment display decoder code that it generated, which also compiled fine and seems optimized and reasonable.
-
-Overall, I would rate the quality of this code pretty good since it seems to be optimal in all the assignments, module interaction, and clock multiplexing that it does. In terms of verilog contstructs that were unknown to me, I did not see anything striking - I have used almost everything used in the AI version. However, the AI did make the counter a little different to mine, with the addition, and counter limit check under the same else conditional, however this was just a design decision. The AI code synthesized both times, I tried it, however the first time there was a logic gap in the way it did the time multiplexing.
-One important thing is that it is not running at the right frequency, it is running too fast since it is just using the HSOSC, so this would be something that might need more prompting.
-In terms of warning messages, I just got the expression size 32 bits truncated to fit in target size 16, but I have also been getting this warning message as well. The next time, I might give it a little more context on what I have available, and perhaps define some of the terms I am using - although this shouldn't have been necessary. Also, it did not use the HSOSC oscillator that I am using because it did not have the context of the lab, and what we were using.
-
-
-![Figure 16: ChatGPT output after giving it related files](images/2ai1.png)
-
-The output of the LLM after providing it with my seven segment decoder and the HSOSC code, is outlined in figure 16. This code good quality, but it did change quite a bit in terms of structure from the previous version. Again, the frequency is not correct as it is going too fast. It also split up the different parts of the code like the PNP enable signals, and the seg calcualtions into different stages which might make it more readable, but it is still functionally correct. There were no warning messages from this that were alarming - it is just interesting that it changed the structure into different units based on my lab 1 code that I had provided.
-
+Overall, I would rate the quality of this code pretty good since it seems to be optimal in all the assignments, module interaction, and clock multiplexing that it does. The AI code synthesized all three times, I tried it, however the later versions were more clean.
+In terms of warning messages, I just got the expression size 32 bits truncated to fit in target size 16, but I have also been getting this warning message as well.
 
 
