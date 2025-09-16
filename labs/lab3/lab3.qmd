@@ -75,7 +75,7 @@ If I was given more time, I would have tried to possibly come up with a new stra
 The overall design, after all the testing, successfully time-multiplexes the seven-segment decoder with the last two keypad entries from the matrix keypad, and it accounts for switch debouncing on both the press and release of a button. Additionally, it does not lock up when multiple buttons are pressed, and only accepts new presses once the pressed key is released. Every segment is equally as bright, and meets the specifications listed.
 I spent a total of 30 hours working on this lab - I also spent a lot of time helping others.
 
-## AI Prototype Summary TODO
+## AI Prototype Summary
 ![Figure 14: Second ChatGPT response after a prompt](images/ai.png)
 
 Figure 14 shows the result of entering the prompt into ChatGPT - this seems to have synthesized, and has the same states as me, but some of the transition conditions are really interesting, and I definitely feel like logically there is some issue with it moving to the states at the wrong time, because it hasn't thought through the exact logic for transitioning.
