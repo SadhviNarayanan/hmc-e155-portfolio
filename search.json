@@ -168,6 +168,55 @@
     "text": "AI Prototype Summary\n\n\n\nFigure 8: Second ChatGPT response after a prompt\n\n\n\n\n\nFigure 9: ChatGPT Seven segment response\n\n\nFigure 8 shows the result of entering the prompt into ChatGPT - after some additional prompting. Initially it created two different instances of the module, because it maybe missed out on the idea of multiplexing, but after I prompted it to only instantiate one module, it created the output above which looks correct to me, and it synthesized fine.\nFigure 9 shows the seven segment display decoder code that it generated, which also compiled fine and seems optimized and reasonable.\nOverall, I would rate the quality of this code pretty good since it seems to be optimal in all the assignments, module interaction, and clock multiplexing that it does. In terms of verilog contstructs that were unknown to me, I did not see anything striking - I have used almost everything used in the AI version. However, the AI did make the counter a little different to mine, with the addition, and counter limit check under the same else conditional, however this was just a design decision. The AI code synthesized both times, I tried it, however the first time there was a logic gap in the way it did the time multiplexing. One important thing is that it is not running at the right frequency, it is running too fast since it is just using the HSOSC, so this would be something that might need more prompting. In terms of warning messages, I just got the expression size 32 bits truncated to fit in target size 16, but I have also been getting this warning message as well. The next time, I might give it a little more context on what I have available, and perhaps define some of the terms I am using - although this shouldn’t have been necessary. Also, it did not use the HSOSC oscillator that I am using because it did not have the context of the lab, and what we were using.\n\n\n\nFigure 10: ChatGPT output after giving it related files\n\n\nThe output of the LLM after providing it with my seven segment decoder and the HSOSC code, is outlined in figure 10. This code good quality, but it did change quite a bit in terms of structure from the previous version. Again, the frequency is not correct as it is going too fast. It also split up the different parts of the code like the PNP enable signals, and the seg calcualtions into different stages which might make it more readable, but it is still functionally correct. There were no warning messages from this that were alarming - it is just interesting that it changed the structure into different units based on my lab 1 code that I had provided."
   },
   {
+    "objectID": "labs/lab4/lab4.html",
+    "href": "labs/lab4/lab4.html",
+    "title": "Lab 4 Report",
+    "section": "",
+    "text": "In this lab, we used the microcontroller in order to play a sound by setting a frequency for the pitch, and then configuring a timer/delay to hold the note for a specific duration. We used a PLL as our system clock, and then fed that to two different TIMER register busses on our system, and then controlled one to be a PWM generator (for the tone frequency), and then another one as the timer for the delay."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html#introduction",
+    "href": "labs/lab4/lab4.html#introduction",
+    "title": "Lab 4 Report",
+    "section": "",
+    "text": "In this lab, we used the microcontroller in order to play a sound by setting a frequency for the pitch, and then configuring a timer/delay to hold the note for a specific duration. We used a PLL as our system clock, and then fed that to two different TIMER register busses on our system, and then controlled one to be a PWM generator (for the tone frequency), and then another one as the timer for the delay."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html#design-and-testing-methodology",
+    "href": "labs/lab4/lab4.html#design-and-testing-methodology",
+    "title": "Lab 4 Report",
+    "section": "Design and Testing Methodology",
+    "text": "Design and Testing Methodology\nIn order to approach the design of the project, I first had to understand the datasheet and reference manual of STMLK324KC microcontroller. This was critical because from here I knew which registers to enable or set to certain values. The datasheet had information on which bits of the ACC register set would enable the clock to the timers. And then, it had information on how to setup PWM for a timer, and enable that as an input into a GPIO pin we could connect the speaker to. From here, we could also set up the counter to set the duration of our delays, etc. Ultimately, the first step to the design process was to understand the datasheet and figure out which registers we need to set. In order to test our design, we did not create testbenches for this like the verilog/FPGA labs. Instead, I used the debugger to walk through the logic of my code, and I brought up all the relevant register signals, so I could see how every line I was working through was changing the state of the MCU, and if I saw that something wasn’t happening according to how I wanted, then I would revise the datasheet. Additionally, I would measure the signals on an oscilloscope so I could see if I was getting an oscillating frequency where I wanted it."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html#technical-documentation",
+    "href": "labs/lab4/lab4.html#technical-documentation",
+    "title": "Lab 4 Report",
+    "section": "Technical Documentation:",
+    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nOscilloscope Frequency Measurements\nThe images show the oscilloscope trace with the frequency, so we can see how closely it is matching up with the expected frequency the audio is supposed to play.\n Figure 2 above was for the first note which should have been 659Hz, but instead it is 658Hz, however it is really close to the expected value, and within 1%.\n The figure above is supposed to be for the 13th note, which was coded as 440Hz, however it is actually 438Hz, which is still quite close to the expected value, and within 1%.\n The note above was for a frequency that should have been at 236Hz, but it is instead at 260Hz, which is still close, and within 1%.\n The image above is to show that our highest note which was at 1.3kHz, can also be played and reached with our PWM.\n And this image above shows how we can also hit our minimum pithch frequency range of 220Hz, although the lowest our system can reach was calcualted to be even smaller (around 78Hz).\n\n\nSchematic\n The image above is the schematic of our circuit, which is connected to our speaker. We used the LM386 low voltage audio power amplifier, in order to take our PWM output from a GPIO MCU pin, and play a tone. We used a variety of resistors and capacitors in order to control the audio, ultimately connecting to an external speaker. Additionally, we added a potentiometer to control the volume of the audio that was outputted on the speaker.\n\n\n\nFigure 8: Min/Max Frequency/Duration calculations\n\n\nIn Figure 8 we can see all the calculations performed to find the min and max frequencies and durations we can support with our clock, and the min and max durations we can hold the delay for.\n Figure 9 above shows the difference between the actual and expected frequencies, because of the rounding that happens when we set out values to arr."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html#results-and-discussion",
+    "href": "labs/lab4/lab4.html#results-and-discussion",
+    "title": "Lab 4 Report",
+    "section": "Results and Discussion",
+    "text": "Results and Discussion\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.\nIf I was given more time, I would have tried to connect to two speakers using two other timer register busses, so I could play different tones at the same time and enhance the music output. Additionally, I would have tried to play a better, more complex sound had I been better at interpreting sheet music.\nThe design performs as expected, and does play the songs I want it to, and it is is reliable. The only thing is that the potentiometer is really sensitive, making it more challening to control the audio volume."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html#conclusion",
+    "href": "labs/lab4/lab4.html#conclusion",
+    "title": "Lab 4 Report",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe overall design works as expected, and we are able to play Fur Elise and another song of our choice on the speakers, by using the MCU clock to generate a PWM frequency for the tone, as well as for a delay timer. In other words, our PLL clock goes to two timer busses to generate a PWM signal for our frequency and create a timer for our audio. Overall, I spent 20 hours on this lab."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html#ai-prototype-summary",
+    "href": "labs/lab4/lab4.html#ai-prototype-summary",
+    "title": "Lab 4 Report",
+    "section": "AI Prototype Summary",
+    "text": "AI Prototype Summary\n\n\n\nFigure 10: Second ChatGPT response after a prompt\n\n\nFigure 10 shows the result of the AI prototype, and it had a decent line of reasoning or chain of logic in order to determine what timer to use. However, ultimately it picked TIM2 which is different than the one I chose to use. I am not sure if TIM2 has a channel that it can be connected to on a pin on our breakout board. There might have been a limitation here on what breakout board we could use, which is something the AI system wouldn’t know possibly, because it may not know what pins we can directly address and write to. Overall, the quality of the output is decent, especially in terms of the chain of logic because it did consider many levels of planning, including talking about the prescalar, arr, clock enable, channel output, etc. All of which I am really impressed about, however there was not much information given as to why TIM2 was chosen over the other timers. The LLM did not generate any code for me, but it did talk about similar registers to what I modified, so it might be pretty close. Because the LLM did not give much reasoning about the timer, it was difficult to compare it to my approach. TIM16 gave a clear pinout to connect to for my PWM on my breakout board, which was one of the main reasons I chose it, however Chat said because it is 32-bits it avoids a “prescalar headache[s]”. It says TIM2 has the simplest, which I do not entirely agree with. However, the LLM does work well as a sounding board which I can tell from this exercise, because it does address imporant registers and bits that need to be changed in order to get the timer to work, which is impressive, because this is what I spent the longest doing."
+  },
+  {
     "objectID": "labs.html",
     "href": "labs.html",
     "title": "E155 Labs",
