@@ -22,7 +22,7 @@ The source code for the project can be found in the associated [Github repositor
 ![Figure 2: Schematic of the physical circuit](images/schematic_lab5.jpeg)
 The image above is the schematic of our circuit, which is connected to our motor. Our two encoder input pulses go into pins 9 and 10, and then we connect the motor to a 5V VCC supply from our MCU, and then power the encoders with and external power source. I set up internal pull-ups on pins 9 and 10 within the MCU.
 
-![Figure 3: Angular Velocity Calculations](images/calc.jpeg)
+![Figure 3: Angular Velocity Calculations](images/final_calc.jpeg)
 Figure 3 above shows the difference between the actual and expected frequencies, because of the rounding that happens when we set out values to arr. 
 
 
