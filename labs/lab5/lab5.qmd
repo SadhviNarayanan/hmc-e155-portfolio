@@ -11,7 +11,7 @@ In terms of design for the motor calcualtions, if we trap on any of A's edges, a
 
 The use of interrupts over polling techniques have different pros and cons. With interrupts, we can configure it so that as soon as an event is detected it will trap, pause all other execution, save the architectural state, and handle the interrupt before resuming normal program flow. This requires less hardware, and can almost instantaneously detect an event and handle it. Additionally, priorities can be set so that different interrupts can take precedents over others based on what may be more important. However, sometimes certain interrupts can pause all other execution, and if we want something to happen in parallel it could affect that. On the other hand, polling would require more hardware and continuous checking to determine if an event happened, and there could be a lag in when an event is detected to when it occurs, or it is possible that polling misses the event, in the case that the event happens in between a clock cycle - although unlikely if polling at high speeds.
 
-![Figure 1: Flowchart with logic flow and interrupts](images/flowchart.jpeg)
+![Figure 1: Flowchart with logic flow and interrupts](images/flowchart1.jpeg)
 Image 1 above displays the flowchart with the control logic flow, and how interrupts are handeled, and how that is built into the main function. 
 
 ## Technical Documentation:
@@ -19,10 +19,10 @@ The source code for the project can be found in the associated [Github repositor
 
 
 ### Schematic
-![Figure 2: Schematic of the physical circuit](images/schematic_lab5.jpeg)
+![Figure 2: Schematic of the physical circuit](images/schematic1.jpeg)
 The image above is the schematic of our circuit, which is connected to our motor. Our two encoder input pulses go into pins 9 and 10, and then we connect the motor to a 5V VCC supply from our MCU, and then power the encoders with and external power source. I set up internal pull-ups on pins 9 and 10 within the MCU.
 
-![Figure 3: Angular Velocity Calculations](images/final_calc.jpeg)
+![Figure 3: Angular Velocity Calculations](images/final_calc1.jpeg)
 Figure 3 above shows the difference between the actual and expected frequencies, because of the rounding that happens when we set out values to arr. 
 
 
