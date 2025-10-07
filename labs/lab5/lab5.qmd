@@ -11,20 +11,25 @@ In terms of design for the motor calcualtions, if we trap on any of A's edges, a
 
 The use of interrupts over polling techniques have different pros and cons. With interrupts, we can configure it so that as soon as an event is detected it will trap, pause all other execution, save the architectural state, and handle the interrupt before resuming normal program flow. This requires less hardware, and can almost instantaneously detect an event and handle it. Additionally, priorities can be set so that different interrupts can take precedents over others based on what may be more important. However, sometimes certain interrupts can pause all other execution, and if we want something to happen in parallel it could affect that. On the other hand, polling would require more hardware and continuous checking to determine if an event happened, and there could be a lag in when an event is detected to when it occurs, or it is possible that polling misses the event, in the case that the event happens in between a clock cycle - although unlikely if polling at high speeds.
 
-![Figure 1: Flowchart with logic flow and interrupts](images/flowchart1.jpeg)
-Image 1 above displays the flowchart with the control logic flow, and how interrupts are handeled, and how that is built into the main function. 
+Calculations:
+I toggled a pin on my mcu within my main loop, as my polling would be constrained by how fast the main loop can operate, which was 52.8Hz, and then I measured the frequency of the encoder which is 999Hz, and when i performed all the calculations, I found the frequency of how fast my main loop could detect my pulse, and then converted that to rev/s, depending on my 408ppr.
+![Figure 1: Polling Differences](images/Note%20Oct%204%2C%202025.jpeg)
+Image 1 above displays the calculations for the polling comparison.
+
+![Figure 2: Flowchart with logic flow and interrupts](images/flowchart1.jpeg)
+Image 2 above displays the flowchart with the control logic flow, and how interrupts are handeled, and how that is built into the main function. 
 
 ## Technical Documentation:
 The source code for the project can be found in the associated [Github repository](https://github.com/SadhviNarayanan/e155-lab5)
 
 
 ### Schematic
-![Figure 2: Schematic of the physical circuit](images/schematic2.jpeg)
-![Figure 2.5: Schematic of the physical circuit](images/schematic3.jpeg)
+![Figure 3: Schematic of the physical circuit](images/schematic2.jpeg)
+![Figure 3.5: Schematic of the physical circuit](images/schematic3.jpeg)
 The image above is the schematic of our circuit, which is connected to our motor. Our two encoder input pulses go into pins 9 and 10, and then we connect the motor to a 5V VCC supply from our MCU, and then power the encoders with and external power source. I set up internal pull-ups on pins 9 and 10 within the MCU.
 
-![Figure 3: Angular Velocity Calculations](images/final_calc1.jpeg)
-Figure 3 above shows the difference between the actual and expected frequencies, because of the rounding that happens when we set out values to arr. 
+![Figure 4: Angular Velocity Calculations](images/final_calc1.jpeg)
+Figure 4 above shows the difference between the actual and expected frequencies, because of the rounding that happens when we set out values to arr. 
 
 
 ## Results and Discussion
@@ -37,7 +42,7 @@ The overall design works as expected, and we are able to capture the angular vel
 I spent 12 hours working on this lab.
 
 ## AI Prototype Summary
-![Figure 4: Second ChatGPT response after a prompt](images/chat_ai.png)
+![Figure 5: Second ChatGPT response after a prompt](images/chat_ai.png)
 
 Figure 4 shows the result of the AI prototype, and it is somewhat similar to my code but also very different at the same time. First off, in the code, it uses the masks defined in the header files for the stm32l432xx.h, whereas I directly accessed the bits using bit shifting, and did not use a predefined mask. Additionally, the logic does not consider setting up encoder B's pin signal on the SYSCFG->EXTICR register which is interesting. I guess, it is not using the highest resolution in the design which is why it is only operating on the rising and falling edge of one of the signals. Furthermore, it is not calculating the direction of the motor based on the values of the encoder pulses, and is also not calculating the angular velocity properly. I also think in the interrupt handler, it is it checking for both bits of the encoder pins at the same time, however in order to determine direction, you need to address the cases differently for the values of the pulses. Furthermore, I am not sure if it knows to use 5V tolerant pins, so this is not really a consideration it made.
 However, overall it did try to pick pins on the same interrupt line to make it easier to handle with just one interrupt request handler function.
