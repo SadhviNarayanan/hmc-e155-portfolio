@@ -95,7 +95,7 @@
     "href": "labs/lab5/lab5.html#technical-documentation",
     "title": "Lab 5 Report",
     "section": "Technical Documentation:",
-    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nSchematic\n The image above is the schematic of our circuit, which is connected to our motor. Our two encoder input pulses go into pins 9 and 10, and then we connect the motor to a 5V VCC supply from our MCU, and then power the encoders with and external power source. I set up internal pull-ups on pins 9 and 10 within the MCU.\n Figure 3 above shows the difference between the actual and expected frequencies, because of the rounding that happens when we set out values to arr."
+    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nSchematic\n  The image above is the schematic of our circuit, which is connected to our motor. Our two encoder input pulses go into pins 9 and 10, and then we connect the motor to a 5V VCC supply from our MCU, and then power the encoders with and external power source. I set up internal pull-ups on pins 9 and 10 within the MCU.\n Figure 3 above shows the difference between the actual and expected frequencies, because of the rounding that happens when we set out values to arr."
   },
   {
     "objectID": "labs/lab5/lab5.html#results-and-discussion",
