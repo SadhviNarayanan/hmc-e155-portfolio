@@ -19,7 +19,8 @@ The source code for the project can be found in the associated [Github repositor
 
 
 ### Schematic
-![Figure 2: Schematic of the physical circuit](images/schematic1.jpeg)
+![Figure 2: Schematic of the physical circuit](images/schematic2.jpeg)
+![Figure 2.5: Schematic of the physical circuit](images/schematic3.jpeg)
 The image above is the schematic of our circuit, which is connected to our motor. Our two encoder input pulses go into pins 9 and 10, and then we connect the motor to a 5V VCC supply from our MCU, and then power the encoders with and external power source. I set up internal pull-ups on pins 9 and 10 within the MCU.
 
 ![Figure 3: Angular Velocity Calculations](images/final_calc1.jpeg)
