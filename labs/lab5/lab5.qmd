@@ -13,8 +13,8 @@ The use of interrupts over polling techniques have different pros and cons. With
 
 Calculations:
 I toggled a pin on my mcu within my main loop, as my polling would be constrained by how fast the main loop can operate, which was 52.8Hz, and then I measured the frequency of the encoder which is 999Hz, and when i performed all the calculations, I found the frequency of how fast my main loop could detect my pulse, and then converted that to rev/s, depending on my 408ppr.
-![Figure 1: Polling Differences](images/Note%20Oct%204%2C%202025.jpeg)
-Image 1 above displays the calculations for the polling comparison.
+![Figure 1: Polling Differences](images/polling.jpeg)
+Image 1 above displays the calculations for the polling comparison. 
 
 ![Figure 2: Flowchart with logic flow and interrupts](images/flowchart1.jpeg)
 Image 2 above displays the flowchart with the control logic flow, and how interrupts are handeled, and how that is built into the main function. 
