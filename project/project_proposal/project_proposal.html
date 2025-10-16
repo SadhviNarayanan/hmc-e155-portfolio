@@ -69,7 +69,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.csss">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -129,7 +129,10 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
   </ul></li>
-  <li><a href="#fpga-design" id="toc-fpga-design" class="nav-link" data-scroll-target="#fpga-design">FPGA Design</a></li>
+  <li><a href="#fpga-design" id="toc-fpga-design" class="nav-link" data-scroll-target="#fpga-design">FPGA Design</a>
+  <ul class="collapse">
+  <li><a href="#core-fpga-modules" id="toc-core-fpga-modules" class="nav-link" data-scroll-target="#core-fpga-modules">Core FPGA Modules</a></li>
+  </ul></li>
   <li><a href="#mcu-design" id="toc-mcu-design" class="nav-link" data-scroll-target="#mcu-design">MCU Design</a></li>
   <li><a href="#task-breakdown" id="toc-task-breakdown" class="nav-link" data-scroll-target="#task-breakdown">Task Breakdown</a></li>
   <li><a href="#project-schedule" id="toc-project-schedule" class="nav-link" data-scroll-target="#project-schedule">Project Schedule</a></li>
@@ -191,19 +194,104 @@ ul.task-list li input[type="checkbox"] {
 <p>The design will interface the MCU and FPGA via SPI communication, allowing the FPGA to render and display the visual state based on the game logic computed by the MCU.</p>
 <section id="block-diagram" class="level3">
 <h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
-<p><img src="images/e155_proj_schematic.drawio.png" class="img-fluid" alt="Figure 1: Block Diagram of the project"> The block diagram in Figure 1 demonstrates the overall design and architecture of the design. We can see there are a variety of control modules to handle the VGA display as well as memory accesses (to display the sprites correctly). We also have ROM blocks, and other elements include a SPI module and 7-segment display for other feautures in our design.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/e155_proj_schematic.drawio.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 1: Block Diagram of the project</figcaption>
+</figure>
+</div>
+<p>The block diagram in Figure 1 demonstrates the overall design and architecture of the design. We can see there are a variety of control modules to handle the VGA display as well as memory accesses (to display the sprites correctly). We also have ROM blocks, and other elements include a SPI module and 7-segment display for other feautures in our design.</p>
 </section>
 </section>
 <section id="fpga-design" class="level2">
 <h2 class="anchored" data-anchor-id="fpga-design">FPGA Design</h2>
 <p>The FPGA handles visual, and time-sensitive operations such as VGA output and reel animation.</p>
-<p>Core FPGA Modules: VGA Controller Generates horizontal and vertical sync signals (hcount, vcount). Drives RGB output based on current reel state. Continuously renders symbols based on current positions. Memory Controller Gets reel ending symbol index from MCU and adds a 1 pixel offset based on counters Takes in (x, y) coordinates from VGA controller to calculate what reel its on, and translate this to RGB color Big pixel line, number of times to display that line (fixed number = X, how big a pixel is) Once it displays big pixel line X number of times, and repeats this N = 10 times → one sprite is done Then, increment sprite counter and restart process Sequentially stops reels in timed order (each following reel does one full rotation before it stops to give it a more randomized looking effect) For each reel store a count N (reel 1 → 5, reel 2 → 6, reel 3 → 7), once the ending symbol index of each reel is fully rendered/displayed N times, stop spinning that reel Reels stop at the precomputed random position sent over by the MCU Once all reels stop, accept WIN message from MCU and update winnings FPGA knows when it’s stopped spinning, so it continues to send the same pixels to VGA to hold state Symbol ROM Storage Stores a contiguous block of equal sized frames for our symbols Memory for each reel in terms of what order the symbols should appear in (use this to index into mem) FPGA is counting through these for the three reels SPI Interface Module Receives 16 bits commands from MCU, returns an acknowledge signal (ACK) in the LSB 12 bits of data, 4 bits for request encoding (REQ) REQ == SPIN: 12 bits contain final 4 bit indices of the 3 reels REQ == WIN: 12 bits contain the number of points won on that spin MAYBE: display a win/lose message on the display REQ == UPDATE: 12 bits contain the total number of points LED Display Controller Display credits won and total credits on 7 segment displays (NOTE: thinking about getting this on VGA)</p>
+<section id="core-fpga-modules" class="level3">
+<h3 class="anchored" data-anchor-id="core-fpga-modules">Core FPGA Modules</h3>
+<ul>
+<li><strong>VGA Controller</strong>
+<ul>
+<li>Generates horizontal and vertical sync signals (<code>hcount</code>, <code>vcount</code>)</li>
+<li>Drives RGB output based on current reel state</li>
+<li>Continuously renders symbols based on current positions</li>
+</ul></li>
+<li><strong>Memory Controller</strong>
+<ul>
+<li>Gets reel ending symbol index from MCU and adds a 1-pixel offset based on counters</li>
+<li>Takes in <code>(x, y)</code> coordinates from VGA controller to calculate what reel it’s on and translate this to RGB color<br>
+</li>
+<li>Handles:
+<ul>
+<li>Big pixel line and number of times to display that line (fixed number = X, determines pixel size)</li>
+<li>Once a big pixel line is displayed <em>X</em> times and repeated <em>N = 10</em> times → one sprite is done<br>
+</li>
+<li>Then increments sprite counter and restarts process</li>
+</ul></li>
+<li>Sequentially stops reels in timed order (each following reel performs one full rotation before stopping for a randomized look)
+<ul>
+<li>For each reel, store a count <em>N</em> (reel 1 → 5, reel 2 → 6, reel 3 → 7)</li>
+<li>Once the ending symbol index of each reel has fully rendered <em>N</em> times, stop spinning that reel</li>
+</ul></li>
+<li>Reels stop at the precomputed random position sent over by the MCU<br>
+</li>
+<li>Once all reels stop, accept <code>WIN</code> message from MCU and update winnings<br>
+</li>
+<li>FPGA knows when it’s stopped spinning, so it continues to send the same pixels to VGA to hold state</li>
+</ul></li>
+<li><strong>Symbol ROM Storage</strong>
+<ul>
+<li>Stores a contiguous block of equal-sized frames for symbols</li>
+<li>Defines memory layout for each reel (symbol order used to index into memory)</li>
+<li>FPGA cycles through these addresses for the three reels</li>
+</ul></li>
+<li><strong>SPI Interface Module</strong>
+<ul>
+<li>Receives 16-bit commands from MCU and returns an acknowledge signal (<code>ACK</code>) in the LSB<br>
+</li>
+<li>12 bits of data, 4 bits for request encoding (<code>REQ</code>)</li>
+<li><code>REQ == SPIN</code> → 12 bits contain final 4-bit indices of the 3 reels<br>
+</li>
+<li><code>REQ == WIN</code> → 12 bits contain the number of points won on that spin<br>
+</li>
+<li><code>REQ == UPDATE</code> → 12 bits contain the total number of points<br>
+</li>
+<li><em>(Optional)</em>: Display a win/lose message on the VGA display</li>
+</ul></li>
+<li><strong>LED Display Controller</strong>
+<ul>
+<li>Displays credits won and total credits on seven-segment displays</li>
+</ul></li>
+</ul>
+</section>
 </section>
 <section id="mcu-design" class="level2">
 <h2 class="anchored" data-anchor-id="mcu-design">MCU Design</h2>
 <p>The MCU handles high-level game logic and asynchronous events.</p>
 <p>Core MCU Functions:</p>
-<p>Coin Detection (Interrupt-Driven): External interrupt triggered by photodiode/coin slot. Increments credit count Denomination dial determines number of credits to “bet” Only starts game when denomination is less that or equal to number of credits Button Handling: Spin button Interrupt triggers START_SPIN sequence and message to FPGA Game Logic: Tracks credits, bets, and game state (IDLE, SPINNING, RESULT). Generates the true random final indices of the displayed icons from within three lists representing the three spinning reels, using these to calculate the player’s winnings and total credits Sends a 16 bit SPI packet to the FPGA to indicate where the three reels should stop spinning, then another for how many credits the player won, and a final one for how many credits the player has Waits for an ACK between all three Audio Control (optional): PWM-based simple tone for win/lose feedback.</p>
+<ul>
+<li><strong>Coin Detection (Interrupt-Driven):</strong>
+<ul>
+<li>External interrupt triggered by photodiode/coin slot.</li>
+<li>Increments credit count</li>
+<li>Denomination dial determines number of credits to “bet”</li>
+<li>Only starts game when denomination is less that or equal to number of credits</li>
+</ul></li>
+<li><strong>Button Handling:</strong>
+<ul>
+<li>Spin button Interrupt triggers START_SPIN sequence and message to FPGA</li>
+</ul></li>
+<li><strong>Game Logic:</strong>
+<ul>
+<li>Tracks credits, bets, and game state (<code>IDLE</code>, <code>SPINNING</code>, <code>RESULT</code>).</li>
+<li>Generates the true random final indices of the displayed icons from within three lists representing the three spinning reels, using these to calculate the player’s winnings and total credits</li>
+<li>Sends a 16 bit SPI packet to the FPGA to indicate where the three reels should stop spinning, then another for how many credits the player won, and a final one for how many credits the player has</li>
+<li>Waits for an ACK between all three</li>
+</ul></li>
+<li><strong>Audio Control (optional):</strong>
+<ul>
+<li>PWM-based simple tone for win/lose feedback.</li>
+</ul></li>
+</ul>
 </section>
 <section id="task-breakdown" class="level2">
 <h2 class="anchored" data-anchor-id="task-breakdown">Task Breakdown</h2>
