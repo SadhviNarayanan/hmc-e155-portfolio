@@ -69,7 +69,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="styles.csss">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -172,9 +172,22 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="project-description-and-overview" class="level2">
 <h2 class="anchored" data-anchor-id="project-description-and-overview">Project Description and Overview</h2>
-<p>The goal is to create a functional, visually engaging slot machine simulation that: - Accepts a penny slot and “spin” button input. - Displays animated reels on a VGA output. - Sequentially stops each reel to show a final symbol combination determined randomly by the MCU. - Calculates and displays winnings and total credits based on the result.</p>
+<p>The goal is to create a functional, visually engaging slot machine simulation that:</p>
+<ul>
+<li><p>Accepts a penny slot and “spin” button input.</p></li>
+<li><p>Displays animated reels on a VGA output.</p></li>
+<li><p>Sequentially stops each reel to show a final symbol combination determined randomly by the MCU.</p></li>
+<li><p>Calculates and displays winnings and total credits based on the result.</p></li>
+</ul>
 <p>The FPGA will handle video display including sending information to the VGA and time-sensitive animations, while the MCU will manage the actual game logic/state, input handling, and random number generation.</p>
-<p>The system will include: - Three spinning reels rendered on a VGA monitor. - A coin slot, push buttons, and a switch for user interaction: - Spin Button — initiates reel animation. - Denomination Switch - indicated how much to bet per spin - Coin Slot — triggers an interrupt and increments credits using an LED to photo diode monitor - 5 seven segment displays, 2 for credits won on the previous spin, and 3 for total credits accrued</p>
+<p>The system will include: - Three spinning reels rendered on a VGA monitor.</p>
+<ul>
+<li><p>A coin slot, push buttons, and a switch for user interaction:</p></li>
+<li><p>Spin Button — initiates reel animation.</p></li>
+<li><p>Denomination Switch - indicated how much to bet per spin</p></li>
+<li><p>Coin Slot — triggers an interrupt and increments credits using an LED to photo diode monitor</p></li>
+<li><p>5 seven segment displays, 2 for credits won on the previous spin, and 3 for total credits accrued</p></li>
+</ul>
 <p>The design will interface the MCU and FPGA via SPI communication, allowing the FPGA to render and display the visual state based on the game logic computed by the MCU.</p>
 <section id="block-diagram" class="level3">
 <h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
