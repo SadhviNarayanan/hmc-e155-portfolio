@@ -7,6 +7,20 @@
     "text": "Intial Reflection\n\n\nInital Refelection and Goals for my semester in MicroPs\n\n\n\n\n\nAug 24, 2025\n\n\nSadhvi Narayanan\n\n\n\n\n\nNo matching items"
   },
   {
+    "objectID": "project.html",
+    "href": "project.html",
+    "title": "E155 Project",
+    "section": "",
+    "text": "Lab Report"
+  },
+  {
+    "objectID": "project.html#project",
+    "href": "project.html#project",
+    "title": "E155 Project",
+    "section": "",
+    "text": "Lab Report"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "E155 Portfolio",
@@ -320,6 +334,76 @@
     "title": "E155 Labs",
     "section": "Lab 7 - The Advanced Encryption Standard (AES)",
     "text": "Lab 7 - The Advanced Encryption Standard (AES)\nLab Report"
+  },
+  {
+    "objectID": "project/project_proposal/project_proposal.html",
+    "href": "project/project_proposal/project_proposal.html",
+    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "section": "",
+    "text": "The goal is to create a functional, visually engaging slot machine simulation that: - Accepts a penny slot and “spin” button input. - Displays animated reels on a VGA output. - Sequentially stops each reel to show a final symbol combination determined randomly by the MCU. - Calculates and displays winnings and total credits based on the result.\nThe FPGA will handle video display including sending information to the VGA and time-sensitive animations, while the MCU will manage the actual game logic/state, input handling, and random number generation.\nThe system will include: - Three spinning reels rendered on a VGA monitor. - A coin slot, push buttons, and a switch for user interaction: - Spin Button — initiates reel animation. - Denomination Switch - indicated how much to bet per spin - Coin Slot — triggers an interrupt and increments credits using an LED to photo diode monitor - 5 seven segment displays, 2 for credits won on the previous spin, and 3 for total credits accrued\nThe design will interface the MCU and FPGA via SPI communication, allowing the FPGA to render and display the visual state based on the game logic computed by the MCU.\n\n\n The block diagram in Figure 1 demonstrates the overall design and architecture of the design. We can see there are a variety of control modules to handle the VGA display as well as memory accesses (to display the sprites correctly). We also have ROM blocks, and other elements include a SPI module and 7-segment display for other feautures in our design."
+  },
+  {
+    "objectID": "project/project_proposal/project_proposal.html#project-description-and-overview",
+    "href": "project/project_proposal/project_proposal.html#project-description-and-overview",
+    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "section": "",
+    "text": "The goal is to create a functional, visually engaging slot machine simulation that: - Accepts a penny slot and “spin” button input. - Displays animated reels on a VGA output. - Sequentially stops each reel to show a final symbol combination determined randomly by the MCU. - Calculates and displays winnings and total credits based on the result.\nThe FPGA will handle video display including sending information to the VGA and time-sensitive animations, while the MCU will manage the actual game logic/state, input handling, and random number generation.\nThe system will include: - Three spinning reels rendered on a VGA monitor. - A coin slot, push buttons, and a switch for user interaction: - Spin Button — initiates reel animation. - Denomination Switch - indicated how much to bet per spin - Coin Slot — triggers an interrupt and increments credits using an LED to photo diode monitor - 5 seven segment displays, 2 for credits won on the previous spin, and 3 for total credits accrued\nThe design will interface the MCU and FPGA via SPI communication, allowing the FPGA to render and display the visual state based on the game logic computed by the MCU.\n\n\n The block diagram in Figure 1 demonstrates the overall design and architecture of the design. We can see there are a variety of control modules to handle the VGA display as well as memory accesses (to display the sprites correctly). We also have ROM blocks, and other elements include a SPI module and 7-segment display for other feautures in our design."
+  },
+  {
+    "objectID": "project/project_proposal/project_proposal.html#fpga-design",
+    "href": "project/project_proposal/project_proposal.html#fpga-design",
+    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "section": "FPGA Design",
+    "text": "FPGA Design\nThe FPGA handles visual, and time-sensitive operations such as VGA output and reel animation.\nCore FPGA Modules: VGA Controller Generates horizontal and vertical sync signals (hcount, vcount). Drives RGB output based on current reel state. Continuously renders symbols based on current positions. Memory Controller Gets reel ending symbol index from MCU and adds a 1 pixel offset based on counters Takes in (x, y) coordinates from VGA controller to calculate what reel its on, and translate this to RGB color Big pixel line, number of times to display that line (fixed number = X, how big a pixel is) Once it displays big pixel line X number of times, and repeats this N = 10 times → one sprite is done Then, increment sprite counter and restart process Sequentially stops reels in timed order (each following reel does one full rotation before it stops to give it a more randomized looking effect) For each reel store a count N (reel 1 → 5, reel 2 → 6, reel 3 → 7), once the ending symbol index of each reel is fully rendered/displayed N times, stop spinning that reel Reels stop at the precomputed random position sent over by the MCU Once all reels stop, accept WIN message from MCU and update winnings FPGA knows when it’s stopped spinning, so it continues to send the same pixels to VGA to hold state Symbol ROM Storage Stores a contiguous block of equal sized frames for our symbols Memory for each reel in terms of what order the symbols should appear in (use this to index into mem) FPGA is counting through these for the three reels SPI Interface Module Receives 16 bits commands from MCU, returns an acknowledge signal (ACK) in the LSB 12 bits of data, 4 bits for request encoding (REQ) REQ == SPIN: 12 bits contain final 4 bit indices of the 3 reels REQ == WIN: 12 bits contain the number of points won on that spin MAYBE: display a win/lose message on the display REQ == UPDATE: 12 bits contain the total number of points LED Display Controller Display credits won and total credits on 7 segment displays (NOTE: thinking about getting this on VGA)"
+  },
+  {
+    "objectID": "project/project_proposal/project_proposal.html#mcu-design",
+    "href": "project/project_proposal/project_proposal.html#mcu-design",
+    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "section": "MCU Design",
+    "text": "MCU Design\nThe MCU handles high-level game logic and asynchronous events.\nCore MCU Functions:\nCoin Detection (Interrupt-Driven): External interrupt triggered by photodiode/coin slot. Increments credit count Denomination dial determines number of credits to “bet” Only starts game when denomination is less that or equal to number of credits Button Handling: Spin button Interrupt triggers START_SPIN sequence and message to FPGA Game Logic: Tracks credits, bets, and game state (IDLE, SPINNING, RESULT). Generates the true random final indices of the displayed icons from within three lists representing the three spinning reels, using these to calculate the player’s winnings and total credits Sends a 16 bit SPI packet to the FPGA to indicate where the three reels should stop spinning, then another for how many credits the player won, and a final one for how many credits the player has Waits for an ACK between all three Audio Control (optional): PWM-based simple tone for win/lose feedback."
+  },
+  {
+    "objectID": "project/project_proposal/project_proposal.html#task-breakdown",
+    "href": "project/project_proposal/project_proposal.html#task-breakdown",
+    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "section": "Task Breakdown",
+    "text": "Task Breakdown\n\n\n\nTask\nEstimated Turnaround\nOwner\n\n\n\n\nProject Proposal (this document)\n1 week\nShared\n\n\nVGA Output from FPGA\n3 weeks\nSadhvi\n\n\nSymbol Digital Art\n1 week\nShared\n\n\nSeven Segment Display Output\n1 week\nShared (essentially done)\n\n\nFPGA SPI interface (peripheral)\n1 week\nSadhvi\n\n\nBlock level formal verification\n1 week\nCorey\n\n\nFull RTL functional verification\n1 week\nCorey\n\n\nDesign Review Presentation\n1 week\nShared\n\n\nMCU button/coin slot interrupts\n1 week\nCorey\n\n\nMCU SPI output (controller)\n1 week\nCorey\n\n\nMCU Main Game Logic\n1 week\nCorey\n\n\nPhysical Assembly\n1 week\nCorey\n\n\nFinal Report\n1 week\nShared"
+  },
+  {
+    "objectID": "project/project_proposal/project_proposal.html#project-schedule",
+    "href": "project/project_proposal/project_proposal.html#project-schedule",
+    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "section": "Project Schedule",
+    "text": "Project Schedule\n\n\n\n\n\n\n\n\nProject Week\nEnd Date\nExpected Deliverables\n\n\n\n\n1\nThurs Oct 16\nProject Proposal (this document)\n\n\n2\nThurs Oct 23\nOrders placed for long turnaround parts\n\n\n3\nThurs Oct 30\nRTL block specifications, Game icon artwork\n\n\n4\nThurs Nov 6\nDesign Review Presentation, VGA driver testbench/SVA, seven segment driver testbench/SVA, Seven segment driver RTL, SPI interface testbench/SVA\n\n\n5\nThurs Nov 13\nSystem level testbench, VGA output on FPGA (hard coded example spin), SPI interface RTL, Button and coin slot interrupts on MCU, All circuits breadboarded\n\n\n6\nThurs Nov 20\nMidpoint demo report, SPI output on MCU (dummy transactions for hardware FPGA testing), VGA output from SPI transaction, Seven segment output from SPI transactions, Game logic C code\n\n\n7\nTues Nov 25\nPhysical Assembly, Whole system hardware validation\n\n\n8\nThurs Dec 4\nProjects Demo Day, Final report"
+  },
+  {
+    "objectID": "project/project_proposal/project_proposal.html#specifications",
+    "href": "project/project_proposal/project_proposal.html#specifications",
+    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "section": "Specifications",
+    "text": "Specifications\n\nProficiency\n\nStarts spinning three reels on a button input\nCalculates points and displays credit total\nSequentially stops each reel on a centered shape\nDisplays result on VGA (B/W)\n\n\n\nExcellence\n\nPenny input with adjustable bet levels\nOnly start game if enough credits\nCryptographically seeded RNG (using hardware RNG)\nColor VGA output\nDisplay credit total and winnings on screen or seven-segment display\nVictory/Loss music"
+  },
+  {
+    "objectID": "project/project_proposal/project_proposal.html#bill-of-materials",
+    "href": "project/project_proposal/project_proposal.html#bill-of-materials",
+    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "section": "Bill of Materials",
+    "text": "Bill of Materials\n\n\n\nQuantity\nItem\nPrice (incl. Tax & Shipping)\nPurchase Link\n\n\n\n\n1\n7 inch VGA Monitor\n$45.68\nLink to Monitor\n\n\n1\nPhototransistor\nStockroom\nn/a\n\n\n1\nIR LED\nStockroom\nn/a\n\n\n1\nClicky Pushbutton\nStockroom\nn/a\n\n\n1\n4 Way (Rotary) Selector Switch\nStockroom\nn/a\n\n\n5\nSeven Segment Display\nStockroom\nn/a\n\n\n5\nPNP Transistors\nStockroom\nn/a\n\n\n5\n1 kΩ Resistors (for PNPs)\nStockroom\nn/a\n\n\n7\n680 Ω Resistors (current limiting)\nStockroom\nn/a\n\n\n1\n8 Ω Speaker\nStockroom\nn/a\n\n\n1\nLM386 Audio Amplifier\nStockroom\nn/a\n\n\n1\n250 µF Capacitor\nStockroom\nn/a\n\n\n1\n10 µF Capacitor\nStockroom\nn/a\n\n\n3\n0.05 µF Capacitors\nStockroom\nn/a"
+  },
+  {
+    "objectID": "project/project_proposal/project_proposal.html#riskiest-part-of-the-design",
+    "href": "project/project_proposal/project_proposal.html#riskiest-part-of-the-design",
+    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "section": "Riskiest part of the design",
+    "text": "Riskiest part of the design\nVGA timing precision + display: Sending the correct pixels, at the correct rate, in the expected format, with the expected timing to the VGA from the FPGA"
+  },
+  {
+    "objectID": "project/project_proposal/project_proposal.html#design-specific-calculations",
+    "href": "project/project_proposal/project_proposal.html#design-specific-calculations",
+    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "section": "Design Specific Calculations",
+    "text": "Design Specific Calculations\n\nPredicted Number of LUTs in the design\n\n( 20 flops (internal counters) + 24 flops (credit display) + 5 flops (seven-segment control output) + 64 flops (internal counter flops) + 16 flops (SPI) ) * 3 = 387 LUTs\n\n\n\nPixel Update Clock\n\nPixel clock = horizontal total * vertical total * frame rate = 640 * 480 * 20Hz (slower frame rate to allow for memory accesses) = 6,144,000 Hz = 6.1 MHz"
   },
   {
     "objectID": "resources.html",

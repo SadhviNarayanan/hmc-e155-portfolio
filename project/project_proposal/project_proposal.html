@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lab 4 Report – E155 Portfolio</title>
+<title>E155 Project Proposal: FPGA + MCU Slot Machine – E155 Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -125,16 +125,26 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a></li>
-  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation:</a>
+  <li><a href="#project-description-and-overview" id="toc-project-description-and-overview" class="nav-link active" data-scroll-target="#project-description-and-overview">Project Description and Overview</a>
   <ul class="collapse">
-  <li><a href="#oscilloscope-frequency-measurements" id="toc-oscilloscope-frequency-measurements" class="nav-link" data-scroll-target="#oscilloscope-frequency-measurements">Oscilloscope Frequency Measurements</a></li>
-  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
   </ul></li>
-  <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
-  <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
+  <li><a href="#fpga-design" id="toc-fpga-design" class="nav-link" data-scroll-target="#fpga-design">FPGA Design</a></li>
+  <li><a href="#mcu-design" id="toc-mcu-design" class="nav-link" data-scroll-target="#mcu-design">MCU Design</a></li>
+  <li><a href="#task-breakdown" id="toc-task-breakdown" class="nav-link" data-scroll-target="#task-breakdown">Task Breakdown</a></li>
+  <li><a href="#project-schedule" id="toc-project-schedule" class="nav-link" data-scroll-target="#project-schedule">Project Schedule</a></li>
+  <li><a href="#specifications" id="toc-specifications" class="nav-link" data-scroll-target="#specifications">Specifications</a>
+  <ul class="collapse">
+  <li><a href="#proficiency" id="toc-proficiency" class="nav-link" data-scroll-target="#proficiency">Proficiency</a></li>
+  <li><a href="#excellence" id="toc-excellence" class="nav-link" data-scroll-target="#excellence">Excellence</a></li>
+  </ul></li>
+  <li><a href="#bill-of-materials" id="toc-bill-of-materials" class="nav-link" data-scroll-target="#bill-of-materials">Bill of Materials</a></li>
+  <li><a href="#riskiest-part-of-the-design" id="toc-riskiest-part-of-the-design" class="nav-link" data-scroll-target="#riskiest-part-of-the-design">Riskiest part of the design</a></li>
+  <li><a href="#design-specific-calculations" id="toc-design-specific-calculations" class="nav-link" data-scroll-target="#design-specific-calculations">Design Specific Calculations</a>
+  <ul class="collapse">
+  <li><a href="#predicted-number-of-luts-in-the-design" id="toc-predicted-number-of-luts-in-the-design" class="nav-link" data-scroll-target="#predicted-number-of-luts-in-the-design">Predicted Number of LUTs in the design</a></li>
+  <li><a href="#pixel-update-clock" id="toc-pixel-update-clock" class="nav-link" data-scroll-target="#pixel-update-clock">Pixel Update Clock</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -143,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lab 4 Report</h1>
+<h1 class="title">E155 Project Proposal: FPGA + MCU Slot Machine</h1>
 </div>
 
 
@@ -160,60 +170,308 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>In this lab, we used the microcontroller in order to play a sound by setting a frequency for the pitch, and then configuring a timer/delay to hold the note for a specific duration. We used a PLL as our system clock, and then fed that to two different TIMER register busses on our system, and then controlled one to be a PWM generator (for the tone frequency), and then another one as the timer for the delay.</p>
-</section>
-<section id="design-and-testing-methodology" class="level2">
-<h2 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h2>
-<p>In order to approach the design of the project, I first had to understand the datasheet and reference manual of STMLK324KC microcontroller. This was critical because from here I knew which registers to enable or set to certain values. The datasheet had information on which bits of the ACC register set would enable the clock to the timers. And then, it had information on how to setup PWM for a timer, and enable that as an input into a GPIO pin we could connect the speaker to. From here, we could also set up the counter to set the duration of our delays, etc. Ultimately, the first step to the design process was to understand the datasheet and figure out which registers we need to set. In order to test our design, we did not create testbenches for this like the verilog/FPGA labs. Instead, I used the debugger to walk through the logic of my code, and I brought up all the relevant register signals, so I could see how every line I was working through was changing the state of the MCU, and if I saw that something wasn’t happening according to how I wanted, then I would revise the datasheet. Additionally, I would measure the signals on an oscilloscope so I could see if I was getting an oscillating frequency where I wanted it.</p>
-</section>
-<section id="technical-documentation" class="level2">
-<h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation:</h2>
-<p>The source code for the project can be found in the associated <a href="https://github.com/SadhviNarayanan/e155-lab4">Github repository</a></p>
-<section id="oscilloscope-frequency-measurements" class="level3">
-<h3 class="anchored" data-anchor-id="oscilloscope-frequency-measurements">Oscilloscope Frequency Measurements</h3>
-<p>The images show the oscilloscope trace with the frequency, so we can see how closely it is matching up with the expected frequency the audio is supposed to play.</p>
-<p><img src="images/DS1Z_QuickPrint1.png" class="img-fluid" alt="Figure 2: Frequency of the first note (we set it to 659 in the code)"> Figure 2 above was for the first note which should have been 659Hz, but instead it is 658Hz, however it is really close to the expected value, and within 1%.</p>
-<p><img src="images/DS1Z_QuickPrint2.png" class="img-fluid" alt="Figure 3: Oscilloscope Traces"> The figure above is supposed to be for the 13th note, which was coded as 440Hz, however it is actually 438Hz, which is still quite close to the expected value, and within 1%.</p>
-<p><img src="images/DS1Z_QuickPrint3.png" class="img-fluid" alt="Figure 4: Oscilloscope Traces"> The note above was for a frequency that should have been at 236Hz, but it is instead at 260Hz, which is still close, and within 1%.</p>
-<p><img src="images/DS1Z_QuickPrint4.png" class="img-fluid" alt="Figure 5: Oscilloscope Traces"> The image above is to show that our highest note which was at 1.3kHz, can also be played and reached with our PWM.</p>
-<p><img src="images/DS1Z_QuickPrint5.png" class="img-fluid" alt="Figure 6: Oscilloscope Traces"> And this image above shows how we can also hit our minimum pithch frequency range of 220Hz, although the lowest our system can reach was calcualted to be even smaller (around 78Hz).</p>
-</section>
-<section id="schematic" class="level3">
-<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
-<p><img src="images/schematic_lab4.jpeg" class="img-fluid" alt="Figure 7: Schematic of the physical circuit"> The image above is the schematic of our circuit, which is connected to our speaker. We used the LM386 low voltage audio power amplifier, in order to take our PWM output from a GPIO MCU pin, and play a tone. We used a variety of resistors and capacitors in order to control the audio, ultimately connecting to an external speaker. Additionally, we added a potentiometer to control the volume of the audio that was outputted on the speaker.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/calcuations.jpeg" class="img-fluid figure-img"></p>
-<figcaption>Figure 8: Min/Max Frequency/Duration calculations</figcaption>
-</figure>
-</div>
-<p>In Figure 8 we can see all the calculations performed to find the min and max frequencies and durations we can support with our clock, and the min and max durations we can hold the delay for.</p>
-<p><img src="images/pitch_accurate.jpeg" class="img-fluid" alt="Figure 9: Pitch accuracy calculations"> Figure 9 above shows the difference between the actual and expected frequencies, because of the rounding that happens when we set out values to arr.</p>
+<section id="project-description-and-overview" class="level2">
+<h2 class="anchored" data-anchor-id="project-description-and-overview">Project Description and Overview</h2>
+<p>The goal is to create a functional, visually engaging slot machine simulation that: - Accepts a penny slot and “spin” button input. - Displays animated reels on a VGA output. - Sequentially stops each reel to show a final symbol combination determined randomly by the MCU. - Calculates and displays winnings and total credits based on the result.</p>
+<p>The FPGA will handle video display including sending information to the VGA and time-sensitive animations, while the MCU will manage the actual game logic/state, input handling, and random number generation.</p>
+<p>The system will include: - Three spinning reels rendered on a VGA monitor. - A coin slot, push buttons, and a switch for user interaction: - Spin Button — initiates reel animation. - Denomination Switch - indicated how much to bet per spin - Coin Slot — triggers an interrupt and increments credits using an LED to photo diode monitor - 5 seven segment displays, 2 for credits won on the previous spin, and 3 for total credits accrued</p>
+<p>The design will interface the MCU and FPGA via SPI communication, allowing the FPGA to render and display the visual state based on the game logic computed by the MCU.</p>
+<section id="block-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
+<p><img src="images/e155_proj_schematic.drawio.png" class="img-fluid" alt="Figure 1: Block Diagram of the project"> The block diagram in Figure 1 demonstrates the overall design and architecture of the design. We can see there are a variety of control modules to handle the VGA display as well as memory accesses (to display the sprites correctly). We also have ROM blocks, and other elements include a SPI module and 7-segment display for other feautures in our design.</p>
 </section>
 </section>
-<section id="results-and-discussion" class="level2">
-<h2 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h2>
-<p>I was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.</p>
-<p>If I was given more time, I would have tried to connect to two speakers using two other timer register busses, so I could play different tones at the same time and enhance the music output. Additionally, I would have tried to play a better, more complex sound had I been better at interpreting sheet music.</p>
-<p>The design performs as expected, and does play the songs I want it to, and it is is reliable. The only thing is that the potentiometer is really sensitive, making it more challening to control the audio volume.</p>
+<section id="fpga-design" class="level2">
+<h2 class="anchored" data-anchor-id="fpga-design">FPGA Design</h2>
+<p>The FPGA handles visual, and time-sensitive operations such as VGA output and reel animation.</p>
+<p>Core FPGA Modules: VGA Controller Generates horizontal and vertical sync signals (hcount, vcount). Drives RGB output based on current reel state. Continuously renders symbols based on current positions. Memory Controller Gets reel ending symbol index from MCU and adds a 1 pixel offset based on counters Takes in (x, y) coordinates from VGA controller to calculate what reel its on, and translate this to RGB color Big pixel line, number of times to display that line (fixed number = X, how big a pixel is) Once it displays big pixel line X number of times, and repeats this N = 10 times → one sprite is done Then, increment sprite counter and restart process Sequentially stops reels in timed order (each following reel does one full rotation before it stops to give it a more randomized looking effect) For each reel store a count N (reel 1 → 5, reel 2 → 6, reel 3 → 7), once the ending symbol index of each reel is fully rendered/displayed N times, stop spinning that reel Reels stop at the precomputed random position sent over by the MCU Once all reels stop, accept WIN message from MCU and update winnings FPGA knows when it’s stopped spinning, so it continues to send the same pixels to VGA to hold state Symbol ROM Storage Stores a contiguous block of equal sized frames for our symbols Memory for each reel in terms of what order the symbols should appear in (use this to index into mem) FPGA is counting through these for the three reels SPI Interface Module Receives 16 bits commands from MCU, returns an acknowledge signal (ACK) in the LSB 12 bits of data, 4 bits for request encoding (REQ) REQ == SPIN: 12 bits contain final 4 bit indices of the 3 reels REQ == WIN: 12 bits contain the number of points won on that spin MAYBE: display a win/lose message on the display REQ == UPDATE: 12 bits contain the total number of points LED Display Controller Display credits won and total credits on 7 segment displays (NOTE: thinking about getting this on VGA)</p>
 </section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>The overall design works as expected, and we are able to play Fur Elise and another song of our choice on the speakers, by using the MCU clock to generate a PWM frequency for the tone, as well as for a delay timer. In other words, our PLL clock goes to two timer busses to generate a PWM signal for our frequency and create a timer for our audio. Overall, I spent 20 hours on this lab.</p>
+<section id="mcu-design" class="level2">
+<h2 class="anchored" data-anchor-id="mcu-design">MCU Design</h2>
+<p>The MCU handles high-level game logic and asynchronous events.</p>
+<p>Core MCU Functions:</p>
+<p>Coin Detection (Interrupt-Driven): External interrupt triggered by photodiode/coin slot. Increments credit count Denomination dial determines number of credits to “bet” Only starts game when denomination is less that or equal to number of credits Button Handling: Spin button Interrupt triggers START_SPIN sequence and message to FPGA Game Logic: Tracks credits, bets, and game state (IDLE, SPINNING, RESULT). Generates the true random final indices of the displayed icons from within three lists representing the three spinning reels, using these to calculate the player’s winnings and total credits Sends a 16 bit SPI packet to the FPGA to indicate where the three reels should stop spinning, then another for how many credits the player won, and a final one for how many credits the player has Waits for an ACK between all three Audio Control (optional): PWM-based simple tone for win/lose feedback.</p>
 </section>
-<section id="ai-prototype-summary" class="level2">
-<h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/AI_prototype.png" class="img-fluid figure-img"></p>
-<figcaption>Figure 10: Second ChatGPT response after a prompt</figcaption>
-</figure>
-</div>
-<p>Figure 10 shows the result of the AI prototype, and it had a decent line of reasoning or chain of logic in order to determine what timer to use. However, ultimately it picked TIM2 which is different than the one I chose to use. I am not sure if TIM2 has a channel that it can be connected to on a pin on our breakout board. There might have been a limitation here on what breakout board we could use, which is something the AI system wouldn’t know possibly, because it may not know what pins we can directly address and write to. Overall, the quality of the output is decent, especially in terms of the chain of logic because it did consider many levels of planning, including talking about the prescalar, arr, clock enable, channel output, etc. All of which I am really impressed about, however there was not much information given as to why TIM2 was chosen over the other timers. The LLM did not generate any code for me, but it did talk about similar registers to what I modified, so it might be pretty close. Because the LLM did not give much reasoning about the timer, it was difficult to compare it to my approach. TIM16 gave a clear pinout to connect to for my PWM on my breakout board, which was one of the main reasons I chose it, however Chat said because it is 32-bits it avoids a “prescalar headache[s]”. It says TIM2 has the simplest, which I do not entirely agree with. However, the LLM does work well as a sounding board which I can tell from this exercise, because it does address imporant registers and bits that need to be changed in order to get the timer to work, which is impressive, because this is what I spent the longest doing.</p>
+<section id="task-breakdown" class="level2">
+<h2 class="anchored" data-anchor-id="task-breakdown">Task Breakdown</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Task</strong></th>
+<th style="text-align: center;"><strong>Estimated Turnaround</strong></th>
+<th style="text-align: left;"><strong>Owner</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Project Proposal (this document)</td>
+<td style="text-align: center;">1 week</td>
+<td style="text-align: left;">Shared</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">VGA Output from FPGA</td>
+<td style="text-align: center;">3 weeks</td>
+<td style="text-align: left;">Sadhvi</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Symbol Digital Art</td>
+<td style="text-align: center;">1 week</td>
+<td style="text-align: left;">Shared</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Seven Segment Display Output</td>
+<td style="text-align: center;">1 week</td>
+<td style="text-align: left;">Shared (essentially done)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FPGA SPI interface (peripheral)</td>
+<td style="text-align: center;">1 week</td>
+<td style="text-align: left;">Sadhvi</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Block level formal verification</td>
+<td style="text-align: center;">1 week</td>
+<td style="text-align: left;">Corey</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Full RTL functional verification</td>
+<td style="text-align: center;">1 week</td>
+<td style="text-align: left;">Corey</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Design Review Presentation</td>
+<td style="text-align: center;">1 week</td>
+<td style="text-align: left;">Shared</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">MCU button/coin slot interrupts</td>
+<td style="text-align: center;">1 week</td>
+<td style="text-align: left;">Corey</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MCU SPI output (controller)</td>
+<td style="text-align: center;">1 week</td>
+<td style="text-align: left;">Corey</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">MCU Main Game Logic</td>
+<td style="text-align: center;">1 week</td>
+<td style="text-align: left;">Corey</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Physical Assembly</td>
+<td style="text-align: center;">1 week</td>
+<td style="text-align: left;">Corey</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Final Report</td>
+<td style="text-align: center;">1 week</td>
+<td style="text-align: left;">Shared</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="project-schedule" class="level2">
+<h2 class="anchored" data-anchor-id="project-schedule">Project Schedule</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 36%">
+<col style="width: 36%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>Project Week</strong></th>
+<th style="text-align: center;"><strong>End Date</strong></th>
+<th style="text-align: left;"><strong>Expected Deliverables</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Thurs Oct 16</td>
+<td style="text-align: left;">Project Proposal (this document)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">Thurs Oct 23</td>
+<td style="text-align: left;">Orders placed for long turnaround parts</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">Thurs Oct 30</td>
+<td style="text-align: left;">RTL block specifications, Game icon artwork</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">Thurs Nov 6</td>
+<td style="text-align: left;">Design Review Presentation, VGA driver testbench/SVA, seven segment driver testbench/SVA, Seven segment driver RTL, SPI interface testbench/SVA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">Thurs Nov 13</td>
+<td style="text-align: left;">System level testbench, VGA output on FPGA (hard coded example spin), SPI interface RTL, Button and coin slot interrupts on MCU, All circuits breadboarded</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">Thurs Nov 20</td>
+<td style="text-align: left;">Midpoint demo report, SPI output on MCU (dummy transactions for hardware FPGA testing), VGA output from SPI transaction, Seven segment output from SPI transactions, Game logic C code</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">Tues Nov 25</td>
+<td style="text-align: left;">Physical Assembly, Whole system hardware validation</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">Thurs Dec 4</td>
+<td style="text-align: left;">Projects Demo Day, Final report</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="specifications" class="level2">
+<h2 class="anchored" data-anchor-id="specifications">Specifications</h2>
+<section id="proficiency" class="level3">
+<h3 class="anchored" data-anchor-id="proficiency">Proficiency</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Starts spinning three reels on a button input</label></li>
+<li><label><input type="checkbox">Calculates points and displays credit total</label></li>
+<li><label><input type="checkbox">Sequentially stops each reel on a centered shape</label></li>
+<li><label><input type="checkbox">Displays result on VGA (B/W)</label></li>
+</ul>
+</section>
+<section id="excellence" class="level3">
+<h3 class="anchored" data-anchor-id="excellence">Excellence</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Penny input with adjustable bet levels</label></li>
+<li><label><input type="checkbox">Only start game if enough credits</label></li>
+<li><label><input type="checkbox">Cryptographically seeded RNG (using hardware RNG)</label></li>
+<li><label><input type="checkbox">Color VGA output</label></li>
+<li><label><input type="checkbox">Display credit total and winnings on screen or seven-segment display</label></li>
+<li><label><input type="checkbox">Victory/Loss music</label></li>
+</ul>
+</section>
+</section>
+<section id="bill-of-materials" class="level2">
+<h2 class="anchored" data-anchor-id="bill-of-materials">Bill of Materials</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>Quantity</strong></th>
+<th style="text-align: left;"><strong>Item</strong></th>
+<th style="text-align: center;"><strong>Price (incl.&nbsp;Tax &amp; Shipping)</strong></th>
+<th style="text-align: center;"><strong>Purchase Link</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">7 inch VGA Monitor</td>
+<td style="text-align: center;">$45.68</td>
+<td style="text-align: center;"><a href="amazon.com/Aurevita-HDMI-LCD-Multi-Function-Raspberry/dp/B0DYV5YRW2/ref=sr_1_4?crid=3L62JC6OCNHNJ&amp;dib=eyJ2IjoiMSJ9.PfvjWKgqBLp0KotuCD6G73wqAlNTlXwA5jucw81A6BZTMl75g80HYobGStZq6aSHC5BiebfoLs6wawTL6hOpAlZWGHgLGSyZsVeWnnGounDSm44MouLQY4FloVqISoY_5gIIF_4tknwyUPfrme88JjKIe3fJsTBQLmWQ9aLLO4B6-igyuU5RRu6zHMrQpnn41GqZIzbbhfMVMh6vBDyMtI55_7-iQal233iokNTe5f8.WWgulaldR5x1Sayg1hJ-5plDATBGf2rI1H1qevI4GFM&amp;dib_tag=se&amp;keywords=vga+monitor&amp;qid=1760585872&amp;sprefix=vga+monito%2Caps%2C187&amp;sr=8-4">Link to Monitor</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Phototransistor</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">IR LED</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Clicky Pushbutton</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">4 Way (Rotary) Selector Switch</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">Seven Segment Display</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">PNP Transistors</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">1 kΩ Resistors (for PNPs)</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7</td>
+<td style="text-align: left;">680 Ω Resistors (current limiting)</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">8 Ω Speaker</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">LM386 Audio Amplifier</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">250 µF Capacitor</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">10 µF Capacitor</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">0.05 µF Capacitors</td>
+<td style="text-align: center;">Stockroom</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="riskiest-part-of-the-design" class="level2">
+<h2 class="anchored" data-anchor-id="riskiest-part-of-the-design">Riskiest part of the design</h2>
+<p>VGA timing precision + display: Sending the correct pixels, at the correct rate, in the expected format, with the expected timing to the VGA from the FPGA</p>
+</section>
+<section id="design-specific-calculations" class="level2">
+<h2 class="anchored" data-anchor-id="design-specific-calculations">Design Specific Calculations</h2>
+<section id="predicted-number-of-luts-in-the-design" class="level3">
+<h3 class="anchored" data-anchor-id="predicted-number-of-luts-in-the-design">Predicted Number of LUTs in the design</h3>
+<ul>
+<li>( 20 flops (internal counters) + 24 flops (credit display) + 5 flops (seven-segment control output) + 64 flops (internal counter flops) + 16 flops (SPI) ) * 3 = 387 LUTs</li>
+</ul>
+</section>
+<section id="pixel-update-clock" class="level3">
+<h3 class="anchored" data-anchor-id="pixel-update-clock">Pixel Update Clock</h3>
+<ul>
+<li>Pixel clock = horizontal total * vertical total * frame rate = 640 * 480 * 20Hz (slower frame rate to allow for memory accesses) = 6,144,000 Hz = 6.1 MHz</li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
