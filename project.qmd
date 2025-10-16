@@ -1,0 +1,6 @@
+---
+title: "E155 Project"
+---
+
+## Project
+[Lab Report](project/project_proposal/project_proposal.qmd)
