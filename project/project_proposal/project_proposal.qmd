@@ -131,22 +131,15 @@ Core MCU Functions:
 
 
 ## Specifications
-### Proficiency
 
 - [ ] Starts spinning three reels on a button input
 - [ ] Calculates points and displays credit total
 - [ ] Sequentially stops each reel on a centered shape
-- [ ] Displays result on VGA (B/W)
-
-### Excellence
-
+- [ ] Displays result on VGA in color
 - [ ] Penny input with adjustable bet levels
 - [ ] Only start game if enough credits
 - [ ] Cryptographically seeded RNG (using hardware RNG)
-- [ ] Color VGA output
 - [ ] Display credit total and winnings on screen or seven-segment display
-- [ ] Victory/Loss music
-
 
 
 ## Bill of Materials
