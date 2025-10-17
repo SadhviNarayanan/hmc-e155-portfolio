@@ -382,7 +382,7 @@
     "href": "project/project_proposal/project_proposal.html#specifications",
     "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
     "section": "Specifications",
-    "text": "Specifications\n\nProficiency\n\nStarts spinning three reels on a button input\nCalculates points and displays credit total\nSequentially stops each reel on a centered shape\nDisplays result on VGA (B/W)\n\n\n\nExcellence\n\nPenny input with adjustable bet levels\nOnly start game if enough credits\nCryptographically seeded RNG (using hardware RNG)\nColor VGA output\nDisplay credit total and winnings on screen or seven-segment display\nVictory/Loss music"
+    "text": "Specifications\n\nStarts spinning three reels on a button input\nCalculates points and displays credit total\nSequentially stops each reel on a centered shape\nDisplays result on VGA in color\nPenny input with adjustable bet levels\nOnly start game if enough credits\nCryptographically seeded RNG (using hardware RNG)\nDisplay credit total and winnings on screen or seven-segment display"
   },
   {
     "objectID": "project/project_proposal/project_proposal.html#bill-of-materials",
