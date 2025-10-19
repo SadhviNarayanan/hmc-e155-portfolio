@@ -15,7 +15,7 @@ The source code for the project can be found in the associated [Github repositor
 
 
 ### Schematic
-![Figure 1: Schematic of the physical circuit](images/schematic_lab6.jpeg)
+![Figure 1: Schematic of the physical circuit](images/schematic_lab6_new.jpeg)
 The image above shows the schematic of our system, with the SPI transaction lines connected between the MCU and DS1722, and UART communication linked through RX and TX. 
 
 
