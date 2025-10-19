@@ -40,9 +40,15 @@ One shortcoming is that the website updates the current selection on the followi
 I spent 15 hours working on this lab.
 
 ## AI Prototype Summary
-![Figure 5: Second ChatGPT response after a prompt](images/chat_ai.png)
+![Figure 5: AI Prototype image of the new website](images/temp_ai.jpg)
 
-Figure 4 shows the result of the AI prototype, and it is somewhat similar to my code but also very different at the same time. First off, in the code, it uses the masks defined in the header files for the stm32l432xx.h, whereas I directly accessed the bits using bit shifting, and did not use a predefined mask. Additionally, the logic does not consider setting up encoder B's pin signal on the SYSCFG->EXTICR register which is interesting. I guess, it is not using the highest resolution in the design which is why it is only operating on the rising and falling edge of one of the signals. Furthermore, it is not calculating the direction of the motor based on the values of the encoder pulses, and is also not calculating the angular velocity properly. I also think in the interrupt handler, it is it checking for both bits of the encoder pins at the same time, however in order to determine direction, you need to address the cases differently for the values of the pulses. Furthermore, I am not sure if it knows to use 5V tolerant pins, so this is not really a consideration it made.
-However, overall it did try to pick pins on the same interrupt line to make it easier to handle with just one interrupt request handler function.
+Figure 5 shows the result of prompting ChatGPT to give me a nice looking website in order to display my termperature resolution form, as well as the buttons for controlling the leds, and displaying the temperature. It looks quite nice actually, and it only took like 2 prompts in order to create this output. It works well, looks a lot better than what it was before, and the output makes sense.
+
+![Figure 6: AI Prototype image of the code](images/code1.png)
+
+![Figure 7: AI Prototype image of the code part 2](images/code2.png)
+
+Figure 6 and 7 above shows the result of the prompt to ask AI for the function to interact with the DS1722 temperature sensor. Something I noticed in this, is it knew to dereference the SR1->DR register in order to write to it - something I would never have figured out, and would have spent hours debugging. Otherwise, the reading from the register didn't seem correct - as it wrote the write address to the SPI transaction, instead of the read address. It identified all the correct registers, however it used them in the wrong way. In order to read, it was also sending the write register which is not needed, it only needs to send the read register (0x02 or 0x01), and then the dummy bits after that. But otherwise, it had the right conceptual idea for all the calculations. I am not entirely sure if the final calculation to convert the temperature to celcius is correct, but otherwise everything else looks okay.
+
 
 
