@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>lab6 – E155 Portfolio</title>
+<title>Lab 6 Report – E155 Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -120,17 +120,85 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a></li>
+  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation:</a>
+  <ul class="collapse">
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  </ul></li>
+  <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab 6 Report</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
+</header>
 
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this lab, we used the SPI communication protocol to have our MCU interface with a DS1722 temperature sensor in order to measure temperature, along with sending a webpage over to our computers through UART. Essentially, we built a simple Iot Device, where we interface with the temperature sensor over SPI. And, the MCU interfaces with teh ESP8266 over UART. There is a simple HTML page that displays this information. The website allows the user to control an onboard LED, as well as change the resolution to which the temperature sensor is measuring in.</p>
+</section>
+<section id="design-and-testing-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h2>
+<p>In terms of the design, it was really imporant to understand how to SPI communication protocol works between the MCU and our temp sensor. Our temperature sensor has a very specific way of communicating with the controller, so we had to make sure our communication was compliant with this. First, I had to read the reference manual closely to understand how to setup SPI communication on our MCU, and make sure everything was configured in the way we wanted, i.e.&nbsp;baud rate, data size, FIFO size, fully duplex, etc. Then, I found compliant pins that I could use on the MCU for SPI - SCLK, CIPO/MISO, COPI/MOSI. And I decided to have a manually controlled CS pin, so I could use any pin for this. Once I had my pins and SPI setup, I had to write my SPI communication functions. This one was simple, because it was just pushing data on the line and returning what comes out. So for this, I had to wait until the transmit buffer was empty, then send the data, then wait for the receiving buffer to be empty, and then return whatever data the temperature sensor sends out. In terms of the temperature sensor, the datasheet mentioned that it requires CS to go high for any communication, and after CS goes high it expects an address, and then if it was a write address it expects the data next, and if it was a read address you can send dummy bits over to create enough clock pulses to get out the data. For reference, 0x80 is the write address to configure the temp sensor, and 0x00 is the read address for the config reg, 0x02 reads the MSB of the temp sensor, and 0x01 reads the LSB for the temp sensor. So first, when a request comes in from the user to change the resolution from the website, we set CS to 1, then send 0x80 to the SPI, and then the configuration with the resolution, nd then CS back to low. For reading the MSB for example, we would do - CS high, send(0x02), msb_value = send(dummy bits, ex 0x00), CS low. Once this protocol was setup, I just had to wire everything in hardware which entailed connecting the appropriate pins on my MCU (SCLK, CIPO/MISO, CPOI/MOSI), to the appropriate pins on the DSI722 (SDO, SDI, SCLK, CS, etc). In order to test, I first tried writing to the configuration register with setting a resolution, and then reading from it to make sure I was ablw to read and write correctly to the temp sensor. Once this was working, I knew that from my while loop writing to the temp sensor to configure the the resolution would work. But, to debug issues I had here, I put all my signals on an oscilloscope to see that CIPO/MISO was changing as data was being passed through , and same for COPI/MOSI. I then used the logic analyzer mode to easily map out all my signals to see my transactions. Once I saw the bits I was sending happening on COPI/MOSI, and then on the next output of data of CIPO/MISO reflecting that, I knew it was correct. I also tested it from my HTML by changing the configrations, and printing out what it was saving, as wella s the config register, to make sure I was updating with button presses.</p>
+</section>
+<section id="technical-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation:</h2>
+<p>The source code for the project can be found in the associated <a href="https://github.com/SadhviNarayanan/e155-lab6">Github repository</a></p>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+<p><img src="images/schematic_lab6.jpeg" class="img-fluid" alt="Figure 1: Schematic of the physical circuit"> The image above shows the schematic of our system, with the SPI transaction lines connected between the MCU and DS1722, and UART communication linked through RX and TX.</p>
+</section>
+</section>
+<section id="results-and-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h2>
+<p>I was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.</p>
+<p>The design performs as expected, as it updates the temperature when I change the temperature applied on the sensor. It also updates the temperature with the correct resolution when I change it from the website, and also controls the LED as well from the website.</p>
+<p><img src="images/SPI_write_8bit.png" class="img-fluid" alt="Figure 2: Logic Analyzer Scope Trace for SPI write transaction - 8-bit resolution"> Figure 2 above shows the logic analyzer trace for a write transaction to the configuration register at address 0x80. The configuration was set for 8-bits, hence 0xE0 was send as the write data.</p>
+<p><img src="images/SPI_write_12bit.png" class="img-fluid" alt="Figure 3: Logic Analyzer Scope Trace for SPI write transaction - 12-bit resolution"> Figure 3 above shows the logic analyzer trace for a write transaction to the configuration register at address 0x80. Here, the configuration was set for 12-bits, hence 0xE8 was send as the write data.</p>
+<p><img src="images/SPI_read.png" class="img-fluid" alt="Figure 4: Logic Analyzer Scope Trace for SPI read transaction"> Figure 4 above shows the logic analyzer trace for a read transaction. First, we can see the confguration register is being read at address 0x00, and we see on the next data output of MISO, we see 0xE0 hence this is an 8-bit configuration. We then see the read for address 0x02, the MSB for temperature, which then gives us 0x18, and then a read at 0x01, the LSB of the temperature sensor which gives us 0x00 as expected, since it is an 8-bit resolution so only the top 8-bits have data, and the bottom 8-bits are 0 (16 bits total for the SPI-&gt;DR (data register)).</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The design works as expected, and works as a simple IoT device. Through an HTML page, the user is able to control an onboard LED, as well as control how temperature is calculated from the temperature sensor, by changing the resolution. When these values are updated/selected, it displays on the website as well for the users to see. The temperature sensor communication with the MCU happens through SPI, and sending the website over to to the ESP8266 chip, and capturing the form requests and sending it to the MCU happens through USART. One shortcoming is that the website updates the current selection on the following/next interaction with the websote, creating a one-page refresh lab. I would have to look into maybe havign an update button which refreshes the page, or wen somethign is pressed, refersh the page twice automatically in order to display the information to the user. I spent 15 hours working on this lab.</p>
+</section>
+<section id="ai-prototype-summary" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/chat_ai.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 5: Second ChatGPT response after a prompt</figcaption>
+</figure>
+</div>
+<p>Figure 4 shows the result of the AI prototype, and it is somewhat similar to my code but also very different at the same time. First off, in the code, it uses the masks defined in the header files for the stm32l432xx.h, whereas I directly accessed the bits using bit shifting, and did not use a predefined mask. Additionally, the logic does not consider setting up encoder B’s pin signal on the SYSCFG-&gt;EXTICR register which is interesting. I guess, it is not using the highest resolution in the design which is why it is only operating on the rising and falling edge of one of the signals. Furthermore, it is not calculating the direction of the motor based on the values of the encoder pulses, and is also not calculating the angular velocity properly. I also think in the interrupt handler, it is it checking for both bits of the encoder pins at the same time, however in order to determine direction, you need to address the cases differently for the values of the pulses. Furthermore, I am not sure if it knows to use 5V tolerant pins, so this is not really a consideration it made. However, overall it did try to pick pins on the same interrupt line to make it easier to handle with just one interrupt request handler function.</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
