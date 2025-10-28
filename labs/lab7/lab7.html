@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>lab7 – E155 Portfolio</title>
+<title>Lab 7 Report – E155 Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -120,17 +120,227 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a></li>
+  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation:</a>
+  <ul class="collapse">
+  <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
+  </ul></li>
+  <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab 7 Report</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
+</header>
 
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this lab, we built the AES encryption system on the FPGA and had to be thoughtful about building the architecture so that it fits on the FPGA. We also interfaced the FPGA with the MCU, where the MCU sends the key and plaintext to the FPGA, and the FPGA using the AES algorithm hardware built will sent the cypertext back to the MCU which will then turn on an LED if that is intended. This gives us experience with hardware accelerators as the AES algorithm runs faster in hardware than it does with software.</p>
+</section>
+<section id="design-and-testing-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h2>
+<p>In terms of the design for this project I first had to think carefully about how I wanted to implement it in hardware so it would fit on the FPGA because we have a limited number of LUTs. I then had to come up with tradeoffs in terms of memory versus time. For example, my design takes 16 extra clock cycles, however it uses fewer number of LUTs - around 1500/5200 available ones. Furthermore, I had to really think about the timing of my signals, and on what round and what cycle certain pieces of information had to be ready. This meant I had to be intentional about what signals I was putting in my flop, and how many modules I was instantiating. It was a really fun and interesting lab, and I really enjoyed designing the FSM. In terms of testing the design, we had some testbenches provided to us, and I also wrote a testbench for each module, and simulated it with different keys and plaintexts to make sure I was get the correct output. I also traced through my output at each stage to further verify this. We also looked at the logic analyzer to make sure the correct data was propagating.</p>
+</section>
+<section id="technical-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation:</h2>
+<p>The source code for the project can be found in the associated <a href="https://github.com/SadhviNarayanan/e155-lab7">Github repository</a></p>
+<section id="block-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
+<p><img src="images/block_diagram_lab7.jpeg" class="img-fluid" alt="Figure 1: Block Diagram of the system"> The image above shows the block diagram of how each of my modules connect to each other, and how the signals propagate.</p>
+</section>
+</section>
+<section id="results-and-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h2>
+<p>I was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.</p>
+<p>The design performs as expected, as it correctly sends the data through SPI, and the FPGA correct sends back the ciphertext. I can tell this because in the MCU code, an LED will light up once the transaction is completed and the ciphertext the FPGA sends matches the expected ciphertext. The design is reliable, accurate, and it is also quite efficient on the hardware.</p>
+<p>Below are the test benches for the AES core and AES core with SPI.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/aes_core_tb.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 2: Testbench for AES core</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/aes_spi_tb.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 3: Testbench for AES SPI + core</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/add_round_key_tb.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 4: Testbench for AES add round kkey</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/aes_sbox_tb.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 5: Testbench for AES sbox</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/aes_galoismult_tb.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 6: Testbench for AES galoismult</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/aes_shiftrows_tb.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 7: Testbench for AES shiftrows</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/aes_mixcolumns_tb.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 8: Testbench for mixcolumns</figcaption>
+</figure>
+</div>
+<p>Now, we have the result of the Logic Analyzer, displaying the SPI transactions. The first data that is transmitted on SPI through MOSI, is the plaintext and key, and the FPGA should output the ciphtertext (ct) which is the following:</p>
+<p>char key[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};</p>
+<p>char plaintext[16] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};</p>
+<p>char ct[16] = {0x69, 0xC4, 0xE0, 0xD8, 0x6A, 0x7B, 0x04, 0x30, 0xD8, 0xCD, 0xB7, 0x80, 0x70, 0xB4, 0xC5, 0x5A};</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/spi1.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 9: LA output for SPI key on MOSI/COPI</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/spi2.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 10: LA output for SPI key on MOSI/COPI</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/spi3.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 11: LA output for SPI key on MOSI/COPI</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/spi4.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 12: LA output for SPI key on MOSI/COPI</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/spi5.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 13: LA output for SPI key on MOSI/COPI</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/spi6.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 14: LA output for SPI key on MOSI/COPI</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/spi7.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 15: LA output for SPI key on MOSI/COPI</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/spi8.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 16: LA output for SPI key on MOSI/COPI</figcaption>
+</figure>
+</div>
+<p>Below are the images from the return transaction, on MISO/CIPO where the FPGA is responding with the ciphertext:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/IMG1.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 17: LA output for ciphertext on MISO/CIPO</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/IMG2.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 18: LA output for ciphertext on MISO/CIPO</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/IMG3.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 19: LA output for ciphertext on MISO/CIPO</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/IMG4.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 20: LA output for ciphertext on MISO/CIPO</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/IMG5.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 21: LA output for ciphertext on MISO/CIPO</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/IMG6.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 22: LA output for ciphertext on MISO/CIPO</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/IMG7.jpg" class="img-fluid figure-img"></p>
+<figcaption>Figure 123: LA output for ciphertext on MISO/CIPO</figcaption>
+</figure>
+</div>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The design works as expected, and works as an AES encoder, where it takes a key and plaintext from the MCU, and then sends it to the FPGA, where the FPGA performs 10 rounds of AES encryption, and then sends the result back to the MCU, along with a done signal, letting the MCU know the transaction is complete. This was a really fun lab, and I thought it was really cool :). I spent 15 hours working on this lab.</p>
+</section>
+<section id="ai-prototype-summary" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ai_ptype_1.png" class="img-fluid figure-img"></p>
+<figcaption>Figure : AI Prototype image of the new website</figcaption>
+</figure>
+</div>
+<p>Figure __ shows the result of the AI engine writing verilog to create the KeyExpansion module. Overall, the code works pretty well, and it even breaks it up by round instead of doing it all at once and then using that result. Additionally, it defines more helper modules to take care of tasks like shifting, which is good since these features are used often in other modules too. Overall, it looks pretty correct and it compiled. Additionally, it new all the round constants, and I was really surprised about this.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ai_ptype_2.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 6: AI Prototype image of the code</figcaption>
+</figure>
+</div>
+<p>Figure __ above shows the result of the second prompt. The output of this prompt was very different than the style used earlier, as it did not rely on the AES knowlegde, and instead implemented the math for the new algorithm. It is definitely a lot more inefficient because of the multuple for loops, and within each loop, a module is instantiated - which means it will blow up the hardware to a decent extent. The LLM having knowledge of AES, definitely simplifies the entire process.</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
