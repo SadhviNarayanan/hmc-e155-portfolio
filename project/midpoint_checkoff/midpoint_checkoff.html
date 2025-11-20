@@ -130,6 +130,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a>
   <ul class="collapse">
   <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
   </ul></li>
   <li><a href="#mcu-design-this-is-yet-to-be-implemented-ported-over-from-proposal" id="toc-mcu-design-this-is-yet-to-be-implemented-ported-over-from-proposal" class="nav-link" data-scroll-target="#mcu-design-this-is-yet-to-be-implemented-ported-over-from-proposal">MCU Design –&gt; This is yet to be implemented (ported over from proposal)</a></li>
   <li><a href="#riskiest-part-of-the-design-done" id="toc-riskiest-part-of-the-design-done" class="nav-link" data-scroll-target="#riskiest-part-of-the-design-done">Riskiest part of the design –&gt; Done</a></li>
@@ -173,11 +174,21 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/e155_proj_schematic.drawio.png" class="img-fluid figure-img"></p>
+<p><img src="images/block_diagram.png" class="img-fluid figure-img"></p>
 <figcaption>Figure 1: Block Diagram of the project</figcaption>
 </figure>
 </div>
 <p>The block diagram in Figure 1 demonstrates the overall design and architecture of the design. We can see there are a variety of control modules to handle the VGA display as well as memory accesses (to display the sprites correctly). We also have ROM blocks, and other elements include a SPI module and 7-segment display for other feautures in our design.</p>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/Schematic.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 2: Schematic of the design</figcaption>
+</figure>
+</div>
+<p>The schematic in Figure 2 demonstrates the overall design of how we are connecting the FPGA to the VGA monitor. Because we are only using 3-bit resolution for the pixels, we are scaling the voltage outputs to 0.7 if we want to display a color.</p>
 </section>
 </section>
 <section id="mcu-design-this-is-yet-to-be-implemented-ported-over-from-proposal" class="level2">
