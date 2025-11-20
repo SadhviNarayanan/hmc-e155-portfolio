@@ -13,9 +13,14 @@ In terms of the design for this project so far we thought about how we wanted to
 In terms of testing, we had a a test bench that we used in simulation to verify that we were calculating our addresses correctly, and then we were pulling out the correct colors. However, although our testbench shows us that we are doing the right things, the hardware doesn't seem ot agree due to timing issues that the simulation is not able to catch or show us. We are realy just debugging in hardware, and for the vga we using the o-scope in order to map our signals and make sure we gor the frequency we wanted.
 
 ### Block Diagram
-![Figure 1: Block Diagram of the project](images/e155_proj_schematic.drawio.png)
+![Figure 1: Block Diagram of the project](images/block_diagram.png)
 
 The block diagram in Figure 1 demonstrates the overall design and architecture of the design. We can see there are a variety of control modules to handle the VGA display as well as memory accesses (to display the sprites correctly). We also have ROM blocks, and other elements include a SPI module and 7-segment display for other feautures in our design.
+
+### Schematic
+![Figure 2: Schematic of the design](images/Schematic.png)
+
+The schematic in Figure 2 demonstrates the overall design of how we are connecting the FPGA to the VGA monitor. Because we are only using 3-bit resolution for the pixels, we are scaling the voltage outputs to 0.7 if we want to display a color.
 
 
 ## MCU Design --> This is yet to be implemented (ported over from proposal)
