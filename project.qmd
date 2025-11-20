@@ -2,5 +2,8 @@
 title: "E155 Project"
 ---
 
-## Project
+## Project Proposal
 [Lab Report](project/project_proposal/project_proposal.qmd)
+
+## Midpoint-checkoff
+[Lab Report](project/midpoint_checkoff/midpoint_checkoff.qmd)
