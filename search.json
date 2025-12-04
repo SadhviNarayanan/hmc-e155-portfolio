@@ -28,6 +28,447 @@
     "text": "Midpoint-checkoff\nLab Report"
   },
   {
+    "objectID": "project.html#final-checkoff",
+    "href": "project.html#final-checkoff",
+    "title": "E155 Project",
+    "section": "Final-checkoff",
+    "text": "Final-checkoff\nLab Report"
+  },
+  {
+    "objectID": "project/final_checkoff/final_checkoff.html",
+    "href": "project/final_checkoff/final_checkoff.html",
+    "title": "E155 Final Checkoff: FPGA + MCU Slot Machine",
+    "section": "",
+    "text": "The goal is to create a functional, visually engaging slot machine simulation that:\n\nAccepts a penny slot and “spin” button input.\nDisplays animated reels on a VGA output.\nSequentially stops each reel to show a final symbol combination determined randomly by the MCU.\nCalculates and displays winnings and total credits based on the result.\n\nThe FPGA will handle video display including sending information to the VGA and time-sensitive animations, while the MCU will manage the actual game logic/state, input handling, and random number generation.\nThe system will include: - Three spinning reels rendered on a VGA monitor.\n\nA coin slot, push buttons, and a switch for user interaction:\nSpin Button — initiates reel animation.\nDenomination Switch - indicated how much to bet per spin\nCoin Slot — triggers an interrupt and increments credits using an LED to photo diode monitor\n5 seven segment displays, 2 for credits won on the previous spin, and 3 for total credits accrued\n\nThe design will interface the MCU and FPGA via SPI communication, allowing the FPGA to render and display the visual state based on the game logic computed by the MCU."
+  },
+  {
+    "objectID": "project/final_checkoff/final_checkoff.html#project-description-and-overview-same-as-before",
+    "href": "project/final_checkoff/final_checkoff.html#project-description-and-overview-same-as-before",
+    "title": "E155 Final Checkoff: FPGA + MCU Slot Machine",
+    "section": "",
+    "text": "The goal is to create a functional, visually engaging slot machine simulation that:\n\nAccepts a penny slot and “spin” button input.\nDisplays animated reels on a VGA output.\nSequentially stops each reel to show a final symbol combination determined randomly by the MCU.\nCalculates and displays winnings and total credits based on the result.\n\nThe FPGA will handle video display including sending information to the VGA and time-sensitive animations, while the MCU will manage the actual game logic/state, input handling, and random number generation.\nThe system will include: - Three spinning reels rendered on a VGA monitor.\n\nA coin slot, push buttons, and a switch for user interaction:\nSpin Button — initiates reel animation.\nDenomination Switch - indicated how much to bet per spin\nCoin Slot — triggers an interrupt and increments credits using an LED to photo diode monitor\n5 seven segment displays, 2 for credits won on the previous spin, and 3 for total credits accrued\n\nThe design will interface the MCU and FPGA via SPI communication, allowing the FPGA to render and display the visual state based on the game logic computed by the MCU."
+  },
+  {
+    "objectID": "project/final_checkoff/final_checkoff.html#project-specifications",
+    "href": "project/final_checkoff/final_checkoff.html#project-specifications",
+    "title": "E155 Final Checkoff: FPGA + MCU Slot Machine",
+    "section": "Project Specifications",
+    "text": "Project Specifications\nAll the specs we defined have been met in our project.\n\nStarts spinning three reels on a button input\n\n\nYes, this spec is met in our project. When the user presses the SPIN button, if there are enough credits, the MCU will capture the input button press, and send a SPI request to the FPGA. The FPGA will then process this request, extract the spin code and the ending sprites for each reel, and then start the process to spin each of the reels. It will spin all the reels, then start to slow down reel1, stop reel1, then slow down reel2, stop reel2, and finally slow down reel3, and stop reel3.\n\n\nCalculates points and displays credit total\n\n\nYes, this spec is met in our project. On the MCU side, it uses the TRNG to determine where each reel will end, it keeps track of the current credits, and the credit payout based on the spin, and then sends an UPDATE SPI request to the FPGA to udpate the credits appropriately. If the ending sprites corresponds to a WIN, then the MCU will send the FPGA a WIN request, and the FPGA will take the numbers to display, and put them on a seven segment display.\n\n\nSequentially stops each reel on a centered shape\n\n\nYes, this spec is met in our project. In the FPGA side, based on the sprite to end on, it will calculate the address of that sprite (will account for the unique sprite sequences across the 3 reels), and then use that offset to get to a centering offset, where the final sprite appears in the middle of the reels. Then, in our FSM it will spin all the reels, and as it starts to stop the reels one by one, it will check if the current offset is equal to the ending offset, and if so then it will fully stop the reel movement and lock the reel in place.\n\n\nDisplays result on VGA in color\n\n\nYes, this spec is met in our project. We have all our sprites in memory, where for each pixel we store 3 bits - each a bit for color (R, G, B). And when we calculate the address we extract 3 bits to get the RBG values we send to the VGA.\n\n\nPenny input with adjustable bet levels\n\n\nYes, this spec is met in our project. We built a coin detector, which uses photo-transistors to detect an IR drop when a coin passes through it. This then triggers an interrupt which updates the total credit amount calculation. Additionally, we have a rotary switch which allows users to configure their bet level (1x, 2x, 5x, 10x).\n\n\nOnly start game if enough credits\n\n\nYes, this spec is met in our project. Based on the number of credits the user has, when the SPIN button is pressed, if there are not enough credits the request will not be sent from the MCU to the FPGA. Only if the user has enough credits, it will send the SPI SPIN request when the user presses the spin button.\n\n\nCryptographically seeded RNG (using hardware RNG)\n\n\nYes, this spec is met in our project. We are using the TRNG on the MCU in order to determine where the reels should stop after a spin. We enable the peripheral, and we can see that on every spin the ending positions are random.\n\n\nDisplay credit total and winnings on screen or seven-segment display\n\n\nYes, this spec is met in our project. Whenever the MCU sends the updated credit or win amount to the FPGA, it will take the sent credit amount, store it in registers, and display them on the seven segment display. We display the total number of credits the user has, as well as the amount of credits they won on the most recent spin.\n\n\nBlock Diagram\n\n\n\nFigure 1: Block Diagram of the project\n\n\nThe block diagram in Figure 1 demonstrates the overall design and architecture of the design. We can see there are a variety of control modules to handle the VGA display as well as memory accesses (to display the sprites correctly). We also have ROM blocks, and other elements include a SPI module and 7-segment display for other feautures in our design."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "E155 Portfolio",
+    "section": "",
+    "text": "Sadhvi Narayanan is a junior at Harvey Mudd College. She is majoring in CS, but is also interested in Computer Engineering which is why she is taking MicroProcessors. In her free time she enjoys baking, watching tv shows, spending time outdoors, and convincing herself to go for runs (but she never actually executes them).\nEmail: sanarayanan@g.hmc.edu"
+  },
+  {
+    "objectID": "posts/initial_reflection/first-post.html",
+    "href": "posts/initial_reflection/first-post.html",
+    "title": "Intial Reflection",
+    "section": "",
+    "text": "Hello Everyone! This is my first blog post on my intial reflections and goals I have for this semester with MicroPs. I am excited to work with microprocessors to build various projects throughout the semester.\nSome of my goals for this semester include:\n\nBuild a good understanding of embedded systems: I want to get comfortable reading datasheets, working with GPIOs, and understanding how microcontrollers interact with external hardware. I also want to understand how different systems can be connected and can communicate with each other in a synchronus way.\nBuild confidence in programming microcontrollers: I want to get more experience in writing the code to interact with microcontrollers effectively, and be able to control various aspects of it through software. I also want to sharpen my debugging skills.\nImprove my design thought-process: I want to be thoughtful with the way I design and craft my project to make sure it is optimal and scalable.\nConnect learnings and labs to real-world applications: I want to use whatever we learn and build through this class to connect it to applications outside, and build better intuition for how some complex systems work.\nCollaborate with classmates: I know some projects can be challenging and require a team effort, so I want to get to know other classmates and collaborate with them throughout the course.\nBuild a cool final projcet: I hope to use all the skills we’ve picked up along the way, and other learning we’ve encountered to build a cool, novel, exciting final project that I am really proud of!\nMake sure I understand all the concepts: I want to make sure I understand everything that is being taught, and reach out in case something is unclear to me, or if I have any doubts."
+  },
+  {
+    "objectID": "labs/lab3/lab3.html",
+    "href": "labs/lab3/lab3.html",
+    "title": "Lab 3 Report",
+    "section": "",
+    "text": "In this lab, we used a time-multiplexed seven-segment display to interface with a matrix keypad, in order to display the last two hexadecimal digits pressed - with the most recent entry appearing on the right. Each press was only recorded once, and the effect of switch bouncing was mitigated in the design implementation. Furthermore, the display does not flicker and is the same brightness regardless of how many segments are displayed."
+  },
+  {
+    "objectID": "labs/lab3/lab3.html#introduction",
+    "href": "labs/lab3/lab3.html#introduction",
+    "title": "Lab 3 Report",
+    "section": "",
+    "text": "In this lab, we used a time-multiplexed seven-segment display to interface with a matrix keypad, in order to display the last two hexadecimal digits pressed - with the most recent entry appearing on the right. Each press was only recorded once, and the effect of switch bouncing was mitigated in the design implementation. Furthermore, the display does not flicker and is the same brightness regardless of how many segments are displayed."
+  },
+  {
+    "objectID": "labs/lab3/lab3.html#design-and-testing-methodology",
+    "href": "labs/lab3/lab3.html#design-and-testing-methodology",
+    "title": "Lab 3 Report",
+    "section": "Design and Testing Methodology",
+    "text": "Design and Testing Methodology\nThere were various steps in implementing this lab. The first thing that I needed to do was decide how I was going to handle switch-bouncing and decide how I would move in and out of various stages of properly registering a keypad press. In order to decide this, I came up with a design of an FSM that would control how I could transition between states based on a given input. Initially, I decided that I would begin in a SCAN state, where I apply power to the columns and then read the rows, to determine if a button is pressed. As soon as I determine a button is pressed (reading a 1 on the row outputs), I would move to the DEBOUNCE_WAIT state, where I implented my debounce logic. For me, I thought it would be the simplest to have a counter that acts as a delay/buffer for around 100ms, after which the switch connection should stabalize, and debouncing should no longer occur. After this counter is over, then I move onto the CAPTURE state, in which I shift the numbers on the display (the right number shifts to the left, and the new number appears on the right), and I wait in this state until the exact button was pressed is released. During the entire FSM, I have various control signals and enable signals that get asserted to determine what functionality I want to achieve (e.x. triggering a power applying FSM to read my keypad, enabling a counter, updating my display, etc.). Regardless, once the button is released from my CAPTURE state, I move to the DEBOUNCE_WAIT state again in order to mitigate any effects of switch debouncing on the release of a button, and then after the timer completes here, I again move back to SCAN to scan through my keypad until another button is pressed. In transitioning through these states, I had to be careful on what control signals I was asserting, because for example, if we are in the DEBOUNCE_WAIT state, we don’t want to accept any other new button presses on the display.\nFor this lab, partitioning is an extrememly important aspect of it in order to ensure ease of testing, debugging, and to isolate various features of my design. For this lab, I decided to have a main fsm to transition through the states listed above, a keypad scanner to apply voltage to my columns and try to read my rows - which gets passed through a synchronizer, a number capture module to correlate the rows and columns to a hex number which gets fed into my seve segment display module to turn on segments on my display, as well as clock dividers.\nIn order to test the design, I isolated each of my modules and tested them individually. For my combinational logic, it was straightforward because I generated all possible input signals and ensured the output from my module matched what I was expecting to read. For my other modules which are based on more asynchronus inputs, I had to turn on and off, and toggle my signals at variosu times to test that on a certain input, I move or do not move to a particular state. Or, if I am in a state that should not be changing based on an input, that it doesn’t do so when I apply an input. For example, for my state machine described above, I would first make sure that when I begin, I start off in the SCAN state, and when I read a row with a 1 in it, I move onto the next state. And then once I am in this state, I try changing the row, but it does not change states, because now it should be in the DEBOUNCE_WAIT state, where it waits for a timer to reach the value, and until then it essetially freezes the system. Then, after the timer is completed, I check that we move on to the CAPTURE state, where I check that the new number is on the right side of the segment, and the previous input is shifted to the left. In my top level module, I also do something similar, but using the clock signal that I pass to everything, and instead of manually having to set some of the inputs, the other modules can take care of a lot of that for me. There would be times in my testbench where I run my clock for multiple cycles, and either make sure the system is retained in it’s state, or that after a period of time it has transitioned to the next state.\nI made all my testbenches assert based so it was easy to check for various inputs given an input that I apply at a specific time.\nI made sure to calculate appropriate resistor values based on the maximum drivable current as well for all my pins.\n\n\n\nFigure 1: Image of the physical setup\n\n\nFigure 1 shows the physical implementation the breadboard with the time-multiplexed segment visible, along with the keypad wired up."
+  },
+  {
+    "objectID": "labs/lab3/lab3.html#technical-documentation",
+    "href": "labs/lab3/lab3.html#technical-documentation",
+    "title": "Lab 3 Report",
+    "section": "Technical Documentation:",
+    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nBlock Diagram\n The block diagram in Figure 2 demonstrates the overall design and architecture of the design. The top-level module incldes seven sub-modules - the HSOSC (high-speed oscillator block), two clock dividers (one for the time multiplexed segment, and one for the debounce timer), the keypad scanner to read button presses, the number capture to transform the pressed row and column to the keypad hex number, the main state machine, and the seven_segment module in order to convert hex digits to seven segments. We can see the internal logic of the muxes as well, in order to multiplex the values given to the seven-segment module, based on the generated clock signal.\n\n\nSchematic\n Figure 3 demonstrates the physical layout of the design. We have our keypad and a visual of how it is wired with pull down resistors on the input pins into the FPGA, so if we are not driving a signal through a button press we read a 0 (since my system is active high). We see that the inputs into my FPGA from the matrix keypad is wired to a pull down 680-ohm resistor. I didn’t do much of a calculation for this, since I just needed a resistor to pull down my system to ground so my signals wouldn’t float, without it being too large to act as a brick wall to the current. We can also see my reset push-button, PNP transistors which was calculated with a 3.3k-ohm resistor on the base, and my seven-segment display, where each segment had a current-limiting resistor of 200-ohms.\n\n\n\nFigure 4: Current Calculations\n\n\nIn Figure 4 we can see all the calculations performed to ensure we are not drawing more current that possible from the FPGA pins - 8mA, and not driving floating signals to the FPGA.\n\n\nFinite State Machines and Transition/Output Tables and Tradeoffs\n\n\n\nFigure 5: Main FSM State Transition Diagram\n\n\n\n\n\nFigure 6: Main FSM State Transition Table\n\n\n\n\n\nFigure 7: Main FSM State Output Table\n\n\n\n\n\nFigure 8: Keypad Scanner FSM Transition table and output table\n\n\nIn Figure 5, we can see the main FSM diagram going through SCAN, DEBOUNCE_WAIT, and CAPTURE. In Figure 6, we see the state transition diagram table. In Figure 7, we have the main FSM output table. In Figure 8, we have the Keypad scanner FSM transition table and output table. I didn’t include a diagram of the counter FSM since that is self-explanatory.\nTradeoffs: There may be some tradeoffs with my strategy and others, right from how I partioned my blocks versus how my debouncing strategy could have been implented. For debouncing, I have one counter that counts to a fixed amount, and after this it assumes that debouncing affects are mitigated, and proceeds to the next stage. However, if I have a partcicularly bad switch which debounces for longer, then my strategy might not account for that time interval, and could fail. Additionally, if I have the same design, but have a switch with almost no debouncing, then I could be waiting for longer than I need to be. One design tradeoff I kept here was consistency and simplicity of the design - I could have alternatively, had a counter which checks how many consecutive high’s I get, and if it passes a certain threshold, then I would move on. However, this implementation also has the limitation of setting the appropriate threshold. Additionally, I have one state which does all the scanning logic, whereas I could have 4 different states for scanning, each of which applies power to one row. My strategy is easy in the sense of I turn on an enable in my SCAN state and it hits all the cols to read the rows through another FSM. This design gives me another piece of hardware potentially, with an external counter - but it is really small and should not have much of an effect, compared to 4 state counters within my main FSM. However, in the CAPTURE state, when I need to check if a button is released, I essentially only need to apply power to the column in which I detected the press in, so have a single state to account for putting power to just that column would have been easy overall, rather than having a conditional, but overall I don’t see much of a design hit with this approach. I also like how I have enables which I set as output signals in my FSM, and it automatically triggers a clock counter/clock divider module to take care of it, and then when that module asserts a high, it continues. This makes the design separation really easy, and a lot easier to test, debug, and isloate."
+  },
+  {
+    "objectID": "labs/lab3/lab3.html#results-and-discussion",
+    "href": "labs/lab3/lab3.html#results-and-discussion",
+    "title": "Lab 3 Report",
+    "section": "Results and Discussion",
+    "text": "Results and Discussion\n\n\n\nFigure 9: A screenshot of a QuestaSim simulation demonstrating the clock toggling at the right frequency and asserting a done signal.\n\n\n\n\n\nFigure 10: A screenshot showing the keypad scanner module toggling through the columns and reading the stabillized value two clock cycles after\n\n\n\n\n\nFigure 11: A screenshot of a QuestaSim simulation for the number capture, which is combinational logic to convert the row and column pressed to a 4-bit hex number.\n\n\n\n\n\nFigure 12: A screenshot of a QuestaSim simulation for the FSM through SCAN, DEBOUNCE_WAIT, and CAPTURE.\n\n\n\n\n\nFigure 13: A screenshot of a QuestaSim simulation for the top level module.\n\n\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.\nFigure 9 shows a screenshot of the QuestaSim Simulation of the clock module, which we can see toggles at a frequency we set and asserts a high signal. Figure 10 shows our keypad scanner which toggles through the columns (applying power to them), and then reads the row_stable and col_stable two clock cycles after they were captured since they go through a 2-flop synchronizer. Figure 11 shows the testbench designed for the combinational logic to convert the rows and columns to a 4-digit hex number on the keypad. Figure 12 shows the testbench waveforms for the FSM which toggles through the states of my logic. And Figure 13 shows the testbench for the top level module, connecting all the compnents together.\nIf I was given more time, I would have tried to possibly come up with a new strategy for debouncing, or could have tried to be more precise with when I leave the debouncing stage instead of just using a fixed time. Additionally, there could have been more ways to partition the design."
+  },
+  {
+    "objectID": "labs/lab3/lab3.html#conclusion",
+    "href": "labs/lab3/lab3.html#conclusion",
+    "title": "Lab 3 Report",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe overall design, after all the testing, successfully time-multiplexes the seven-segment decoder with the last two keypad entries from the matrix keypad, and it accounts for switch debouncing on both the press and release of a button. Additionally, it does not lock up when multiple buttons are pressed, and only accepts new presses once the pressed key is released. Every segment is equally as bright, and meets the specifications listed. I spent a total of 30 hours working on this lab - I also spent a lot of time helping others."
+  },
+  {
+    "objectID": "labs/lab3/lab3.html#ai-prototype-summary",
+    "href": "labs/lab3/lab3.html#ai-prototype-summary",
+    "title": "Lab 3 Report",
+    "section": "AI Prototype Summary",
+    "text": "AI Prototype Summary\n\n\n\nFigure 14: Second ChatGPT response after a prompt\n\n\nFigure 14 shows the result of entering the prompt into ChatGPT - this seems to have synthesized, and has the same states as me, but some of the transition conditions are really interesting, and I definitely feel like logically there is some issue with it moving to the states at the wrong time, because it hasn’t thought through the exact logic for transitioning. Modularizing the prompts gave it more space to have it be more detailed in some of the logic implementation, and made it easier to understand, but overall in the initial prompt, it wasn’t that difficult to follow. However, the last prompt was easier to read, and it was more similar to a more traditional transition and fsm. Prototype A, did not modularize the design in the way I thought it would - but it had the main ways I broke mine up, however I had more modules. It didn’t make any illogical splits, but overall it was near and clear. ChatGPT used clog2 for a counter logic which was something I did not think about, and it created functions within the module which was something I don’t have exposure to.\nOverall, I would rate the quality of this code pretty good since it seems to be optimal in all the assignments, module interaction, and clock multiplexing that it does. The AI code synthesized all three times, I tried it, however the later versions were more clean. In terms of warning messages, I just got the expression size 32 bits truncated to fit in target size 16, but I have also been getting this warning message as well."
+  },
+  {
+    "objectID": "labs/lab5/lab5.html",
+    "href": "labs/lab5/lab5.html",
+    "title": "Lab 5 Report",
+    "section": "",
+    "text": "In this lab, we used interrupts on the microcontroller to determine the angular velocity and direction of a motor by reading from a quadrature encoder. The motor emits a square wave in the form of two encoder output signals A and B, which are connected to two pins on the MCU respectively. To achieve the highest resolution, on each edge of each encoder pulse, we trigger an interrupt, which goes to that pin/line’s respective interrupt handler where we can perform some calcululations. We also have a timer based interrupt, which allows us to perform time-sensitive calculations such as finding the motor’s speed, and we also use this timer interrupt for a 1Hz display update where we print the angular velocity and direction of the motor to the debug console."
+  },
+  {
+    "objectID": "labs/lab5/lab5.html#introduction",
+    "href": "labs/lab5/lab5.html#introduction",
+    "title": "Lab 5 Report",
+    "section": "",
+    "text": "In this lab, we used interrupts on the microcontroller to determine the angular velocity and direction of a motor by reading from a quadrature encoder. The motor emits a square wave in the form of two encoder output signals A and B, which are connected to two pins on the MCU respectively. To achieve the highest resolution, on each edge of each encoder pulse, we trigger an interrupt, which goes to that pin/line’s respective interrupt handler where we can perform some calcululations. We also have a timer based interrupt, which allows us to perform time-sensitive calculations such as finding the motor’s speed, and we also use this timer interrupt for a 1Hz display update where we print the angular velocity and direction of the motor to the debug console."
+  },
+  {
+    "objectID": "labs/lab5/lab5.html#design-and-testing-methodology",
+    "href": "labs/lab5/lab5.html#design-and-testing-methodology",
+    "title": "Lab 5 Report",
+    "section": "Design and Testing Methodology",
+    "text": "Design and Testing Methodology\nIn order to approach the design of the project, I first had to look through the reference/programming manual of the STMLK324KC microcontroller, as well as the interrupt lecture slides to understand the flow of logic that needs to be configured to enable interrupts. I used some of the provided header and C files, as well as the timer configuration files from my last lab, however I removed the structs as for this lab we could directly use the stm32l432xx.h header. However, I kept the .c functions the same as it had specially defined functions to configure our clocks and flash. In terms of design for the motor calcualtions, if we trap on any of A’s edges, and B is the opposite signal then we can determine a clockwise direction of motion. Similarly, if we trap on any of B’s edges, and A is the same signal, then we are going clockwise. Otherwise, we are moving in the counter clockwise. So, I connected the input pins (PA9 –&gt; A and PA10 –&gt; B) to interrupt lines (PA9 connects to line 9, PA10 connects to line 10), adn configured the interrupts to trap on both rising and falling edges of the square-wave encoder pulse. Then, on an interrupt, it goes to that line’s IRQ interrupt handler function, where I check for the interrupt on the exact line I care about (9 in EXTI9_5 handler, and 10 in EXTI15_10 handler), clear it by writing 1 to it, and perform my calculations. Here I check for the edges of A and B on the trap to get direction (I can tell which encoder signal I trapped on based on which interrupt handler I went to/which interrupt flag bit went to 1). Then, on these interrupts I also keep a running total of the number of pulses I have in the cw and ccw directions which then gets used in my tim16 interrupt handler function. For tim16, I have the tim 16 timer configured to 1 second, after which it raises the UIF flag and traps into its tim16 interrupt handler. Once I am here, I check how many pulses I had in the second, and divide that by the motors ppr (pulses per revolution), which is 408 from the datasheet to give me angular velocity (rev/sec). I then clear the counter to start fresh for the next 1 second interval. Additionally, once I hit the interrupt handler for the timer, I set a display flag to 1, which if true in the main function, it prints out the direction and angular velocity to the debug console.\nThe use of interrupts over polling techniques have different pros and cons. With interrupts, we can configure it so that as soon as an event is detected it will trap, pause all other execution, save the architectural state, and handle the interrupt before resuming normal program flow. This requires less hardware, and can almost instantaneously detect an event and handle it. Additionally, priorities can be set so that different interrupts can take precedents over others based on what may be more important. However, sometimes certain interrupts can pause all other execution, and if we want something to happen in parallel it could affect that. On the other hand, polling would require more hardware and continuous checking to determine if an event happened, and there could be a lag in when an event is detected to when it occurs, or it is possible that polling misses the event, in the case that the event happens in between a clock cycle - although unlikely if polling at high speeds.\nCalculations: I toggled a pin on my mcu within my main loop, as my polling would be constrained by how fast the main loop can operate, which was 52.8Hz, and then I measured the frequency of the encoder which is 999Hz, and when i performed all the calculations, I found the frequency of how fast my main loop could detect my pulse, and then converted that to rev/s, depending on my 408ppr.  Image 1 above displays the calculations for the polling comparison.\n Image 2 above displays the flowchart with the control logic flow, and how interrupts are handeled, and how that is built into the main function."
+  },
+  {
+    "objectID": "labs/lab5/lab5.html#technical-documentation",
+    "href": "labs/lab5/lab5.html#technical-documentation",
+    "title": "Lab 5 Report",
+    "section": "Technical Documentation:",
+    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nSchematic\n  The image above is the schematic of our circuit, which is connected to our motor. Our two encoder input pulses go into pins 9 and 10, and then we connect the motor to a 5V VCC supply from our MCU, and then power the encoders with and external power source. I set up internal pull-ups on pins 9 and 10 within the MCU.\n Figure 4 above shows the difference between the actual and expected frequencies, because of the rounding that happens when we set out values to arr."
+  },
+  {
+    "objectID": "labs/lab5/lab5.html#results-and-discussion",
+    "href": "labs/lab5/lab5.html#results-and-discussion",
+    "title": "Lab 5 Report",
+    "section": "Results and Discussion",
+    "text": "Results and Discussion\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.\nThe design performs as expected, and it does seem to display the appropriate angular velocity based on visually how many revolutions occur per second. It also detects the correct direction as well."
+  },
+  {
+    "objectID": "labs/lab5/lab5.html#conclusion",
+    "href": "labs/lab5/lab5.html#conclusion",
+    "title": "Lab 5 Report",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe overall design works as expected, and we are able to capture the angular velocity and direction of the motors using a quadrature encoder. I configured interrupts to trap on each edge of the incoming pulses, and based on which trap handler and interrupt bit is high, I would check for the value of the incoming pins to determine the direction, and count the pulses. Additionally, I had a 1 second timer on TIM16 connected to an interrupt, which if it entered the TIM16 interrupt handler, it would calculate the angular velocity using the number of pulses it detected in that second, and the ppr. I spent 12 hours working on this lab."
+  },
+  {
+    "objectID": "labs/lab5/lab5.html#ai-prototype-summary",
+    "href": "labs/lab5/lab5.html#ai-prototype-summary",
+    "title": "Lab 5 Report",
+    "section": "AI Prototype Summary",
+    "text": "AI Prototype Summary\n\n\n\nFigure 5: Second ChatGPT response after a prompt\n\n\nFigure 4 shows the result of the AI prototype, and it is somewhat similar to my code but also very different at the same time. First off, in the code, it uses the masks defined in the header files for the stm32l432xx.h, whereas I directly accessed the bits using bit shifting, and did not use a predefined mask. Additionally, the logic does not consider setting up encoder B’s pin signal on the SYSCFG-&gt;EXTICR register which is interesting. I guess, it is not using the highest resolution in the design which is why it is only operating on the rising and falling edge of one of the signals. Furthermore, it is not calculating the direction of the motor based on the values of the encoder pulses, and is also not calculating the angular velocity properly. I also think in the interrupt handler, it is it checking for both bits of the encoder pins at the same time, however in order to determine direction, you need to address the cases differently for the values of the pulses. Furthermore, I am not sure if it knows to use 5V tolerant pins, so this is not really a consideration it made. However, overall it did try to pick pins on the same interrupt line to make it easier to handle with just one interrupt request handler function."
+  },
+  {
+    "objectID": "labs/lab6/lab6.html",
+    "href": "labs/lab6/lab6.html",
+    "title": "Lab 6 Report",
+    "section": "",
+    "text": "In this lab, we used the SPI communication protocol to have our MCU interface with a DS1722 temperature sensor in order to measure temperature, along with sending a webpage over to our computers through UART. Essentially, we built a simple Iot Device, where we interface with the temperature sensor over SPI. And, the MCU interfaces with teh ESP8266 over UART. There is a simple HTML page that displays this information. The website allows the user to control an onboard LED, as well as change the resolution to which the temperature sensor is measuring in."
+  },
+  {
+    "objectID": "labs/lab6/lab6.html#introduction",
+    "href": "labs/lab6/lab6.html#introduction",
+    "title": "Lab 6 Report",
+    "section": "",
+    "text": "In this lab, we used the SPI communication protocol to have our MCU interface with a DS1722 temperature sensor in order to measure temperature, along with sending a webpage over to our computers through UART. Essentially, we built a simple Iot Device, where we interface with the temperature sensor over SPI. And, the MCU interfaces with teh ESP8266 over UART. There is a simple HTML page that displays this information. The website allows the user to control an onboard LED, as well as change the resolution to which the temperature sensor is measuring in."
+  },
+  {
+    "objectID": "labs/lab6/lab6.html#design-and-testing-methodology",
+    "href": "labs/lab6/lab6.html#design-and-testing-methodology",
+    "title": "Lab 6 Report",
+    "section": "Design and Testing Methodology",
+    "text": "Design and Testing Methodology\nIn terms of the design, it was really imporant to understand how to SPI communication protocol works between the MCU and our temp sensor. Our temperature sensor has a very specific way of communicating with the controller, so we had to make sure our communication was compliant with this. First, I had to read the reference manual closely to understand how to setup SPI communication on our MCU, and make sure everything was configured in the way we wanted, i.e. baud rate, data size, FIFO size, fully duplex, etc. Then, I found compliant pins that I could use on the MCU for SPI - SCLK, CIPO/MISO, COPI/MOSI. And I decided to have a manually controlled CS pin, so I could use any pin for this. Once I had my pins and SPI setup, I had to write my SPI communication functions. This one was simple, because it was just pushing data on the line and returning what comes out. So for this, I had to wait until the transmit buffer was empty, then send the data, then wait for the receiving buffer to be empty, and then return whatever data the temperature sensor sends out. In terms of the temperature sensor, the datasheet mentioned that it requires CS to go high for any communication, and after CS goes high it expects an address, and then if it was a write address it expects the data next, and if it was a read address you can send dummy bits over to create enough clock pulses to get out the data. For reference, 0x80 is the write address to configure the temp sensor, and 0x00 is the read address for the config reg, 0x02 reads the MSB of the temp sensor, and 0x01 reads the LSB for the temp sensor. So first, when a request comes in from the user to change the resolution from the website, we set CS to 1, then send 0x80 to the SPI, and then the configuration with the resolution, nd then CS back to low. For reading the MSB for example, we would do - CS high, send(0x02), msb_value = send(dummy bits, ex 0x00), CS low. Once this protocol was setup, I just had to wire everything in hardware which entailed connecting the appropriate pins on my MCU (SCLK, CIPO/MISO, CPOI/MOSI), to the appropriate pins on the DSI722 (SDO, SDI, SCLK, CS, etc). In order to test, I first tried writing to the configuration register with setting a resolution, and then reading from it to make sure I was ablw to read and write correctly to the temp sensor. Once this was working, I knew that from my while loop writing to the temp sensor to configure the the resolution would work. But, to debug issues I had here, I put all my signals on an oscilloscope to see that CIPO/MISO was changing as data was being passed through , and same for COPI/MOSI. I then used the logic analyzer mode to easily map out all my signals to see my transactions. Once I saw the bits I was sending happening on COPI/MOSI, and then on the next output of data of CIPO/MISO reflecting that, I knew it was correct. I also tested it from my HTML by changing the configrations, and printing out what it was saving, as wella s the config register, to make sure I was updating with button presses."
+  },
+  {
+    "objectID": "labs/lab6/lab6.html#technical-documentation",
+    "href": "labs/lab6/lab6.html#technical-documentation",
+    "title": "Lab 6 Report",
+    "section": "Technical Documentation:",
+    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nSchematic\n The image above shows the schematic of our system, with the SPI transaction lines connected between the MCU and DS1722, and UART communication linked through RX and TX."
+  },
+  {
+    "objectID": "labs/lab6/lab6.html#results-and-discussion",
+    "href": "labs/lab6/lab6.html#results-and-discussion",
+    "title": "Lab 6 Report",
+    "section": "Results and Discussion",
+    "text": "Results and Discussion\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.\nThe design performs as expected, as it updates the temperature when I change the temperature applied on the sensor. It also updates the temperature with the correct resolution when I change it from the website, and also controls the LED as well from the website.\n Figure 2 above shows the logic analyzer trace for a write transaction to the configuration register at address 0x80. The configuration was set for 8-bits, hence 0xE0 was send as the write data.\n Figure 3 above shows the logic analyzer trace for a write transaction to the configuration register at address 0x80. Here, the configuration was set for 12-bits, hence 0xE8 was send as the write data.\n Figure 4 above shows the logic analyzer trace for a read transaction. First, we can see the confguration register is being read at address 0x00, and we see on the next data output of MISO, we see 0xE0 hence this is an 8-bit configuration. We then see the read for address 0x02, the MSB for temperature, which then gives us 0x18, and then a read at 0x01, the LSB of the temperature sensor which gives us 0x00 as expected, since it is an 8-bit resolution so only the top 8-bits have data, and the bottom 8-bits are 0 (16 bits total for the SPI-&gt;DR (data register))."
+  },
+  {
+    "objectID": "labs/lab6/lab6.html#conclusion",
+    "href": "labs/lab6/lab6.html#conclusion",
+    "title": "Lab 6 Report",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe design works as expected, and works as a simple IoT device. Through an HTML page, the user is able to control an onboard LED, as well as control how temperature is calculated from the temperature sensor, by changing the resolution. When these values are updated/selected, it displays on the website as well for the users to see. The temperature sensor communication with the MCU happens through SPI, and sending the website over to to the ESP8266 chip, and capturing the form requests and sending it to the MCU happens through USART. One shortcoming is that the website updates the current selection on the following/next interaction with the websote, creating a one-page refresh lab. I would have to look into maybe havign an update button which refreshes the page, or wen somethign is pressed, refersh the page twice automatically in order to display the information to the user. I spent 15 hours working on this lab."
+  },
+  {
+    "objectID": "labs/lab6/lab6.html#ai-prototype-summary",
+    "href": "labs/lab6/lab6.html#ai-prototype-summary",
+    "title": "Lab 6 Report",
+    "section": "AI Prototype Summary",
+    "text": "AI Prototype Summary\n\n\n\nFigure 5: AI Prototype image of the new website\n\n\nFigure 5 shows the result of prompting ChatGPT to give me a nice looking website in order to display my termperature resolution form, as well as the buttons for controlling the leds, and displaying the temperature. It looks quite nice actually, and it only took like 2 prompts in order to create this output. It works well, looks a lot better than what it was before, and the output makes sense.\n\n\n\nFigure 6: AI Prototype image of the code\n\n\n\n\n\nFigure 7: AI Prototype image of the code part 2\n\n\nFigure 6 and 7 above shows the result of the prompt to ask AI for the function to interact with the DS1722 temperature sensor. Something I noticed in this, is it knew to dereference the SR1-&gt;DR register in order to write to it - something I would never have figured out, and would have spent hours debugging. Otherwise, the reading from the register didn’t seem correct - as it wrote the write address to the SPI transaction, instead of the read address. It identified all the correct registers, however it used them in the wrong way. In order to read, it was also sending the write register which is not needed, it only needs to send the read register (0x02 or 0x01), and then the dummy bits after that. But otherwise, it had the right conceptual idea for all the calculations. I am not entirely sure if the final calculation to convert the temperature to celcius is correct, but otherwise everything else looks okay."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html",
+    "href": "labs/lab1/lab1.html",
+    "title": "Lab 1 Report",
+    "section": "",
+    "text": "In this lab, we built out motherboard with the FPGA and the microcontroller through soldering, and tested our board by loading designs onto our FPGA nad microcontroller. We implemented a design on the FPGA to test the on-board high-speed oscillator by blinking one of the on-board LEDs. And we implemented a program on the microcontroller to light an LED.\nOverall, the main goal after creating our boards was to create a seven segment display. We wrote verilog to convert a 4-bit hex inputted through a switch into display using 7-segments. We did this by programming pins on the FPGA based on the switches, and then connecting this to a physical build of a seven-segment display on a breadboard to observe the numbers. We also used the switches to light other LEDs on the FPGA, and like described earlier, we used the on-board high-speed oscillator to blind an on-board led at 2.4Hz."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#introduction",
+    "href": "labs/lab1/lab1.html#introduction",
+    "title": "Lab 1 Report",
+    "section": "",
+    "text": "In this lab, we built out motherboard with the FPGA and the microcontroller through soldering, and tested our board by loading designs onto our FPGA nad microcontroller. We implemented a design on the FPGA to test the on-board high-speed oscillator by blinking one of the on-board LEDs. And we implemented a program on the microcontroller to light an LED.\nOverall, the main goal after creating our boards was to create a seven segment display. We wrote verilog to convert a 4-bit hex inputted through a switch into display using 7-segments. We did this by programming pins on the FPGA based on the switches, and then connecting this to a physical build of a seven-segment display on a breadboard to observe the numbers. We also used the switches to light other LEDs on the FPGA, and like described earlier, we used the on-board high-speed oscillator to blind an on-board led at 2.4Hz."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#design-and-testing-methodology",
+    "href": "labs/lab1/lab1.html#design-and-testing-methodology",
+    "title": "Lab 1 Report",
+    "section": "Design and Testing Methodology",
+    "text": "Design and Testing Methodology\nThere were two different steps associated with the hardware component of the design, with the first one being the soldering of the components.\nThere were two main parts to soldering the components to the motherboard - we had to solder on the SMD components, and the THT components as well. We also soldered on the FPGA and micro-controller as well.\nAfter the soldering was done, we proceeded to test our board. We first loaded a test program to the FPGA which uses the high-speed oscillator (HSOSC) from the iCE40 UltraPlus primitve library. Here, this library is used to generate a clock signal at 24Mhz, and then counter was implemented in order to produce a blinking frequency of 1.5Hz, so that we could see it on the LEDs. This was developed with a clock-divider module. After this, we uploaded another program to our FPGA which toggles pin P25 at around 1Hz, and if switch SW7 is on, then P25 is connected to PA9 which will see LED D3 blinking. We then, uploaded a program to our MCU unit, which reads the value of the toggled LED from the FPGA and echoes it to another pin which then causes LED D2 blinking.\nWe then implemented the 7-segment code in verilog, which was essetially a decoder. Along with this, we programmed some switch inputs to control 3 other on-board FPGA LEDs using combinational logic, and using the HSOSC to take teh 24MHz signal and convert it into a 2.4Hz signal which was reflected in a blinking LED. I then used an oscilliscope to test the frequency of the blinking LED and it was exactly 2.4Hz. Figure 1 below shows this.\n\n\n\nFigure 1: Oscilliscope Trace showing the 2.4Hz signal on the bottom right\n\n\nAfter this, we had to build the 7-segment LED display on a breadboard. After looking at the specs, I was able to apply power to one of the middle pins on either side, and ground the respective other pins in order to turn on that respective segment. Each non-power pin on the displaywas then hooked to ground through a 10kohm resistor. I made sure to connect the programmed pins from the FPGA to the seven-segment display. In order to test this, I created a self-checking testbench which ran through all posisble inputs and made sure the outputs were as expected."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#technical-documentation",
+    "href": "labs/lab1/lab1.html#technical-documentation",
+    "title": "Lab 1 Report",
+    "section": "Technical Documentation:",
+    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nBlock Diagram\n The block diagram in Figure 2 demonstrates the overall design and architecture of the design. The top-level module incldes two sub-modules - the HSOSC (high-speed oscillator block), and the seven_segment module in order to convert hex digits to seven segments. Additionally, there is internal counter logic fro the clock divider, as well as combinational logic to control the LEDs.\n\n\nSchematic\n Figure 3 demonstrates the physical layout of the design. We have internal 100k-ohm pullup resistors in order to ensure the pins aren’t floating. We then have the output on-board LEDs connected using a 1k-ohm current limiting resistor to ensure the output current (around 2.6mA) did not exceed the maximum output current of the FPGA I/O pins.\n\n\n\nFigure 4: Current Calculations\n\n\nThen, if we look further down, we can see the seven-segment display component. Here we power the middle pin on the left, which propogates to all the other pins. In order to turn on a pin, it needs to be grounded, hence we have 10k-ohm resistors connected from each output pin to ground in order to not exceed the maximum allowed output current of the pins. Figure 4 highlights the calculations performed to ensure we were not exceeding the maximum current allowed."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#results-and-discussion",
+    "href": "labs/lab1/lab1.html#results-and-discussion",
+    "title": "Lab 1 Report",
+    "section": "Results and Discussion",
+    "text": "Results and Discussion\n\n\n\nFigure 5: A screenshot of a QuestaSim simulation demonstrating the hex-switch inputs and the correspinding seven segment output.\n\n\n\n\n\nFigure 6: A screenshot of a QuestaSim simulation demonstrating the toggling LED at 2.4Hz using the clock divder.\n\n\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components. Figure 5 shows a screenshot of the QuestaSim Simulation. This is the simulation run with the self checking test-bench.\nFigure 6 on the other hand, shows the toggling of led 2 at 2.4Hz using the clock divider. If I was given more time, I would have expanded the testbench to also test that the led signal was infact blinking at 2.4Hz through possibly another clock generation. The design performed exactly as intended, with the blinking LEDs blinking at the approproate frequencies, and the seven segment display working exactly as intended."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#conclusion",
+    "href": "labs/lab1/lab1.html#conclusion",
+    "title": "Lab 1 Report",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe overall design, after all the testing, successfully takes a 4-bit hex number inputted by the user on the DIP switches, and then converts this into the numeric hex representation of this number on the seven-segment display. I spent a total of 25 hours working on this lab."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#ai-prototype-summary",
+    "href": "labs/lab1/lab1.html#ai-prototype-summary",
+    "title": "Lab 1 Report",
+    "section": "AI Prototype Summary",
+    "text": "AI Prototype Summary\n\n\n\nFigure 7: Initial ChatGPT response\n\n\nFigure 7 shows the result of entering the prompt into ChatGPT.\nAfter entering this project into Lattice, and synthesiszing it, it seemed to have run with no errors, meaning at least the verilog syntax was correct. Additionally, it seems like most of the logic is correct for the counter, and it even accounted for dividing the period by 2 in order to toggle two times in each period. Figure 8 shows the successful response.\n\n\n\nFigure 8: Lattice Synthesis Result\n\n\nOverall, I would say that the quality of this verilog is really nice, with a very exact counter. This was similar to how I learned it in E85 last semester for my music lab, and therefore how I implemented it myself. The LLM did generate some constructs like parameter int, which I have never used before. The code did synthesize the first time around, which is impressive. However, this is also a common application of clock dividing, so it must have been trained on a lot of relevant data. There were very small errors such as bit truncation for optimization.\nNext time I use LLM in my workflow, it is important to understand how to prompt the model, it is important to give it the constraints you are working under, and even providing specific library names are important. I was really surprised when the LLM picked up on the HSOSC library and the documentation for the syntax."
+  },
+  {
+    "objectID": "labs/lab7/lab7.html",
+    "href": "labs/lab7/lab7.html",
+    "title": "Lab 7 Report",
+    "section": "",
+    "text": "In this lab, we built the AES encryption system on the FPGA and had to be thoughtful about building the architecture so that it fits on the FPGA. We also interfaced the FPGA with the MCU, where the MCU sends the key and plaintext to the FPGA, and the FPGA using the AES algorithm hardware built will sent the cypertext back to the MCU which will then turn on an LED if that is intended. This gives us experience with hardware accelerators as the AES algorithm runs faster in hardware than it does with software."
+  },
+  {
+    "objectID": "labs/lab7/lab7.html#introduction",
+    "href": "labs/lab7/lab7.html#introduction",
+    "title": "Lab 7 Report",
+    "section": "",
+    "text": "In this lab, we built the AES encryption system on the FPGA and had to be thoughtful about building the architecture so that it fits on the FPGA. We also interfaced the FPGA with the MCU, where the MCU sends the key and plaintext to the FPGA, and the FPGA using the AES algorithm hardware built will sent the cypertext back to the MCU which will then turn on an LED if that is intended. This gives us experience with hardware accelerators as the AES algorithm runs faster in hardware than it does with software."
+  },
+  {
+    "objectID": "labs/lab7/lab7.html#design-and-testing-methodology",
+    "href": "labs/lab7/lab7.html#design-and-testing-methodology",
+    "title": "Lab 7 Report",
+    "section": "Design and Testing Methodology",
+    "text": "Design and Testing Methodology\nIn terms of the design for this project I first had to think carefully about how I wanted to implement it in hardware so it would fit on the FPGA because we have a limited number of LUTs. I then had to come up with tradeoffs in terms of memory versus time. For example, my design takes 16 extra clock cycles, however it uses fewer number of LUTs - around 1500/5200 available ones. Furthermore, I had to really think about the timing of my signals, and on what round and what cycle certain pieces of information had to be ready. This meant I had to be intentional about what signals I was putting in my flop, and how many modules I was instantiating. It was a really fun and interesting lab, and I really enjoyed designing the FSM. In terms of testing the design, we had some testbenches provided to us, and I also wrote a testbench for each module, and simulated it with different keys and plaintexts to make sure I was get the correct output. I also traced through my output at each stage to further verify this. We also looked at the logic analyzer to make sure the correct data was propagating."
+  },
+  {
+    "objectID": "labs/lab7/lab7.html#technical-documentation",
+    "href": "labs/lab7/lab7.html#technical-documentation",
+    "title": "Lab 7 Report",
+    "section": "Technical Documentation:",
+    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nBlock Diagram\n The image above shows the block diagram of how each of my modules connect to each other, and how the signals propagate."
+  },
+  {
+    "objectID": "labs/lab7/lab7.html#results-and-discussion",
+    "href": "labs/lab7/lab7.html#results-and-discussion",
+    "title": "Lab 7 Report",
+    "section": "Results and Discussion",
+    "text": "Results and Discussion\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.\nThe design performs as expected, as it correctly sends the data through SPI, and the FPGA correct sends back the ciphertext. I can tell this because in the MCU code, an LED will light up once the transaction is completed and the ciphertext the FPGA sends matches the expected ciphertext. The design is reliable, accurate, and it is also quite efficient on the hardware.\nBelow are the test benches for the AES core and AES core with SPI.\n\n\n\nFigure 2: Testbench for AES core\n\n\n\n\n\nFigure 3: Testbench for AES SPI + core\n\n\n\n\n\nFigure 4: Testbench for AES add round kkey\n\n\n\n\n\nFigure 5: Testbench for AES sbox\n\n\n\n\n\nFigure 6: Testbench for AES galoismult\n\n\n\n\n\nFigure 7: Testbench for AES shiftrows\n\n\n\n\n\nFigure 8: Testbench for mixcolumns\n\n\nNow, we have the result of the Logic Analyzer, displaying the SPI transactions. The first data that is transmitted on SPI through MOSI, is the plaintext and key, and the FPGA should output the ciphtertext (ct) which is the following:\nchar key[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};\nchar plaintext[16] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};\nchar ct[16] = {0x69, 0xC4, 0xE0, 0xD8, 0x6A, 0x7B, 0x04, 0x30, 0xD8, 0xCD, 0xB7, 0x80, 0x70, 0xB4, 0xC5, 0x5A};\n\n\n\nFigure 9: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 10: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 11: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 12: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 13: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 14: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 15: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 16: LA output for SPI key on MOSI/COPI\n\n\nBelow are the images from the return transaction, on MISO/CIPO where the FPGA is responding with the ciphertext:\n\n\n\nFigure 17: LA output for ciphertext on MISO/CIPO\n\n\n\n\n\nFigure 18: LA output for ciphertext on MISO/CIPO\n\n\n\n\n\nFigure 19: LA output for ciphertext on MISO/CIPO\n\n\n\n\n\nFigure 20: LA output for ciphertext on MISO/CIPO\n\n\n\n\n\nFigure 21: LA output for ciphertext on MISO/CIPO\n\n\n\n\n\nFigure 22: LA output for ciphertext on MISO/CIPO\n\n\n\n\n\nFigure 123: LA output for ciphertext on MISO/CIPO"
+  },
+  {
+    "objectID": "labs/lab7/lab7.html#conclusion",
+    "href": "labs/lab7/lab7.html#conclusion",
+    "title": "Lab 7 Report",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe design works as expected, and works as an AES encoder, where it takes a key and plaintext from the MCU, and then sends it to the FPGA, where the FPGA performs 10 rounds of AES encryption, and then sends the result back to the MCU, along with a done signal, letting the MCU know the transaction is complete. This was a really fun lab, and I thought it was really cool :). I spent 15 hours working on this lab."
+  },
+  {
+    "objectID": "labs/lab7/lab7.html#ai-prototype-summary",
+    "href": "labs/lab7/lab7.html#ai-prototype-summary",
+    "title": "Lab 7 Report",
+    "section": "AI Prototype Summary",
+    "text": "AI Prototype Summary\n\n\n\nFigure : AI Prototype image of the new website\n\n\nFigure __ shows the result of the AI engine writing verilog to create the KeyExpansion module. Overall, the code works pretty well, and it even breaks it up by round instead of doing it all at once and then using that result. Additionally, it defines more helper modules to take care of tasks like shifting, which is good since these features are used often in other modules too. Overall, it looks pretty correct and it compiled. Additionally, it new all the round constants, and I was really surprised about this.\n\n\n\nFigure 6: AI Prototype image of the code\n\n\nFigure __ above shows the result of the second prompt. The output of this prompt was very different than the style used earlier, as it did not rely on the AES knowlegde, and instead implemented the math for the new algorithm. It is definitely a lot more inefficient because of the multuple for loops, and within each loop, a module is instantiated - which means it will blow up the hardware to a decent extent. The LLM having knowledge of AES, definitely simplifies the entire process."
+  },
+  {
+    "objectID": "labs/lab2/lab2.html",
+    "href": "labs/lab2/lab2.html",
+    "title": "Lab 2 Report",
+    "section": "",
+    "text": "In this lab, we built a time-multiplexed seven segment display, which would share one single seven_segment decoder module, in order to display what looks like two numbers on the dual display at the same time. The module is a shared resource between both DIP-switch controlled numbers, so the overall goal was to time-multiplex the seven segment decoder to allow only one number to have access to the led display, but flash at a frequency fast enough to make it seem like both numbers were appearing at the same time (as though we had two different module instantiations). The numbers are controlled by two independent DIP switches.\nAdditionally, we have an LED that displays the sum of the numbers inputted in on both the DIP switches."
+  },
+  {
+    "objectID": "labs/lab2/lab2.html#introduction",
+    "href": "labs/lab2/lab2.html#introduction",
+    "title": "Lab 2 Report",
+    "section": "",
+    "text": "In this lab, we built a time-multiplexed seven segment display, which would share one single seven_segment decoder module, in order to display what looks like two numbers on the dual display at the same time. The module is a shared resource between both DIP-switch controlled numbers, so the overall goal was to time-multiplex the seven segment decoder to allow only one number to have access to the led display, but flash at a frequency fast enough to make it seem like both numbers were appearing at the same time (as though we had two different module instantiations). The numbers are controlled by two independent DIP switches.\nAdditionally, we have an LED that displays the sum of the numbers inputted in on both the DIP switches."
+  },
+  {
+    "objectID": "labs/lab2/lab2.html#design-and-testing-methodology",
+    "href": "labs/lab2/lab2.html#design-and-testing-methodology",
+    "title": "Lab 2 Report",
+    "section": "Design and Testing Methodology",
+    "text": "Design and Testing Methodology\nThere were various steps in implementing this lab. First, we could use the base code from lab 1, which was displaying a single DIP switches input into one seven segment LED display. But, for this lab, we created a clock which toggled at 60Hz from a clock divider - around the frequency of flicker free viewing for humans. Then, every 60Hz I would toggle a signal, which woudl essentially be the select signal for a mux which would decide which DIP switche’s input to display on the LED. Based on which DIP switch’s input was selected, that would be fed into the single, shared, seven segment module instantiation which would then display that number on the display. However, because we made our new clock toggle at 60Hz, the flicker free viewing frequency, both switch numbers are toggling so fast it looks like they are both displayed on the LED-display at the same time. Due to this, when building the circuit on the breadboard, I would only need 7 pins to connect to all the 14 different segments on the dual-display, because we designed it so that only 7 segments can be driven at a time, since there is only one seven segment module decoder. Additionally, the FPGA does not have enough power to drive the dual-segment LED display, so we had to connect the output of the FPGA pins to a PNP transistor which was connected to a 3.3V collecter, so everytime a high signal was asserted by any of the pins it would pull current from the collecter in order to provide enough power to the dual display. I had an enable signal that was two bits wide, and depending on the clock signal, would either provide a base to one of the two PNP transistors. And we also had 5 LEDs which would just display the sum of both the dip switches.\nIn order to test the design, I first isolated my clock divider module, so I could test that the clock was indeed running 60Hz. I created my own clock signal in the testbench, and then asserted that after 60Hz from the testbench, we were also toggling the clock in my clock module. Essentially, I made sure both clocks were running at the same frequency.\nThen, in order to test the rest of my design, I had another testbench. This time, I did not use testvectors, but rather leveraged assert statements. I generated a counter that was 8-bits wide, and each time it would split this 8-bit bus into two 4-bit busses, which would simulate the inputs on both by 4-input DIP switches. I then made sure the addition of the led signal was equal to the sum of both of 4-bit busses. And then, based on the enable signal asserted from my top-level module, I made sure that the actual seven-segment output, matched with the one I was chosing based on the enable signal and switch value.\nI made sure to calculate appropriate resistor values based on the maximum drivable current as well for all my pins.\n\n\n\nFigure 1: Image of the physical setup\n\n\nFigure 1 shows the physical implementation the breadboard with the time-multiplexed segment visible."
+  },
+  {
+    "objectID": "labs/lab2/lab2.html#technical-documentation",
+    "href": "labs/lab2/lab2.html#technical-documentation",
+    "title": "Lab 2 Report",
+    "section": "Technical Documentation:",
+    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nBlock Diagram\n The block diagram in Figure 2 demonstrates the overall design and architecture of the design. The top-level module incldes three sub-modules - the HSOSC (high-speed oscillator block), the clock, and the seven_segment module in order to convert hex digits to seven segments. The clock is essentially the clock divider which is taking care of toggling the clock at 60Hz. We can see the internal logic of the muxes as well, in order to multiplex the values given to the seven-segment module, based on the generated clock.\n\n\nSchematic\n Figure 3 demonstrates the physical layout of the design. We have internal 100k-ohm pullup resistors in order to ensure the pins aren’t floating. We then have the DIP switch on the right connected to around a 420 ohm pull-down resistor on the left, and then power to the right. We have each of our PNP transistors connected to a 3.3V collecter, and a 330-ohm resistor in order to limit the current going into the transistor base. Each of our segments was connected to a pin, with two segments mapping to one pin due ot the shared seven-segment module. Each segment was connected to a 170 ohm resistor to limit the current going into the LED’s, while not exceeding the maximum current that can be driven by an FPGA pin. Our adder-sum LED’s are each connected to a 100ohm resistor to limit the current through the diodes to around 13mA, which is within its possible range.\n\n\n\nFigure 4: Current Calculations\n\n\nIn Figure 4 we can see all the calculations performed to ensure we are not drawing more current that possible from the FPGA pins - 8mA."
+  },
+  {
+    "objectID": "labs/lab2/lab2.html#results-and-discussion",
+    "href": "labs/lab2/lab2.html#results-and-discussion",
+    "title": "Lab 2 Report",
+    "section": "Results and Discussion",
+    "text": "Results and Discussion\n\n\n\nFigure 5: A screenshot of a QuestaSim simulation demonstrating the clock toggling at the right frequency - 60Hz.\n\n\n\n\n\nFigure 6: A screenshot showing the enable signal into the PNP transistors is toggling every few cycles\n\n\n\n\n\nFigure 7: A screenshot of a QuestaSim simulation for the top level module.\n\n\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components. Figure 5 shows a screenshot of the QuestaSim Simulation of the clock module. This is the simulation run with the self checking test-bench without testvectors. Figure 6 shpws that our enable signal is toggling every few cycles in order to control which segment is being displayed on the display. Figure 7 shows the testbench designed for the overall top-level design, which was also designed without testvectors and was instead an assert based testbench.\nIf I was given more time, I would have tried to come up with other ways to test the clock signal using the in-built delays available in the testbench. I would have also made my wires on my breadboard more concise and neater, so it would have been easier to debug. The design performed exactly as intended."
+  },
+  {
+    "objectID": "labs/lab2/lab2.html#conclusion",
+    "href": "labs/lab2/lab2.html#conclusion",
+    "title": "Lab 2 Report",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe overall design, after all the testing, successfully time-multiplexes the seven-segment decoder to ensure that is a shared resource between two possible inputs from two independent DIP switches. Although the dual display can only be used by one DIP switches output at a time, the fast multiplexing makes it seem like both numbers are being displayed at the same time - as our eyes are not able to detect the flicker. I spent a total of 12 hours working on this lab."
+  },
+  {
+    "objectID": "labs/lab2/lab2.html#ai-prototype-summary",
+    "href": "labs/lab2/lab2.html#ai-prototype-summary",
+    "title": "Lab 2 Report",
+    "section": "AI Prototype Summary",
+    "text": "AI Prototype Summary\n\n\n\nFigure 8: Second ChatGPT response after a prompt\n\n\n\n\n\nFigure 9: ChatGPT Seven segment response\n\n\nFigure 8 shows the result of entering the prompt into ChatGPT - after some additional prompting. Initially it created two different instances of the module, because it maybe missed out on the idea of multiplexing, but after I prompted it to only instantiate one module, it created the output above which looks correct to me, and it synthesized fine.\nFigure 9 shows the seven segment display decoder code that it generated, which also compiled fine and seems optimized and reasonable.\nOverall, I would rate the quality of this code pretty good since it seems to be optimal in all the assignments, module interaction, and clock multiplexing that it does. In terms of verilog contstructs that were unknown to me, I did not see anything striking - I have used almost everything used in the AI version. However, the AI did make the counter a little different to mine, with the addition, and counter limit check under the same else conditional, however this was just a design decision. The AI code synthesized both times, I tried it, however the first time there was a logic gap in the way it did the time multiplexing. One important thing is that it is not running at the right frequency, it is running too fast since it is just using the HSOSC, so this would be something that might need more prompting. In terms of warning messages, I just got the expression size 32 bits truncated to fit in target size 16, but I have also been getting this warning message as well. The next time, I might give it a little more context on what I have available, and perhaps define some of the terms I am using - although this shouldn’t have been necessary. Also, it did not use the HSOSC oscillator that I am using because it did not have the context of the lab, and what we were using.\n\n\n\nFigure 10: ChatGPT output after giving it related files\n\n\nThe output of the LLM after providing it with my seven segment decoder and the HSOSC code, is outlined in figure 10. This code good quality, but it did change quite a bit in terms of structure from the previous version. Again, the frequency is not correct as it is going too fast. It also split up the different parts of the code like the PNP enable signals, and the seg calcualtions into different stages which might make it more readable, but it is still functionally correct. There were no warning messages from this that were alarming - it is just interesting that it changed the structure into different units based on my lab 1 code that I had provided."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html",
+    "href": "labs/lab4/lab4.html",
+    "title": "Lab 4 Report",
+    "section": "",
+    "text": "In this lab, we used the microcontroller in order to play a sound by setting a frequency for the pitch, and then configuring a timer/delay to hold the note for a specific duration. We used a PLL as our system clock, and then fed that to two different TIMER register busses on our system, and then controlled one to be a PWM generator (for the tone frequency), and then another one as the timer for the delay."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html#introduction",
+    "href": "labs/lab4/lab4.html#introduction",
+    "title": "Lab 4 Report",
+    "section": "",
+    "text": "In this lab, we used the microcontroller in order to play a sound by setting a frequency for the pitch, and then configuring a timer/delay to hold the note for a specific duration. We used a PLL as our system clock, and then fed that to two different TIMER register busses on our system, and then controlled one to be a PWM generator (for the tone frequency), and then another one as the timer for the delay."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html#design-and-testing-methodology",
+    "href": "labs/lab4/lab4.html#design-and-testing-methodology",
+    "title": "Lab 4 Report",
+    "section": "Design and Testing Methodology",
+    "text": "Design and Testing Methodology\nIn order to approach the design of the project, I first had to understand the datasheet and reference manual of STMLK324KC microcontroller. This was critical because from here I knew which registers to enable or set to certain values. The datasheet had information on which bits of the ACC register set would enable the clock to the timers. And then, it had information on how to setup PWM for a timer, and enable that as an input into a GPIO pin we could connect the speaker to. From here, we could also set up the counter to set the duration of our delays, etc. Ultimately, the first step to the design process was to understand the datasheet and figure out which registers we need to set. In order to test our design, we did not create testbenches for this like the verilog/FPGA labs. Instead, I used the debugger to walk through the logic of my code, and I brought up all the relevant register signals, so I could see how every line I was working through was changing the state of the MCU, and if I saw that something wasn’t happening according to how I wanted, then I would revise the datasheet. Additionally, I would measure the signals on an oscilloscope so I could see if I was getting an oscillating frequency where I wanted it."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html#technical-documentation",
+    "href": "labs/lab4/lab4.html#technical-documentation",
+    "title": "Lab 4 Report",
+    "section": "Technical Documentation:",
+    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nOscilloscope Frequency Measurements\nThe images show the oscilloscope trace with the frequency, so we can see how closely it is matching up with the expected frequency the audio is supposed to play.\n Figure 2 above was for the first note which should have been 659Hz, but instead it is 658Hz, however it is really close to the expected value, and within 1%.\n The figure above is supposed to be for the 13th note, which was coded as 440Hz, however it is actually 438Hz, which is still quite close to the expected value, and within 1%.\n The note above was for a frequency that should have been at 236Hz, but it is instead at 260Hz, which is still close, and within 1%.\n The image above is to show that our highest note which was at 1.3kHz, can also be played and reached with our PWM.\n And this image above shows how we can also hit our minimum pithch frequency range of 220Hz, although the lowest our system can reach was calcualted to be even smaller (around 78Hz).\n\n\nSchematic\n The image above is the schematic of our circuit, which is connected to our speaker. We used the LM386 low voltage audio power amplifier, in order to take our PWM output from a GPIO MCU pin, and play a tone. We used a variety of resistors and capacitors in order to control the audio, ultimately connecting to an external speaker. Additionally, we added a potentiometer to control the volume of the audio that was outputted on the speaker.\n\n\n\nFigure 8: Min/Max Frequency/Duration calculations\n\n\nIn Figure 8 we can see all the calculations performed to find the min and max frequencies and durations we can support with our clock, and the min and max durations we can hold the delay for.\n Figure 9 above shows the difference between the actual and expected frequencies, because of the rounding that happens when we set out values to arr."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html#results-and-discussion",
+    "href": "labs/lab4/lab4.html#results-and-discussion",
+    "title": "Lab 4 Report",
+    "section": "Results and Discussion",
+    "text": "Results and Discussion\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.\nIf I was given more time, I would have tried to connect to two speakers using two other timer register busses, so I could play different tones at the same time and enhance the music output. Additionally, I would have tried to play a better, more complex sound had I been better at interpreting sheet music.\nThe design performs as expected, and does play the songs I want it to, and it is is reliable. The only thing is that the potentiometer is really sensitive, making it more challening to control the audio volume."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html#conclusion",
+    "href": "labs/lab4/lab4.html#conclusion",
+    "title": "Lab 4 Report",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe overall design works as expected, and we are able to play Fur Elise and another song of our choice on the speakers, by using the MCU clock to generate a PWM frequency for the tone, as well as for a delay timer. In other words, our PLL clock goes to two timer busses to generate a PWM signal for our frequency and create a timer for our audio. Overall, I spent 20 hours on this lab."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html#ai-prototype-summary",
+    "href": "labs/lab4/lab4.html#ai-prototype-summary",
+    "title": "Lab 4 Report",
+    "section": "AI Prototype Summary",
+    "text": "AI Prototype Summary\n\n\n\nFigure 10: Second ChatGPT response after a prompt\n\n\nFigure 10 shows the result of the AI prototype, and it had a decent line of reasoning or chain of logic in order to determine what timer to use. However, ultimately it picked TIM2 which is different than the one I chose to use. I am not sure if TIM2 has a channel that it can be connected to on a pin on our breakout board. There might have been a limitation here on what breakout board we could use, which is something the AI system wouldn’t know possibly, because it may not know what pins we can directly address and write to. Overall, the quality of the output is decent, especially in terms of the chain of logic because it did consider many levels of planning, including talking about the prescalar, arr, clock enable, channel output, etc. All of which I am really impressed about, however there was not much information given as to why TIM2 was chosen over the other timers. The LLM did not generate any code for me, but it did talk about similar registers to what I modified, so it might be pretty close. Because the LLM did not give much reasoning about the timer, it was difficult to compare it to my approach. TIM16 gave a clear pinout to connect to for my PWM on my breakout board, which was one of the main reasons I chose it, however Chat said because it is 32-bits it avoids a “prescalar headache[s]”. It says TIM2 has the simplest, which I do not entirely agree with. However, the LLM does work well as a sounding board which I can tell from this exercise, because it does address imporant registers and bits that need to be changed in order to get the timer to work, which is impressive, because this is what I spent the longest doing."
+  },
+  {
+    "objectID": "labs.html",
+    "href": "labs.html",
+    "title": "E155 Labs",
+    "section": "",
+    "text": "Lab Report"
+  },
+  {
+    "objectID": "labs.html#lab-1---board-assembly-and-testing",
+    "href": "labs.html#lab-1---board-assembly-and-testing",
+    "title": "E155 Labs",
+    "section": "",
+    "text": "Lab Report"
+  },
+  {
+    "objectID": "labs.html#lab-2---multiplexed-7-segment-display",
+    "href": "labs.html#lab-2---multiplexed-7-segment-display",
+    "title": "E155 Labs",
+    "section": "Lab 2 - Multiplexed 7-Segment Display",
+    "text": "Lab 2 - Multiplexed 7-Segment Display\nLab Report"
+  },
+  {
+    "objectID": "labs.html#lab-3---keypad-scanner",
+    "href": "labs.html#lab-3---keypad-scanner",
+    "title": "E155 Labs",
+    "section": "Lab 3 - Keypad Scanner",
+    "text": "Lab 3 - Keypad Scanner\nLab Report"
+  },
+  {
+    "objectID": "labs.html#lab-4---digital-audio",
+    "href": "labs.html#lab-4---digital-audio",
+    "title": "E155 Labs",
+    "section": "Lab 4 - Digital Audio",
+    "text": "Lab 4 - Digital Audio\nLab Report"
+  },
+  {
+    "objectID": "labs.html#lab-5---interrupts",
+    "href": "labs.html#lab-5---interrupts",
+    "title": "E155 Labs",
+    "section": "Lab 5 - Interrupts",
+    "text": "Lab 5 - Interrupts\nLab Report"
+  },
+  {
+    "objectID": "labs.html#lab-6---the-internet-of-things-and-serial-peripheral-interface",
+    "href": "labs.html#lab-6---the-internet-of-things-and-serial-peripheral-interface",
+    "title": "E155 Labs",
+    "section": "Lab 6 - The Internet of Things and Serial Peripheral Interface",
+    "text": "Lab 6 - The Internet of Things and Serial Peripheral Interface\nLab Report"
+  },
+  {
+    "objectID": "labs.html#lab-7---the-advanced-encryption-standard-aes",
+    "href": "labs.html#lab-7---the-advanced-encryption-standard-aes",
+    "title": "E155 Labs",
+    "section": "Lab 7 - The Advanced Encryption Standard (AES)",
+    "text": "Lab 7 - The Advanced Encryption Standard (AES)\nLab Report"
+  },
+  {
     "objectID": "project/project_proposal/project_proposal.html",
     "href": "project/project_proposal/project_proposal.html",
     "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
@@ -98,457 +539,44 @@
     "text": "Design Specific Calculations\n\nPredicted Number of LUTs in the design\n\n( 20 flops (internal counters) + 24 flops (credit display) + 5 flops (seven-segment control output) + 64 flops (internal counter flops) + 16 flops (SPI) ) * 3 = 387 LUTs\n\n\n\nPixel Update Clock\n\nPixel clock = horizontal total * vertical total * frame rate = 640 * 480 * 20Hz (slower frame rate to allow for memory accesses) = 6,144,000 Hz = 6.1 MHz"
   },
   {
-    "objectID": "labs.html",
-    "href": "labs.html",
-    "title": "E155 Labs",
-    "section": "",
-    "text": "Lab Report"
-  },
-  {
-    "objectID": "labs.html#lab-1---board-assembly-and-testing",
-    "href": "labs.html#lab-1---board-assembly-and-testing",
-    "title": "E155 Labs",
-    "section": "",
-    "text": "Lab Report"
-  },
-  {
-    "objectID": "labs.html#lab-2---multiplexed-7-segment-display",
-    "href": "labs.html#lab-2---multiplexed-7-segment-display",
-    "title": "E155 Labs",
-    "section": "Lab 2 - Multiplexed 7-Segment Display",
-    "text": "Lab 2 - Multiplexed 7-Segment Display\nLab Report"
-  },
-  {
-    "objectID": "labs.html#lab-3---keypad-scanner",
-    "href": "labs.html#lab-3---keypad-scanner",
-    "title": "E155 Labs",
-    "section": "Lab 3 - Keypad Scanner",
-    "text": "Lab 3 - Keypad Scanner\nLab Report"
-  },
-  {
-    "objectID": "labs.html#lab-4---digital-audio",
-    "href": "labs.html#lab-4---digital-audio",
-    "title": "E155 Labs",
-    "section": "Lab 4 - Digital Audio",
-    "text": "Lab 4 - Digital Audio\nLab Report"
-  },
-  {
-    "objectID": "labs.html#lab-5---interrupts",
-    "href": "labs.html#lab-5---interrupts",
-    "title": "E155 Labs",
-    "section": "Lab 5 - Interrupts",
-    "text": "Lab 5 - Interrupts\nLab Report"
-  },
-  {
-    "objectID": "labs.html#lab-6---the-internet-of-things-and-serial-peripheral-interface",
-    "href": "labs.html#lab-6---the-internet-of-things-and-serial-peripheral-interface",
-    "title": "E155 Labs",
-    "section": "Lab 6 - The Internet of Things and Serial Peripheral Interface",
-    "text": "Lab 6 - The Internet of Things and Serial Peripheral Interface\nLab Report"
-  },
-  {
-    "objectID": "labs.html#lab-7---the-advanced-encryption-standard-aes",
-    "href": "labs.html#lab-7---the-advanced-encryption-standard-aes",
-    "title": "E155 Labs",
-    "section": "Lab 7 - The Advanced Encryption Standard (AES)",
-    "text": "Lab 7 - The Advanced Encryption Standard (AES)\nLab Report"
-  },
-  {
-    "objectID": "labs/lab4/lab4.html",
-    "href": "labs/lab4/lab4.html",
-    "title": "Lab 4 Report",
-    "section": "",
-    "text": "In this lab, we used the microcontroller in order to play a sound by setting a frequency for the pitch, and then configuring a timer/delay to hold the note for a specific duration. We used a PLL as our system clock, and then fed that to two different TIMER register busses on our system, and then controlled one to be a PWM generator (for the tone frequency), and then another one as the timer for the delay."
-  },
-  {
-    "objectID": "labs/lab4/lab4.html#introduction",
-    "href": "labs/lab4/lab4.html#introduction",
-    "title": "Lab 4 Report",
-    "section": "",
-    "text": "In this lab, we used the microcontroller in order to play a sound by setting a frequency for the pitch, and then configuring a timer/delay to hold the note for a specific duration. We used a PLL as our system clock, and then fed that to two different TIMER register busses on our system, and then controlled one to be a PWM generator (for the tone frequency), and then another one as the timer for the delay."
-  },
-  {
-    "objectID": "labs/lab4/lab4.html#design-and-testing-methodology",
-    "href": "labs/lab4/lab4.html#design-and-testing-methodology",
-    "title": "Lab 4 Report",
-    "section": "Design and Testing Methodology",
-    "text": "Design and Testing Methodology\nIn order to approach the design of the project, I first had to understand the datasheet and reference manual of STMLK324KC microcontroller. This was critical because from here I knew which registers to enable or set to certain values. The datasheet had information on which bits of the ACC register set would enable the clock to the timers. And then, it had information on how to setup PWM for a timer, and enable that as an input into a GPIO pin we could connect the speaker to. From here, we could also set up the counter to set the duration of our delays, etc. Ultimately, the first step to the design process was to understand the datasheet and figure out which registers we need to set. In order to test our design, we did not create testbenches for this like the verilog/FPGA labs. Instead, I used the debugger to walk through the logic of my code, and I brought up all the relevant register signals, so I could see how every line I was working through was changing the state of the MCU, and if I saw that something wasn’t happening according to how I wanted, then I would revise the datasheet. Additionally, I would measure the signals on an oscilloscope so I could see if I was getting an oscillating frequency where I wanted it."
-  },
-  {
-    "objectID": "labs/lab4/lab4.html#technical-documentation",
-    "href": "labs/lab4/lab4.html#technical-documentation",
-    "title": "Lab 4 Report",
-    "section": "Technical Documentation:",
-    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nOscilloscope Frequency Measurements\nThe images show the oscilloscope trace with the frequency, so we can see how closely it is matching up with the expected frequency the audio is supposed to play.\n Figure 2 above was for the first note which should have been 659Hz, but instead it is 658Hz, however it is really close to the expected value, and within 1%.\n The figure above is supposed to be for the 13th note, which was coded as 440Hz, however it is actually 438Hz, which is still quite close to the expected value, and within 1%.\n The note above was for a frequency that should have been at 236Hz, but it is instead at 260Hz, which is still close, and within 1%.\n The image above is to show that our highest note which was at 1.3kHz, can also be played and reached with our PWM.\n And this image above shows how we can also hit our minimum pithch frequency range of 220Hz, although the lowest our system can reach was calcualted to be even smaller (around 78Hz).\n\n\nSchematic\n The image above is the schematic of our circuit, which is connected to our speaker. We used the LM386 low voltage audio power amplifier, in order to take our PWM output from a GPIO MCU pin, and play a tone. We used a variety of resistors and capacitors in order to control the audio, ultimately connecting to an external speaker. Additionally, we added a potentiometer to control the volume of the audio that was outputted on the speaker.\n\n\n\nFigure 8: Min/Max Frequency/Duration calculations\n\n\nIn Figure 8 we can see all the calculations performed to find the min and max frequencies and durations we can support with our clock, and the min and max durations we can hold the delay for.\n Figure 9 above shows the difference between the actual and expected frequencies, because of the rounding that happens when we set out values to arr."
-  },
-  {
-    "objectID": "labs/lab4/lab4.html#results-and-discussion",
-    "href": "labs/lab4/lab4.html#results-and-discussion",
-    "title": "Lab 4 Report",
-    "section": "Results and Discussion",
-    "text": "Results and Discussion\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.\nIf I was given more time, I would have tried to connect to two speakers using two other timer register busses, so I could play different tones at the same time and enhance the music output. Additionally, I would have tried to play a better, more complex sound had I been better at interpreting sheet music.\nThe design performs as expected, and does play the songs I want it to, and it is is reliable. The only thing is that the potentiometer is really sensitive, making it more challening to control the audio volume."
-  },
-  {
-    "objectID": "labs/lab4/lab4.html#conclusion",
-    "href": "labs/lab4/lab4.html#conclusion",
-    "title": "Lab 4 Report",
-    "section": "Conclusion",
-    "text": "Conclusion\nThe overall design works as expected, and we are able to play Fur Elise and another song of our choice on the speakers, by using the MCU clock to generate a PWM frequency for the tone, as well as for a delay timer. In other words, our PLL clock goes to two timer busses to generate a PWM signal for our frequency and create a timer for our audio. Overall, I spent 20 hours on this lab."
-  },
-  {
-    "objectID": "labs/lab4/lab4.html#ai-prototype-summary",
-    "href": "labs/lab4/lab4.html#ai-prototype-summary",
-    "title": "Lab 4 Report",
-    "section": "AI Prototype Summary",
-    "text": "AI Prototype Summary\n\n\n\nFigure 10: Second ChatGPT response after a prompt\n\n\nFigure 10 shows the result of the AI prototype, and it had a decent line of reasoning or chain of logic in order to determine what timer to use. However, ultimately it picked TIM2 which is different than the one I chose to use. I am not sure if TIM2 has a channel that it can be connected to on a pin on our breakout board. There might have been a limitation here on what breakout board we could use, which is something the AI system wouldn’t know possibly, because it may not know what pins we can directly address and write to. Overall, the quality of the output is decent, especially in terms of the chain of logic because it did consider many levels of planning, including talking about the prescalar, arr, clock enable, channel output, etc. All of which I am really impressed about, however there was not much information given as to why TIM2 was chosen over the other timers. The LLM did not generate any code for me, but it did talk about similar registers to what I modified, so it might be pretty close. Because the LLM did not give much reasoning about the timer, it was difficult to compare it to my approach. TIM16 gave a clear pinout to connect to for my PWM on my breakout board, which was one of the main reasons I chose it, however Chat said because it is 32-bits it avoids a “prescalar headache[s]”. It says TIM2 has the simplest, which I do not entirely agree with. However, the LLM does work well as a sounding board which I can tell from this exercise, because it does address imporant registers and bits that need to be changed in order to get the timer to work, which is impressive, because this is what I spent the longest doing."
-  },
-  {
-    "objectID": "labs/lab2/lab2.html",
-    "href": "labs/lab2/lab2.html",
-    "title": "Lab 2 Report",
-    "section": "",
-    "text": "In this lab, we built a time-multiplexed seven segment display, which would share one single seven_segment decoder module, in order to display what looks like two numbers on the dual display at the same time. The module is a shared resource between both DIP-switch controlled numbers, so the overall goal was to time-multiplex the seven segment decoder to allow only one number to have access to the led display, but flash at a frequency fast enough to make it seem like both numbers were appearing at the same time (as though we had two different module instantiations). The numbers are controlled by two independent DIP switches.\nAdditionally, we have an LED that displays the sum of the numbers inputted in on both the DIP switches."
-  },
-  {
-    "objectID": "labs/lab2/lab2.html#introduction",
-    "href": "labs/lab2/lab2.html#introduction",
-    "title": "Lab 2 Report",
-    "section": "",
-    "text": "In this lab, we built a time-multiplexed seven segment display, which would share one single seven_segment decoder module, in order to display what looks like two numbers on the dual display at the same time. The module is a shared resource between both DIP-switch controlled numbers, so the overall goal was to time-multiplex the seven segment decoder to allow only one number to have access to the led display, but flash at a frequency fast enough to make it seem like both numbers were appearing at the same time (as though we had two different module instantiations). The numbers are controlled by two independent DIP switches.\nAdditionally, we have an LED that displays the sum of the numbers inputted in on both the DIP switches."
-  },
-  {
-    "objectID": "labs/lab2/lab2.html#design-and-testing-methodology",
-    "href": "labs/lab2/lab2.html#design-and-testing-methodology",
-    "title": "Lab 2 Report",
-    "section": "Design and Testing Methodology",
-    "text": "Design and Testing Methodology\nThere were various steps in implementing this lab. First, we could use the base code from lab 1, which was displaying a single DIP switches input into one seven segment LED display. But, for this lab, we created a clock which toggled at 60Hz from a clock divider - around the frequency of flicker free viewing for humans. Then, every 60Hz I would toggle a signal, which woudl essentially be the select signal for a mux which would decide which DIP switche’s input to display on the LED. Based on which DIP switch’s input was selected, that would be fed into the single, shared, seven segment module instantiation which would then display that number on the display. However, because we made our new clock toggle at 60Hz, the flicker free viewing frequency, both switch numbers are toggling so fast it looks like they are both displayed on the LED-display at the same time. Due to this, when building the circuit on the breadboard, I would only need 7 pins to connect to all the 14 different segments on the dual-display, because we designed it so that only 7 segments can be driven at a time, since there is only one seven segment module decoder. Additionally, the FPGA does not have enough power to drive the dual-segment LED display, so we had to connect the output of the FPGA pins to a PNP transistor which was connected to a 3.3V collecter, so everytime a high signal was asserted by any of the pins it would pull current from the collecter in order to provide enough power to the dual display. I had an enable signal that was two bits wide, and depending on the clock signal, would either provide a base to one of the two PNP transistors. And we also had 5 LEDs which would just display the sum of both the dip switches.\nIn order to test the design, I first isolated my clock divider module, so I could test that the clock was indeed running 60Hz. I created my own clock signal in the testbench, and then asserted that after 60Hz from the testbench, we were also toggling the clock in my clock module. Essentially, I made sure both clocks were running at the same frequency.\nThen, in order to test the rest of my design, I had another testbench. This time, I did not use testvectors, but rather leveraged assert statements. I generated a counter that was 8-bits wide, and each time it would split this 8-bit bus into two 4-bit busses, which would simulate the inputs on both by 4-input DIP switches. I then made sure the addition of the led signal was equal to the sum of both of 4-bit busses. And then, based on the enable signal asserted from my top-level module, I made sure that the actual seven-segment output, matched with the one I was chosing based on the enable signal and switch value.\nI made sure to calculate appropriate resistor values based on the maximum drivable current as well for all my pins.\n\n\n\nFigure 1: Image of the physical setup\n\n\nFigure 1 shows the physical implementation the breadboard with the time-multiplexed segment visible."
-  },
-  {
-    "objectID": "labs/lab2/lab2.html#technical-documentation",
-    "href": "labs/lab2/lab2.html#technical-documentation",
-    "title": "Lab 2 Report",
-    "section": "Technical Documentation:",
-    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nBlock Diagram\n The block diagram in Figure 2 demonstrates the overall design and architecture of the design. The top-level module incldes three sub-modules - the HSOSC (high-speed oscillator block), the clock, and the seven_segment module in order to convert hex digits to seven segments. The clock is essentially the clock divider which is taking care of toggling the clock at 60Hz. We can see the internal logic of the muxes as well, in order to multiplex the values given to the seven-segment module, based on the generated clock.\n\n\nSchematic\n Figure 3 demonstrates the physical layout of the design. We have internal 100k-ohm pullup resistors in order to ensure the pins aren’t floating. We then have the DIP switch on the right connected to around a 420 ohm pull-down resistor on the left, and then power to the right. We have each of our PNP transistors connected to a 3.3V collecter, and a 330-ohm resistor in order to limit the current going into the transistor base. Each of our segments was connected to a pin, with two segments mapping to one pin due ot the shared seven-segment module. Each segment was connected to a 170 ohm resistor to limit the current going into the LED’s, while not exceeding the maximum current that can be driven by an FPGA pin. Our adder-sum LED’s are each connected to a 100ohm resistor to limit the current through the diodes to around 13mA, which is within its possible range.\n\n\n\nFigure 4: Current Calculations\n\n\nIn Figure 4 we can see all the calculations performed to ensure we are not drawing more current that possible from the FPGA pins - 8mA."
-  },
-  {
-    "objectID": "labs/lab2/lab2.html#results-and-discussion",
-    "href": "labs/lab2/lab2.html#results-and-discussion",
-    "title": "Lab 2 Report",
-    "section": "Results and Discussion",
-    "text": "Results and Discussion\n\n\n\nFigure 5: A screenshot of a QuestaSim simulation demonstrating the clock toggling at the right frequency - 60Hz.\n\n\n\n\n\nFigure 6: A screenshot showing the enable signal into the PNP transistors is toggling every few cycles\n\n\n\n\n\nFigure 7: A screenshot of a QuestaSim simulation for the top level module.\n\n\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components. Figure 5 shows a screenshot of the QuestaSim Simulation of the clock module. This is the simulation run with the self checking test-bench without testvectors. Figure 6 shpws that our enable signal is toggling every few cycles in order to control which segment is being displayed on the display. Figure 7 shows the testbench designed for the overall top-level design, which was also designed without testvectors and was instead an assert based testbench.\nIf I was given more time, I would have tried to come up with other ways to test the clock signal using the in-built delays available in the testbench. I would have also made my wires on my breadboard more concise and neater, so it would have been easier to debug. The design performed exactly as intended."
-  },
-  {
-    "objectID": "labs/lab2/lab2.html#conclusion",
-    "href": "labs/lab2/lab2.html#conclusion",
-    "title": "Lab 2 Report",
-    "section": "Conclusion",
-    "text": "Conclusion\nThe overall design, after all the testing, successfully time-multiplexes the seven-segment decoder to ensure that is a shared resource between two possible inputs from two independent DIP switches. Although the dual display can only be used by one DIP switches output at a time, the fast multiplexing makes it seem like both numbers are being displayed at the same time - as our eyes are not able to detect the flicker. I spent a total of 12 hours working on this lab."
-  },
-  {
-    "objectID": "labs/lab2/lab2.html#ai-prototype-summary",
-    "href": "labs/lab2/lab2.html#ai-prototype-summary",
-    "title": "Lab 2 Report",
-    "section": "AI Prototype Summary",
-    "text": "AI Prototype Summary\n\n\n\nFigure 8: Second ChatGPT response after a prompt\n\n\n\n\n\nFigure 9: ChatGPT Seven segment response\n\n\nFigure 8 shows the result of entering the prompt into ChatGPT - after some additional prompting. Initially it created two different instances of the module, because it maybe missed out on the idea of multiplexing, but after I prompted it to only instantiate one module, it created the output above which looks correct to me, and it synthesized fine.\nFigure 9 shows the seven segment display decoder code that it generated, which also compiled fine and seems optimized and reasonable.\nOverall, I would rate the quality of this code pretty good since it seems to be optimal in all the assignments, module interaction, and clock multiplexing that it does. In terms of verilog contstructs that were unknown to me, I did not see anything striking - I have used almost everything used in the AI version. However, the AI did make the counter a little different to mine, with the addition, and counter limit check under the same else conditional, however this was just a design decision. The AI code synthesized both times, I tried it, however the first time there was a logic gap in the way it did the time multiplexing. One important thing is that it is not running at the right frequency, it is running too fast since it is just using the HSOSC, so this would be something that might need more prompting. In terms of warning messages, I just got the expression size 32 bits truncated to fit in target size 16, but I have also been getting this warning message as well. The next time, I might give it a little more context on what I have available, and perhaps define some of the terms I am using - although this shouldn’t have been necessary. Also, it did not use the HSOSC oscillator that I am using because it did not have the context of the lab, and what we were using.\n\n\n\nFigure 10: ChatGPT output after giving it related files\n\n\nThe output of the LLM after providing it with my seven segment decoder and the HSOSC code, is outlined in figure 10. This code good quality, but it did change quite a bit in terms of structure from the previous version. Again, the frequency is not correct as it is going too fast. It also split up the different parts of the code like the PNP enable signals, and the seg calcualtions into different stages which might make it more readable, but it is still functionally correct. There were no warning messages from this that were alarming - it is just interesting that it changed the structure into different units based on my lab 1 code that I had provided."
-  },
-  {
-    "objectID": "labs/lab7/lab7.html",
-    "href": "labs/lab7/lab7.html",
-    "title": "Lab 7 Report",
-    "section": "",
-    "text": "In this lab, we built the AES encryption system on the FPGA and had to be thoughtful about building the architecture so that it fits on the FPGA. We also interfaced the FPGA with the MCU, where the MCU sends the key and plaintext to the FPGA, and the FPGA using the AES algorithm hardware built will sent the cypertext back to the MCU which will then turn on an LED if that is intended. This gives us experience with hardware accelerators as the AES algorithm runs faster in hardware than it does with software."
-  },
-  {
-    "objectID": "labs/lab7/lab7.html#introduction",
-    "href": "labs/lab7/lab7.html#introduction",
-    "title": "Lab 7 Report",
-    "section": "",
-    "text": "In this lab, we built the AES encryption system on the FPGA and had to be thoughtful about building the architecture so that it fits on the FPGA. We also interfaced the FPGA with the MCU, where the MCU sends the key and plaintext to the FPGA, and the FPGA using the AES algorithm hardware built will sent the cypertext back to the MCU which will then turn on an LED if that is intended. This gives us experience with hardware accelerators as the AES algorithm runs faster in hardware than it does with software."
-  },
-  {
-    "objectID": "labs/lab7/lab7.html#design-and-testing-methodology",
-    "href": "labs/lab7/lab7.html#design-and-testing-methodology",
-    "title": "Lab 7 Report",
-    "section": "Design and Testing Methodology",
-    "text": "Design and Testing Methodology\nIn terms of the design for this project I first had to think carefully about how I wanted to implement it in hardware so it would fit on the FPGA because we have a limited number of LUTs. I then had to come up with tradeoffs in terms of memory versus time. For example, my design takes 16 extra clock cycles, however it uses fewer number of LUTs - around 1500/5200 available ones. Furthermore, I had to really think about the timing of my signals, and on what round and what cycle certain pieces of information had to be ready. This meant I had to be intentional about what signals I was putting in my flop, and how many modules I was instantiating. It was a really fun and interesting lab, and I really enjoyed designing the FSM. In terms of testing the design, we had some testbenches provided to us, and I also wrote a testbench for each module, and simulated it with different keys and plaintexts to make sure I was get the correct output. I also traced through my output at each stage to further verify this. We also looked at the logic analyzer to make sure the correct data was propagating."
-  },
-  {
-    "objectID": "labs/lab7/lab7.html#technical-documentation",
-    "href": "labs/lab7/lab7.html#technical-documentation",
-    "title": "Lab 7 Report",
-    "section": "Technical Documentation:",
-    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nBlock Diagram\n The image above shows the block diagram of how each of my modules connect to each other, and how the signals propagate."
-  },
-  {
-    "objectID": "labs/lab7/lab7.html#results-and-discussion",
-    "href": "labs/lab7/lab7.html#results-and-discussion",
-    "title": "Lab 7 Report",
-    "section": "Results and Discussion",
-    "text": "Results and Discussion\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.\nThe design performs as expected, as it correctly sends the data through SPI, and the FPGA correct sends back the ciphertext. I can tell this because in the MCU code, an LED will light up once the transaction is completed and the ciphertext the FPGA sends matches the expected ciphertext. The design is reliable, accurate, and it is also quite efficient on the hardware.\nBelow are the test benches for the AES core and AES core with SPI.\n\n\n\nFigure 2: Testbench for AES core\n\n\n\n\n\nFigure 3: Testbench for AES SPI + core\n\n\n\n\n\nFigure 4: Testbench for AES add round kkey\n\n\n\n\n\nFigure 5: Testbench for AES sbox\n\n\n\n\n\nFigure 6: Testbench for AES galoismult\n\n\n\n\n\nFigure 7: Testbench for AES shiftrows\n\n\n\n\n\nFigure 8: Testbench for mixcolumns\n\n\nNow, we have the result of the Logic Analyzer, displaying the SPI transactions. The first data that is transmitted on SPI through MOSI, is the plaintext and key, and the FPGA should output the ciphtertext (ct) which is the following:\nchar key[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};\nchar plaintext[16] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};\nchar ct[16] = {0x69, 0xC4, 0xE0, 0xD8, 0x6A, 0x7B, 0x04, 0x30, 0xD8, 0xCD, 0xB7, 0x80, 0x70, 0xB4, 0xC5, 0x5A};\n\n\n\nFigure 9: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 10: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 11: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 12: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 13: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 14: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 15: LA output for SPI key on MOSI/COPI\n\n\n\n\n\nFigure 16: LA output for SPI key on MOSI/COPI\n\n\nBelow are the images from the return transaction, on MISO/CIPO where the FPGA is responding with the ciphertext:\n\n\n\nFigure 17: LA output for ciphertext on MISO/CIPO\n\n\n\n\n\nFigure 18: LA output for ciphertext on MISO/CIPO\n\n\n\n\n\nFigure 19: LA output for ciphertext on MISO/CIPO\n\n\n\n\n\nFigure 20: LA output for ciphertext on MISO/CIPO\n\n\n\n\n\nFigure 21: LA output for ciphertext on MISO/CIPO\n\n\n\n\n\nFigure 22: LA output for ciphertext on MISO/CIPO\n\n\n\n\n\nFigure 123: LA output for ciphertext on MISO/CIPO"
-  },
-  {
-    "objectID": "labs/lab7/lab7.html#conclusion",
-    "href": "labs/lab7/lab7.html#conclusion",
-    "title": "Lab 7 Report",
-    "section": "Conclusion",
-    "text": "Conclusion\nThe design works as expected, and works as an AES encoder, where it takes a key and plaintext from the MCU, and then sends it to the FPGA, where the FPGA performs 10 rounds of AES encryption, and then sends the result back to the MCU, along with a done signal, letting the MCU know the transaction is complete. This was a really fun lab, and I thought it was really cool :). I spent 15 hours working on this lab."
-  },
-  {
-    "objectID": "labs/lab7/lab7.html#ai-prototype-summary",
-    "href": "labs/lab7/lab7.html#ai-prototype-summary",
-    "title": "Lab 7 Report",
-    "section": "AI Prototype Summary",
-    "text": "AI Prototype Summary\n\n\n\nFigure : AI Prototype image of the new website\n\n\nFigure __ shows the result of the AI engine writing verilog to create the KeyExpansion module. Overall, the code works pretty well, and it even breaks it up by round instead of doing it all at once and then using that result. Additionally, it defines more helper modules to take care of tasks like shifting, which is good since these features are used often in other modules too. Overall, it looks pretty correct and it compiled. Additionally, it new all the round constants, and I was really surprised about this.\n\n\n\nFigure 6: AI Prototype image of the code\n\n\nFigure __ above shows the result of the second prompt. The output of this prompt was very different than the style used earlier, as it did not rely on the AES knowlegde, and instead implemented the math for the new algorithm. It is definitely a lot more inefficient because of the multuple for loops, and within each loop, a module is instantiated - which means it will blow up the hardware to a decent extent. The LLM having knowledge of AES, definitely simplifies the entire process."
-  },
-  {
-    "objectID": "labs/lab1/lab1.html",
-    "href": "labs/lab1/lab1.html",
-    "title": "Lab 1 Report",
-    "section": "",
-    "text": "In this lab, we built out motherboard with the FPGA and the microcontroller through soldering, and tested our board by loading designs onto our FPGA nad microcontroller. We implemented a design on the FPGA to test the on-board high-speed oscillator by blinking one of the on-board LEDs. And we implemented a program on the microcontroller to light an LED.\nOverall, the main goal after creating our boards was to create a seven segment display. We wrote verilog to convert a 4-bit hex inputted through a switch into display using 7-segments. We did this by programming pins on the FPGA based on the switches, and then connecting this to a physical build of a seven-segment display on a breadboard to observe the numbers. We also used the switches to light other LEDs on the FPGA, and like described earlier, we used the on-board high-speed oscillator to blind an on-board led at 2.4Hz."
-  },
-  {
-    "objectID": "labs/lab1/lab1.html#introduction",
-    "href": "labs/lab1/lab1.html#introduction",
-    "title": "Lab 1 Report",
-    "section": "",
-    "text": "In this lab, we built out motherboard with the FPGA and the microcontroller through soldering, and tested our board by loading designs onto our FPGA nad microcontroller. We implemented a design on the FPGA to test the on-board high-speed oscillator by blinking one of the on-board LEDs. And we implemented a program on the microcontroller to light an LED.\nOverall, the main goal after creating our boards was to create a seven segment display. We wrote verilog to convert a 4-bit hex inputted through a switch into display using 7-segments. We did this by programming pins on the FPGA based on the switches, and then connecting this to a physical build of a seven-segment display on a breadboard to observe the numbers. We also used the switches to light other LEDs on the FPGA, and like described earlier, we used the on-board high-speed oscillator to blind an on-board led at 2.4Hz."
-  },
-  {
-    "objectID": "labs/lab1/lab1.html#design-and-testing-methodology",
-    "href": "labs/lab1/lab1.html#design-and-testing-methodology",
-    "title": "Lab 1 Report",
-    "section": "Design and Testing Methodology",
-    "text": "Design and Testing Methodology\nThere were two different steps associated with the hardware component of the design, with the first one being the soldering of the components.\nThere were two main parts to soldering the components to the motherboard - we had to solder on the SMD components, and the THT components as well. We also soldered on the FPGA and micro-controller as well.\nAfter the soldering was done, we proceeded to test our board. We first loaded a test program to the FPGA which uses the high-speed oscillator (HSOSC) from the iCE40 UltraPlus primitve library. Here, this library is used to generate a clock signal at 24Mhz, and then counter was implemented in order to produce a blinking frequency of 1.5Hz, so that we could see it on the LEDs. This was developed with a clock-divider module. After this, we uploaded another program to our FPGA which toggles pin P25 at around 1Hz, and if switch SW7 is on, then P25 is connected to PA9 which will see LED D3 blinking. We then, uploaded a program to our MCU unit, which reads the value of the toggled LED from the FPGA and echoes it to another pin which then causes LED D2 blinking.\nWe then implemented the 7-segment code in verilog, which was essetially a decoder. Along with this, we programmed some switch inputs to control 3 other on-board FPGA LEDs using combinational logic, and using the HSOSC to take teh 24MHz signal and convert it into a 2.4Hz signal which was reflected in a blinking LED. I then used an oscilliscope to test the frequency of the blinking LED and it was exactly 2.4Hz. Figure 1 below shows this.\n\n\n\nFigure 1: Oscilliscope Trace showing the 2.4Hz signal on the bottom right\n\n\nAfter this, we had to build the 7-segment LED display on a breadboard. After looking at the specs, I was able to apply power to one of the middle pins on either side, and ground the respective other pins in order to turn on that respective segment. Each non-power pin on the displaywas then hooked to ground through a 10kohm resistor. I made sure to connect the programmed pins from the FPGA to the seven-segment display. In order to test this, I created a self-checking testbench which ran through all posisble inputs and made sure the outputs were as expected."
-  },
-  {
-    "objectID": "labs/lab1/lab1.html#technical-documentation",
-    "href": "labs/lab1/lab1.html#technical-documentation",
-    "title": "Lab 1 Report",
-    "section": "Technical Documentation:",
-    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nBlock Diagram\n The block diagram in Figure 2 demonstrates the overall design and architecture of the design. The top-level module incldes two sub-modules - the HSOSC (high-speed oscillator block), and the seven_segment module in order to convert hex digits to seven segments. Additionally, there is internal counter logic fro the clock divider, as well as combinational logic to control the LEDs.\n\n\nSchematic\n Figure 3 demonstrates the physical layout of the design. We have internal 100k-ohm pullup resistors in order to ensure the pins aren’t floating. We then have the output on-board LEDs connected using a 1k-ohm current limiting resistor to ensure the output current (around 2.6mA) did not exceed the maximum output current of the FPGA I/O pins.\n\n\n\nFigure 4: Current Calculations\n\n\nThen, if we look further down, we can see the seven-segment display component. Here we power the middle pin on the left, which propogates to all the other pins. In order to turn on a pin, it needs to be grounded, hence we have 10k-ohm resistors connected from each output pin to ground in order to not exceed the maximum allowed output current of the pins. Figure 4 highlights the calculations performed to ensure we were not exceeding the maximum current allowed."
-  },
-  {
-    "objectID": "labs/lab1/lab1.html#results-and-discussion",
-    "href": "labs/lab1/lab1.html#results-and-discussion",
-    "title": "Lab 1 Report",
-    "section": "Results and Discussion",
-    "text": "Results and Discussion\n\n\n\nFigure 5: A screenshot of a QuestaSim simulation demonstrating the hex-switch inputs and the correspinding seven segment output.\n\n\n\n\n\nFigure 6: A screenshot of a QuestaSim simulation demonstrating the toggling LED at 2.4Hz using the clock divder.\n\n\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components. Figure 5 shows a screenshot of the QuestaSim Simulation. This is the simulation run with the self checking test-bench.\nFigure 6 on the other hand, shows the toggling of led 2 at 2.4Hz using the clock divider. If I was given more time, I would have expanded the testbench to also test that the led signal was infact blinking at 2.4Hz through possibly another clock generation. The design performed exactly as intended, with the blinking LEDs blinking at the approproate frequencies, and the seven segment display working exactly as intended."
-  },
-  {
-    "objectID": "labs/lab1/lab1.html#conclusion",
-    "href": "labs/lab1/lab1.html#conclusion",
-    "title": "Lab 1 Report",
-    "section": "Conclusion",
-    "text": "Conclusion\nThe overall design, after all the testing, successfully takes a 4-bit hex number inputted by the user on the DIP switches, and then converts this into the numeric hex representation of this number on the seven-segment display. I spent a total of 25 hours working on this lab."
-  },
-  {
-    "objectID": "labs/lab1/lab1.html#ai-prototype-summary",
-    "href": "labs/lab1/lab1.html#ai-prototype-summary",
-    "title": "Lab 1 Report",
-    "section": "AI Prototype Summary",
-    "text": "AI Prototype Summary\n\n\n\nFigure 7: Initial ChatGPT response\n\n\nFigure 7 shows the result of entering the prompt into ChatGPT.\nAfter entering this project into Lattice, and synthesiszing it, it seemed to have run with no errors, meaning at least the verilog syntax was correct. Additionally, it seems like most of the logic is correct for the counter, and it even accounted for dividing the period by 2 in order to toggle two times in each period. Figure 8 shows the successful response.\n\n\n\nFigure 8: Lattice Synthesis Result\n\n\nOverall, I would say that the quality of this verilog is really nice, with a very exact counter. This was similar to how I learned it in E85 last semester for my music lab, and therefore how I implemented it myself. The LLM did generate some constructs like parameter int, which I have never used before. The code did synthesize the first time around, which is impressive. However, this is also a common application of clock dividing, so it must have been trained on a lot of relevant data. There were very small errors such as bit truncation for optimization.\nNext time I use LLM in my workflow, it is important to understand how to prompt the model, it is important to give it the constraints you are working under, and even providing specific library names are important. I was really surprised when the LLM picked up on the HSOSC library and the documentation for the syntax."
-  },
-  {
-    "objectID": "labs/lab6/lab6.html",
-    "href": "labs/lab6/lab6.html",
-    "title": "Lab 6 Report",
-    "section": "",
-    "text": "In this lab, we used the SPI communication protocol to have our MCU interface with a DS1722 temperature sensor in order to measure temperature, along with sending a webpage over to our computers through UART. Essentially, we built a simple Iot Device, where we interface with the temperature sensor over SPI. And, the MCU interfaces with teh ESP8266 over UART. There is a simple HTML page that displays this information. The website allows the user to control an onboard LED, as well as change the resolution to which the temperature sensor is measuring in."
-  },
-  {
-    "objectID": "labs/lab6/lab6.html#introduction",
-    "href": "labs/lab6/lab6.html#introduction",
-    "title": "Lab 6 Report",
-    "section": "",
-    "text": "In this lab, we used the SPI communication protocol to have our MCU interface with a DS1722 temperature sensor in order to measure temperature, along with sending a webpage over to our computers through UART. Essentially, we built a simple Iot Device, where we interface with the temperature sensor over SPI. And, the MCU interfaces with teh ESP8266 over UART. There is a simple HTML page that displays this information. The website allows the user to control an onboard LED, as well as change the resolution to which the temperature sensor is measuring in."
-  },
-  {
-    "objectID": "labs/lab6/lab6.html#design-and-testing-methodology",
-    "href": "labs/lab6/lab6.html#design-and-testing-methodology",
-    "title": "Lab 6 Report",
-    "section": "Design and Testing Methodology",
-    "text": "Design and Testing Methodology\nIn terms of the design, it was really imporant to understand how to SPI communication protocol works between the MCU and our temp sensor. Our temperature sensor has a very specific way of communicating with the controller, so we had to make sure our communication was compliant with this. First, I had to read the reference manual closely to understand how to setup SPI communication on our MCU, and make sure everything was configured in the way we wanted, i.e. baud rate, data size, FIFO size, fully duplex, etc. Then, I found compliant pins that I could use on the MCU for SPI - SCLK, CIPO/MISO, COPI/MOSI. And I decided to have a manually controlled CS pin, so I could use any pin for this. Once I had my pins and SPI setup, I had to write my SPI communication functions. This one was simple, because it was just pushing data on the line and returning what comes out. So for this, I had to wait until the transmit buffer was empty, then send the data, then wait for the receiving buffer to be empty, and then return whatever data the temperature sensor sends out. In terms of the temperature sensor, the datasheet mentioned that it requires CS to go high for any communication, and after CS goes high it expects an address, and then if it was a write address it expects the data next, and if it was a read address you can send dummy bits over to create enough clock pulses to get out the data. For reference, 0x80 is the write address to configure the temp sensor, and 0x00 is the read address for the config reg, 0x02 reads the MSB of the temp sensor, and 0x01 reads the LSB for the temp sensor. So first, when a request comes in from the user to change the resolution from the website, we set CS to 1, then send 0x80 to the SPI, and then the configuration with the resolution, nd then CS back to low. For reading the MSB for example, we would do - CS high, send(0x02), msb_value = send(dummy bits, ex 0x00), CS low. Once this protocol was setup, I just had to wire everything in hardware which entailed connecting the appropriate pins on my MCU (SCLK, CIPO/MISO, CPOI/MOSI), to the appropriate pins on the DSI722 (SDO, SDI, SCLK, CS, etc). In order to test, I first tried writing to the configuration register with setting a resolution, and then reading from it to make sure I was ablw to read and write correctly to the temp sensor. Once this was working, I knew that from my while loop writing to the temp sensor to configure the the resolution would work. But, to debug issues I had here, I put all my signals on an oscilloscope to see that CIPO/MISO was changing as data was being passed through , and same for COPI/MOSI. I then used the logic analyzer mode to easily map out all my signals to see my transactions. Once I saw the bits I was sending happening on COPI/MOSI, and then on the next output of data of CIPO/MISO reflecting that, I knew it was correct. I also tested it from my HTML by changing the configrations, and printing out what it was saving, as wella s the config register, to make sure I was updating with button presses."
-  },
-  {
-    "objectID": "labs/lab6/lab6.html#technical-documentation",
-    "href": "labs/lab6/lab6.html#technical-documentation",
-    "title": "Lab 6 Report",
-    "section": "Technical Documentation:",
-    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nSchematic\n The image above shows the schematic of our system, with the SPI transaction lines connected between the MCU and DS1722, and UART communication linked through RX and TX."
-  },
-  {
-    "objectID": "labs/lab6/lab6.html#results-and-discussion",
-    "href": "labs/lab6/lab6.html#results-and-discussion",
-    "title": "Lab 6 Report",
-    "section": "Results and Discussion",
-    "text": "Results and Discussion\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.\nThe design performs as expected, as it updates the temperature when I change the temperature applied on the sensor. It also updates the temperature with the correct resolution when I change it from the website, and also controls the LED as well from the website.\n Figure 2 above shows the logic analyzer trace for a write transaction to the configuration register at address 0x80. The configuration was set for 8-bits, hence 0xE0 was send as the write data.\n Figure 3 above shows the logic analyzer trace for a write transaction to the configuration register at address 0x80. Here, the configuration was set for 12-bits, hence 0xE8 was send as the write data.\n Figure 4 above shows the logic analyzer trace for a read transaction. First, we can see the confguration register is being read at address 0x00, and we see on the next data output of MISO, we see 0xE0 hence this is an 8-bit configuration. We then see the read for address 0x02, the MSB for temperature, which then gives us 0x18, and then a read at 0x01, the LSB of the temperature sensor which gives us 0x00 as expected, since it is an 8-bit resolution so only the top 8-bits have data, and the bottom 8-bits are 0 (16 bits total for the SPI-&gt;DR (data register))."
-  },
-  {
-    "objectID": "labs/lab6/lab6.html#conclusion",
-    "href": "labs/lab6/lab6.html#conclusion",
-    "title": "Lab 6 Report",
-    "section": "Conclusion",
-    "text": "Conclusion\nThe design works as expected, and works as a simple IoT device. Through an HTML page, the user is able to control an onboard LED, as well as control how temperature is calculated from the temperature sensor, by changing the resolution. When these values are updated/selected, it displays on the website as well for the users to see. The temperature sensor communication with the MCU happens through SPI, and sending the website over to to the ESP8266 chip, and capturing the form requests and sending it to the MCU happens through USART. One shortcoming is that the website updates the current selection on the following/next interaction with the websote, creating a one-page refresh lab. I would have to look into maybe havign an update button which refreshes the page, or wen somethign is pressed, refersh the page twice automatically in order to display the information to the user. I spent 15 hours working on this lab."
-  },
-  {
-    "objectID": "labs/lab6/lab6.html#ai-prototype-summary",
-    "href": "labs/lab6/lab6.html#ai-prototype-summary",
-    "title": "Lab 6 Report",
-    "section": "AI Prototype Summary",
-    "text": "AI Prototype Summary\n\n\n\nFigure 5: AI Prototype image of the new website\n\n\nFigure 5 shows the result of prompting ChatGPT to give me a nice looking website in order to display my termperature resolution form, as well as the buttons for controlling the leds, and displaying the temperature. It looks quite nice actually, and it only took like 2 prompts in order to create this output. It works well, looks a lot better than what it was before, and the output makes sense.\n\n\n\nFigure 6: AI Prototype image of the code\n\n\n\n\n\nFigure 7: AI Prototype image of the code part 2\n\n\nFigure 6 and 7 above shows the result of the prompt to ask AI for the function to interact with the DS1722 temperature sensor. Something I noticed in this, is it knew to dereference the SR1-&gt;DR register in order to write to it - something I would never have figured out, and would have spent hours debugging. Otherwise, the reading from the register didn’t seem correct - as it wrote the write address to the SPI transaction, instead of the read address. It identified all the correct registers, however it used them in the wrong way. In order to read, it was also sending the write register which is not needed, it only needs to send the read register (0x02 or 0x01), and then the dummy bits after that. But otherwise, it had the right conceptual idea for all the calculations. I am not entirely sure if the final calculation to convert the temperature to celcius is correct, but otherwise everything else looks okay."
-  },
-  {
-    "objectID": "labs/lab5/lab5.html",
-    "href": "labs/lab5/lab5.html",
-    "title": "Lab 5 Report",
-    "section": "",
-    "text": "In this lab, we used interrupts on the microcontroller to determine the angular velocity and direction of a motor by reading from a quadrature encoder. The motor emits a square wave in the form of two encoder output signals A and B, which are connected to two pins on the MCU respectively. To achieve the highest resolution, on each edge of each encoder pulse, we trigger an interrupt, which goes to that pin/line’s respective interrupt handler where we can perform some calcululations. We also have a timer based interrupt, which allows us to perform time-sensitive calculations such as finding the motor’s speed, and we also use this timer interrupt for a 1Hz display update where we print the angular velocity and direction of the motor to the debug console."
-  },
-  {
-    "objectID": "labs/lab5/lab5.html#introduction",
-    "href": "labs/lab5/lab5.html#introduction",
-    "title": "Lab 5 Report",
-    "section": "",
-    "text": "In this lab, we used interrupts on the microcontroller to determine the angular velocity and direction of a motor by reading from a quadrature encoder. The motor emits a square wave in the form of two encoder output signals A and B, which are connected to two pins on the MCU respectively. To achieve the highest resolution, on each edge of each encoder pulse, we trigger an interrupt, which goes to that pin/line’s respective interrupt handler where we can perform some calcululations. We also have a timer based interrupt, which allows us to perform time-sensitive calculations such as finding the motor’s speed, and we also use this timer interrupt for a 1Hz display update where we print the angular velocity and direction of the motor to the debug console."
-  },
-  {
-    "objectID": "labs/lab5/lab5.html#design-and-testing-methodology",
-    "href": "labs/lab5/lab5.html#design-and-testing-methodology",
-    "title": "Lab 5 Report",
-    "section": "Design and Testing Methodology",
-    "text": "Design and Testing Methodology\nIn order to approach the design of the project, I first had to look through the reference/programming manual of the STMLK324KC microcontroller, as well as the interrupt lecture slides to understand the flow of logic that needs to be configured to enable interrupts. I used some of the provided header and C files, as well as the timer configuration files from my last lab, however I removed the structs as for this lab we could directly use the stm32l432xx.h header. However, I kept the .c functions the same as it had specially defined functions to configure our clocks and flash. In terms of design for the motor calcualtions, if we trap on any of A’s edges, and B is the opposite signal then we can determine a clockwise direction of motion. Similarly, if we trap on any of B’s edges, and A is the same signal, then we are going clockwise. Otherwise, we are moving in the counter clockwise. So, I connected the input pins (PA9 –&gt; A and PA10 –&gt; B) to interrupt lines (PA9 connects to line 9, PA10 connects to line 10), adn configured the interrupts to trap on both rising and falling edges of the square-wave encoder pulse. Then, on an interrupt, it goes to that line’s IRQ interrupt handler function, where I check for the interrupt on the exact line I care about (9 in EXTI9_5 handler, and 10 in EXTI15_10 handler), clear it by writing 1 to it, and perform my calculations. Here I check for the edges of A and B on the trap to get direction (I can tell which encoder signal I trapped on based on which interrupt handler I went to/which interrupt flag bit went to 1). Then, on these interrupts I also keep a running total of the number of pulses I have in the cw and ccw directions which then gets used in my tim16 interrupt handler function. For tim16, I have the tim 16 timer configured to 1 second, after which it raises the UIF flag and traps into its tim16 interrupt handler. Once I am here, I check how many pulses I had in the second, and divide that by the motors ppr (pulses per revolution), which is 408 from the datasheet to give me angular velocity (rev/sec). I then clear the counter to start fresh for the next 1 second interval. Additionally, once I hit the interrupt handler for the timer, I set a display flag to 1, which if true in the main function, it prints out the direction and angular velocity to the debug console.\nThe use of interrupts over polling techniques have different pros and cons. With interrupts, we can configure it so that as soon as an event is detected it will trap, pause all other execution, save the architectural state, and handle the interrupt before resuming normal program flow. This requires less hardware, and can almost instantaneously detect an event and handle it. Additionally, priorities can be set so that different interrupts can take precedents over others based on what may be more important. However, sometimes certain interrupts can pause all other execution, and if we want something to happen in parallel it could affect that. On the other hand, polling would require more hardware and continuous checking to determine if an event happened, and there could be a lag in when an event is detected to when it occurs, or it is possible that polling misses the event, in the case that the event happens in between a clock cycle - although unlikely if polling at high speeds.\nCalculations: I toggled a pin on my mcu within my main loop, as my polling would be constrained by how fast the main loop can operate, which was 52.8Hz, and then I measured the frequency of the encoder which is 999Hz, and when i performed all the calculations, I found the frequency of how fast my main loop could detect my pulse, and then converted that to rev/s, depending on my 408ppr.  Image 1 above displays the calculations for the polling comparison.\n Image 2 above displays the flowchart with the control logic flow, and how interrupts are handeled, and how that is built into the main function."
-  },
-  {
-    "objectID": "labs/lab5/lab5.html#technical-documentation",
-    "href": "labs/lab5/lab5.html#technical-documentation",
-    "title": "Lab 5 Report",
-    "section": "Technical Documentation:",
-    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nSchematic\n  The image above is the schematic of our circuit, which is connected to our motor. Our two encoder input pulses go into pins 9 and 10, and then we connect the motor to a 5V VCC supply from our MCU, and then power the encoders with and external power source. I set up internal pull-ups on pins 9 and 10 within the MCU.\n Figure 4 above shows the difference between the actual and expected frequencies, because of the rounding that happens when we set out values to arr."
-  },
-  {
-    "objectID": "labs/lab5/lab5.html#results-and-discussion",
-    "href": "labs/lab5/lab5.html#results-and-discussion",
-    "title": "Lab 5 Report",
-    "section": "Results and Discussion",
-    "text": "Results and Discussion\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.\nThe design performs as expected, and it does seem to display the appropriate angular velocity based on visually how many revolutions occur per second. It also detects the correct direction as well."
-  },
-  {
-    "objectID": "labs/lab5/lab5.html#conclusion",
-    "href": "labs/lab5/lab5.html#conclusion",
-    "title": "Lab 5 Report",
-    "section": "Conclusion",
-    "text": "Conclusion\nThe overall design works as expected, and we are able to capture the angular velocity and direction of the motors using a quadrature encoder. I configured interrupts to trap on each edge of the incoming pulses, and based on which trap handler and interrupt bit is high, I would check for the value of the incoming pins to determine the direction, and count the pulses. Additionally, I had a 1 second timer on TIM16 connected to an interrupt, which if it entered the TIM16 interrupt handler, it would calculate the angular velocity using the number of pulses it detected in that second, and the ppr. I spent 12 hours working on this lab."
-  },
-  {
-    "objectID": "labs/lab5/lab5.html#ai-prototype-summary",
-    "href": "labs/lab5/lab5.html#ai-prototype-summary",
-    "title": "Lab 5 Report",
-    "section": "AI Prototype Summary",
-    "text": "AI Prototype Summary\n\n\n\nFigure 5: Second ChatGPT response after a prompt\n\n\nFigure 4 shows the result of the AI prototype, and it is somewhat similar to my code but also very different at the same time. First off, in the code, it uses the masks defined in the header files for the stm32l432xx.h, whereas I directly accessed the bits using bit shifting, and did not use a predefined mask. Additionally, the logic does not consider setting up encoder B’s pin signal on the SYSCFG-&gt;EXTICR register which is interesting. I guess, it is not using the highest resolution in the design which is why it is only operating on the rising and falling edge of one of the signals. Furthermore, it is not calculating the direction of the motor based on the values of the encoder pulses, and is also not calculating the angular velocity properly. I also think in the interrupt handler, it is it checking for both bits of the encoder pins at the same time, however in order to determine direction, you need to address the cases differently for the values of the pulses. Furthermore, I am not sure if it knows to use 5V tolerant pins, so this is not really a consideration it made. However, overall it did try to pick pins on the same interrupt line to make it easier to handle with just one interrupt request handler function."
-  },
-  {
-    "objectID": "labs/lab3/lab3.html",
-    "href": "labs/lab3/lab3.html",
-    "title": "Lab 3 Report",
-    "section": "",
-    "text": "In this lab, we used a time-multiplexed seven-segment display to interface with a matrix keypad, in order to display the last two hexadecimal digits pressed - with the most recent entry appearing on the right. Each press was only recorded once, and the effect of switch bouncing was mitigated in the design implementation. Furthermore, the display does not flicker and is the same brightness regardless of how many segments are displayed."
-  },
-  {
-    "objectID": "labs/lab3/lab3.html#introduction",
-    "href": "labs/lab3/lab3.html#introduction",
-    "title": "Lab 3 Report",
-    "section": "",
-    "text": "In this lab, we used a time-multiplexed seven-segment display to interface with a matrix keypad, in order to display the last two hexadecimal digits pressed - with the most recent entry appearing on the right. Each press was only recorded once, and the effect of switch bouncing was mitigated in the design implementation. Furthermore, the display does not flicker and is the same brightness regardless of how many segments are displayed."
-  },
-  {
-    "objectID": "labs/lab3/lab3.html#design-and-testing-methodology",
-    "href": "labs/lab3/lab3.html#design-and-testing-methodology",
-    "title": "Lab 3 Report",
-    "section": "Design and Testing Methodology",
-    "text": "Design and Testing Methodology\nThere were various steps in implementing this lab. The first thing that I needed to do was decide how I was going to handle switch-bouncing and decide how I would move in and out of various stages of properly registering a keypad press. In order to decide this, I came up with a design of an FSM that would control how I could transition between states based on a given input. Initially, I decided that I would begin in a SCAN state, where I apply power to the columns and then read the rows, to determine if a button is pressed. As soon as I determine a button is pressed (reading a 1 on the row outputs), I would move to the DEBOUNCE_WAIT state, where I implented my debounce logic. For me, I thought it would be the simplest to have a counter that acts as a delay/buffer for around 100ms, after which the switch connection should stabalize, and debouncing should no longer occur. After this counter is over, then I move onto the CAPTURE state, in which I shift the numbers on the display (the right number shifts to the left, and the new number appears on the right), and I wait in this state until the exact button was pressed is released. During the entire FSM, I have various control signals and enable signals that get asserted to determine what functionality I want to achieve (e.x. triggering a power applying FSM to read my keypad, enabling a counter, updating my display, etc.). Regardless, once the button is released from my CAPTURE state, I move to the DEBOUNCE_WAIT state again in order to mitigate any effects of switch debouncing on the release of a button, and then after the timer completes here, I again move back to SCAN to scan through my keypad until another button is pressed. In transitioning through these states, I had to be careful on what control signals I was asserting, because for example, if we are in the DEBOUNCE_WAIT state, we don’t want to accept any other new button presses on the display.\nFor this lab, partitioning is an extrememly important aspect of it in order to ensure ease of testing, debugging, and to isolate various features of my design. For this lab, I decided to have a main fsm to transition through the states listed above, a keypad scanner to apply voltage to my columns and try to read my rows - which gets passed through a synchronizer, a number capture module to correlate the rows and columns to a hex number which gets fed into my seve segment display module to turn on segments on my display, as well as clock dividers.\nIn order to test the design, I isolated each of my modules and tested them individually. For my combinational logic, it was straightforward because I generated all possible input signals and ensured the output from my module matched what I was expecting to read. For my other modules which are based on more asynchronus inputs, I had to turn on and off, and toggle my signals at variosu times to test that on a certain input, I move or do not move to a particular state. Or, if I am in a state that should not be changing based on an input, that it doesn’t do so when I apply an input. For example, for my state machine described above, I would first make sure that when I begin, I start off in the SCAN state, and when I read a row with a 1 in it, I move onto the next state. And then once I am in this state, I try changing the row, but it does not change states, because now it should be in the DEBOUNCE_WAIT state, where it waits for a timer to reach the value, and until then it essetially freezes the system. Then, after the timer is completed, I check that we move on to the CAPTURE state, where I check that the new number is on the right side of the segment, and the previous input is shifted to the left. In my top level module, I also do something similar, but using the clock signal that I pass to everything, and instead of manually having to set some of the inputs, the other modules can take care of a lot of that for me. There would be times in my testbench where I run my clock for multiple cycles, and either make sure the system is retained in it’s state, or that after a period of time it has transitioned to the next state.\nI made all my testbenches assert based so it was easy to check for various inputs given an input that I apply at a specific time.\nI made sure to calculate appropriate resistor values based on the maximum drivable current as well for all my pins.\n\n\n\nFigure 1: Image of the physical setup\n\n\nFigure 1 shows the physical implementation the breadboard with the time-multiplexed segment visible, along with the keypad wired up."
-  },
-  {
-    "objectID": "labs/lab3/lab3.html#technical-documentation",
-    "href": "labs/lab3/lab3.html#technical-documentation",
-    "title": "Lab 3 Report",
-    "section": "Technical Documentation:",
-    "text": "Technical Documentation:\nThe source code for the project can be found in the associated Github repository\n\nBlock Diagram\n The block diagram in Figure 2 demonstrates the overall design and architecture of the design. The top-level module incldes seven sub-modules - the HSOSC (high-speed oscillator block), two clock dividers (one for the time multiplexed segment, and one for the debounce timer), the keypad scanner to read button presses, the number capture to transform the pressed row and column to the keypad hex number, the main state machine, and the seven_segment module in order to convert hex digits to seven segments. We can see the internal logic of the muxes as well, in order to multiplex the values given to the seven-segment module, based on the generated clock signal.\n\n\nSchematic\n Figure 3 demonstrates the physical layout of the design. We have our keypad and a visual of how it is wired with pull down resistors on the input pins into the FPGA, so if we are not driving a signal through a button press we read a 0 (since my system is active high). We see that the inputs into my FPGA from the matrix keypad is wired to a pull down 680-ohm resistor. I didn’t do much of a calculation for this, since I just needed a resistor to pull down my system to ground so my signals wouldn’t float, without it being too large to act as a brick wall to the current. We can also see my reset push-button, PNP transistors which was calculated with a 3.3k-ohm resistor on the base, and my seven-segment display, where each segment had a current-limiting resistor of 200-ohms.\n\n\n\nFigure 4: Current Calculations\n\n\nIn Figure 4 we can see all the calculations performed to ensure we are not drawing more current that possible from the FPGA pins - 8mA, and not driving floating signals to the FPGA.\n\n\nFinite State Machines and Transition/Output Tables and Tradeoffs\n\n\n\nFigure 5: Main FSM State Transition Diagram\n\n\n\n\n\nFigure 6: Main FSM State Transition Table\n\n\n\n\n\nFigure 7: Main FSM State Output Table\n\n\n\n\n\nFigure 8: Keypad Scanner FSM Transition table and output table\n\n\nIn Figure 5, we can see the main FSM diagram going through SCAN, DEBOUNCE_WAIT, and CAPTURE. In Figure 6, we see the state transition diagram table. In Figure 7, we have the main FSM output table. In Figure 8, we have the Keypad scanner FSM transition table and output table. I didn’t include a diagram of the counter FSM since that is self-explanatory.\nTradeoffs: There may be some tradeoffs with my strategy and others, right from how I partioned my blocks versus how my debouncing strategy could have been implented. For debouncing, I have one counter that counts to a fixed amount, and after this it assumes that debouncing affects are mitigated, and proceeds to the next stage. However, if I have a partcicularly bad switch which debounces for longer, then my strategy might not account for that time interval, and could fail. Additionally, if I have the same design, but have a switch with almost no debouncing, then I could be waiting for longer than I need to be. One design tradeoff I kept here was consistency and simplicity of the design - I could have alternatively, had a counter which checks how many consecutive high’s I get, and if it passes a certain threshold, then I would move on. However, this implementation also has the limitation of setting the appropriate threshold. Additionally, I have one state which does all the scanning logic, whereas I could have 4 different states for scanning, each of which applies power to one row. My strategy is easy in the sense of I turn on an enable in my SCAN state and it hits all the cols to read the rows through another FSM. This design gives me another piece of hardware potentially, with an external counter - but it is really small and should not have much of an effect, compared to 4 state counters within my main FSM. However, in the CAPTURE state, when I need to check if a button is released, I essentially only need to apply power to the column in which I detected the press in, so have a single state to account for putting power to just that column would have been easy overall, rather than having a conditional, but overall I don’t see much of a design hit with this approach. I also like how I have enables which I set as output signals in my FSM, and it automatically triggers a clock counter/clock divider module to take care of it, and then when that module asserts a high, it continues. This makes the design separation really easy, and a lot easier to test, debug, and isloate."
-  },
-  {
-    "objectID": "labs/lab3/lab3.html#results-and-discussion",
-    "href": "labs/lab3/lab3.html#results-and-discussion",
-    "title": "Lab 3 Report",
-    "section": "Results and Discussion",
-    "text": "Results and Discussion\n\n\n\nFigure 9: A screenshot of a QuestaSim simulation demonstrating the clock toggling at the right frequency and asserting a done signal.\n\n\n\n\n\nFigure 10: A screenshot showing the keypad scanner module toggling through the columns and reading the stabillized value two clock cycles after\n\n\n\n\n\nFigure 11: A screenshot of a QuestaSim simulation for the number capture, which is combinational logic to convert the row and column pressed to a 4-bit hex number.\n\n\n\n\n\nFigure 12: A screenshot of a QuestaSim simulation for the FSM through SCAN, DEBOUNCE_WAIT, and CAPTURE.\n\n\n\n\n\nFigure 13: A screenshot of a QuestaSim simulation for the top level module.\n\n\nI was able to accomplish all of the prescribed tasks in this project. I also met all the intended design objectives, and was able to check off all the components in the spec, along with the excellence components.\nFigure 9 shows a screenshot of the QuestaSim Simulation of the clock module, which we can see toggles at a frequency we set and asserts a high signal. Figure 10 shows our keypad scanner which toggles through the columns (applying power to them), and then reads the row_stable and col_stable two clock cycles after they were captured since they go through a 2-flop synchronizer. Figure 11 shows the testbench designed for the combinational logic to convert the rows and columns to a 4-digit hex number on the keypad. Figure 12 shows the testbench waveforms for the FSM which toggles through the states of my logic. And Figure 13 shows the testbench for the top level module, connecting all the compnents together.\nIf I was given more time, I would have tried to possibly come up with a new strategy for debouncing, or could have tried to be more precise with when I leave the debouncing stage instead of just using a fixed time. Additionally, there could have been more ways to partition the design."
-  },
-  {
-    "objectID": "labs/lab3/lab3.html#conclusion",
-    "href": "labs/lab3/lab3.html#conclusion",
-    "title": "Lab 3 Report",
-    "section": "Conclusion",
-    "text": "Conclusion\nThe overall design, after all the testing, successfully time-multiplexes the seven-segment decoder with the last two keypad entries from the matrix keypad, and it accounts for switch debouncing on both the press and release of a button. Additionally, it does not lock up when multiple buttons are pressed, and only accepts new presses once the pressed key is released. Every segment is equally as bright, and meets the specifications listed. I spent a total of 30 hours working on this lab - I also spent a lot of time helping others."
-  },
-  {
-    "objectID": "labs/lab3/lab3.html#ai-prototype-summary",
-    "href": "labs/lab3/lab3.html#ai-prototype-summary",
-    "title": "Lab 3 Report",
-    "section": "AI Prototype Summary",
-    "text": "AI Prototype Summary\n\n\n\nFigure 14: Second ChatGPT response after a prompt\n\n\nFigure 14 shows the result of entering the prompt into ChatGPT - this seems to have synthesized, and has the same states as me, but some of the transition conditions are really interesting, and I definitely feel like logically there is some issue with it moving to the states at the wrong time, because it hasn’t thought through the exact logic for transitioning. Modularizing the prompts gave it more space to have it be more detailed in some of the logic implementation, and made it easier to understand, but overall in the initial prompt, it wasn’t that difficult to follow. However, the last prompt was easier to read, and it was more similar to a more traditional transition and fsm. Prototype A, did not modularize the design in the way I thought it would - but it had the main ways I broke mine up, however I had more modules. It didn’t make any illogical splits, but overall it was near and clear. ChatGPT used clog2 for a counter logic which was something I did not think about, and it created functions within the module which was something I don’t have exposure to.\nOverall, I would rate the quality of this code pretty good since it seems to be optimal in all the assignments, module interaction, and clock multiplexing that it does. The AI code synthesized all three times, I tried it, however the later versions were more clean. In terms of warning messages, I just got the expression size 32 bits truncated to fit in target size 16, but I have also been getting this warning message as well."
-  },
-  {
-    "objectID": "posts/initial_reflection/first-post.html",
-    "href": "posts/initial_reflection/first-post.html",
-    "title": "Intial Reflection",
-    "section": "",
-    "text": "Hello Everyone! This is my first blog post on my intial reflections and goals I have for this semester with MicroPs. I am excited to work with microprocessors to build various projects throughout the semester.\nSome of my goals for this semester include:\n\nBuild a good understanding of embedded systems: I want to get comfortable reading datasheets, working with GPIOs, and understanding how microcontrollers interact with external hardware. I also want to understand how different systems can be connected and can communicate with each other in a synchronus way.\nBuild confidence in programming microcontrollers: I want to get more experience in writing the code to interact with microcontrollers effectively, and be able to control various aspects of it through software. I also want to sharpen my debugging skills.\nImprove my design thought-process: I want to be thoughtful with the way I design and craft my project to make sure it is optimal and scalable.\nConnect learnings and labs to real-world applications: I want to use whatever we learn and build through this class to connect it to applications outside, and build better intuition for how some complex systems work.\nCollaborate with classmates: I know some projects can be challenging and require a team effort, so I want to get to know other classmates and collaborate with them throughout the course.\nBuild a cool final projcet: I hope to use all the skills we’ve picked up along the way, and other learning we’ve encountered to build a cool, novel, exciting final project that I am really proud of!\nMake sure I understand all the concepts: I want to make sure I understand everything that is being taught, and reach out in case something is unclear to me, or if I have any doubts."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "E155 Portfolio",
-    "section": "",
-    "text": "Sadhvi Narayanan is a junior at Harvey Mudd College. She is majoring in CS, but is also interested in Computer Engineering which is why she is taking MicroProcessors. In her free time she enjoys baking, watching tv shows, spending time outdoors, and convincing herself to go for runs (but she never actually executes them).\nEmail: sanarayanan@g.hmc.edu"
-  },
-  {
     "objectID": "project/midpoint_checkoff/midpoint_checkoff.html",
     "href": "project/midpoint_checkoff/midpoint_checkoff.html",
-    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "title": "E155 Midpoint Checkoff: FPGA + MCU Slot Machine",
     "section": "",
     "text": "We are building a slot machine on the VGA."
   },
   {
     "objectID": "project/midpoint_checkoff/midpoint_checkoff.html#introduction",
     "href": "project/midpoint_checkoff/midpoint_checkoff.html#introduction",
-    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "title": "E155 Midpoint Checkoff: FPGA + MCU Slot Machine",
     "section": "",
     "text": "We are building a slot machine on the VGA."
   },
   {
     "objectID": "project/midpoint_checkoff/midpoint_checkoff.html#project-current-status",
     "href": "project/midpoint_checkoff/midpoint_checkoff.html#project-current-status",
-    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "title": "E155 Midpoint Checkoff: FPGA + MCU Slot Machine",
     "section": "Project Current Status",
     "text": "Project Current Status\nCurrently, the project has the VGA working, with 3 spinning reels and is able to stop dynanamically (reel1 stops, then reel2, and then reel3) based on a counter and FSM. Additionally, the shapes come from BRAM or EBR blocks on the fpga which are loaded with 64x64 pixel resolution images, and then scaled up to 128x128 in the display. We have 7 sprites, which each take up 4 EBR blocks, as the data is distributed amongst these blocks. Currently, we are having issues displaying 2 more sprites on our display, because when we do this, it distorts the rest of the images - this tells that we are having some placement or routing issue, and we are trying to fix it by piplelineing or distributing our mux more, to reduce fan-in’s on the inputs coming in."
   },
   {
     "objectID": "project/midpoint_checkoff/midpoint_checkoff.html#design-and-testing-methodology",
     "href": "project/midpoint_checkoff/midpoint_checkoff.html#design-and-testing-methodology",
-    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "title": "E155 Midpoint Checkoff: FPGA + MCU Slot Machine",
     "section": "Design and Testing Methodology",
     "text": "Design and Testing Methodology\nIn terms of the design for this project so far we thought about how we wanted to display the moving reels, and we decided that having an FSM where there is a state for the spinning of each of the reels, and then controls how that reel stops would be the easiest. Therefore, we have states for the spinning of each reel and the stopping condition for each reel as well. We also built our vga controller module, which is in charge of controlling vsync and hsync, and aligning with the internal counter of the VGA to synchronize our signalas. Our biggest issue right now whcih are are working on is the rom wrapper, as going into memory has posed its challenges, as adding more EBR blocks is causing the synthesis tool to place the blocks farther from the outputs than the other, having some parts of logic take in a larger fan-in, likely delaying everything. We are working on find alternatives, such as storing the data in a non EBR block, and delaying the signal in rather than out, or pipelineing and distirbuting our mux. In terms of testing, we had a a test bench that we used in simulation to verify that we were calculating our addresses correctly, and then we were pulling out the correct colors. However, although our testbench shows us that we are doing the right things, the hardware doesn’t seem ot agree due to timing issues that the simulation is not able to catch or show us. We are realy just debugging in hardware, and for the vga we using the o-scope in order to map our signals and make sure we gor the frequency we wanted.\n\nBlock Diagram\n\n\n\nFigure 1: Block Diagram of the project\n\n\nThe block diagram in Figure 1 demonstrates the overall design and architecture of the design. We can see there are a variety of control modules to handle the VGA display as well as memory accesses (to display the sprites correctly). We also have ROM blocks, and other elements include a SPI module and 7-segment display for other feautures in our design.\n\n\nSchematic\n\n\n\nFigure 2: Schematic of the design\n\n\nThe schematic in Figure 2 demonstrates the overall design of how we are connecting the FPGA to the VGA monitor. Because we are only using 3-bit resolution for the pixels, we are scaling the voltage outputs to 0.7 if we want to display a color."
   },
   {
     "objectID": "project/midpoint_checkoff/midpoint_checkoff.html#mcu-design-this-is-yet-to-be-implemented-ported-over-from-proposal",
     "href": "project/midpoint_checkoff/midpoint_checkoff.html#mcu-design-this-is-yet-to-be-implemented-ported-over-from-proposal",
-    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "title": "E155 Midpoint Checkoff: FPGA + MCU Slot Machine",
     "section": "MCU Design –> This is yet to be implemented (ported over from proposal)",
     "text": "MCU Design –&gt; This is yet to be implemented (ported over from proposal)\nThe MCU handles high-level game logic and asynchronous events.\nCore MCU Functions:\n\nCoin Detection (Interrupt-Driven):\n\nExternal interrupt triggered by photodiode/coin slot.\nIncrements credit count\nDenomination dial determines number of credits to “bet”\nOnly starts game when denomination is less that or equal to number of credits\n\nButton Handling:\n\nSpin button Interrupt triggers START_SPIN sequence and message to FPGA\n\nGame Logic:\n\nTracks credits, bets, and game state (IDLE, SPINNING, RESULT).\nGenerates the true random final indices of the displayed icons from within three lists representing the three spinning reels, using these to calculate the player’s winnings and total credits\nSends a 16 bit SPI packet to the FPGA to indicate where the three reels should stop spinning, then another for how many credits the player won, and a final one for how many credits the player has\nWaits for an ACK between all three\n\nAudio Control (optional):\n\nPWM-based simple tone for win/lose feedback."
   },
   {
     "objectID": "project/midpoint_checkoff/midpoint_checkoff.html#riskiest-part-of-the-design-done",
     "href": "project/midpoint_checkoff/midpoint_checkoff.html#riskiest-part-of-the-design-done",
-    "title": "E155 Project Proposal: FPGA + MCU Slot Machine",
+    "title": "E155 Midpoint Checkoff: FPGA + MCU Slot Machine",
     "section": "Riskiest part of the design –> Done",
     "text": "Riskiest part of the design –&gt; Done\nVGA timing precision + display: Sending the correct pixels, at the correct rate, in the expected format, with the expected timing to the VGA from the FPGA"
   },

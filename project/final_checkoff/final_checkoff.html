@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>E155 Midpoint Checkoff: FPGA + MCU Slot Machine – E155 Portfolio</title>
+<title>E155 Final Checkoff: FPGA + MCU Slot Machine – E155 Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -125,15 +125,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#project-current-status" id="toc-project-current-status" class="nav-link" data-scroll-target="#project-current-status">Project Current Status</a></li>
-  <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a>
+  <li><a href="#project-description-and-overview-same-as-before" id="toc-project-description-and-overview-same-as-before" class="nav-link active" data-scroll-target="#project-description-and-overview-same-as-before">Project Description and Overview (same as before)</a></li>
+  <li><a href="#project-specifications" id="toc-project-specifications" class="nav-link" data-scroll-target="#project-specifications">Project Specifications</a>
   <ul class="collapse">
   <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
-  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
   </ul></li>
-  <li><a href="#mcu-design-this-is-yet-to-be-implemented-ported-over-from-proposal" id="toc-mcu-design-this-is-yet-to-be-implemented-ported-over-from-proposal" class="nav-link" data-scroll-target="#mcu-design-this-is-yet-to-be-implemented-ported-over-from-proposal">MCU Design –&gt; This is yet to be implemented (ported over from proposal)</a></li>
-  <li><a href="#riskiest-part-of-the-design-done" id="toc-riskiest-part-of-the-design-done" class="nav-link" data-scroll-target="#riskiest-part-of-the-design-done">Riskiest part of the design –&gt; Done</a></li>
   </ul>
 </nav>
     </div>
@@ -142,7 +138,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">E155 Midpoint Checkoff: FPGA + MCU Slot Machine</h1>
+<h1 class="title">E155 Final Checkoff: FPGA + MCU Slot Machine</h1>
 </div>
 
 
@@ -159,17 +155,77 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>We are building a slot machine on the VGA.</p>
+<section id="project-description-and-overview-same-as-before" class="level2">
+<h2 class="anchored" data-anchor-id="project-description-and-overview-same-as-before">Project Description and Overview (same as before)</h2>
+<p>The goal is to create a functional, visually engaging slot machine simulation that:</p>
+<ul>
+<li><p>Accepts a penny slot and “spin” button input.</p></li>
+<li><p>Displays animated reels on a VGA output.</p></li>
+<li><p>Sequentially stops each reel to show a final symbol combination determined randomly by the MCU.</p></li>
+<li><p>Calculates and displays winnings and total credits based on the result.</p></li>
+</ul>
+<p>The FPGA will handle video display including sending information to the VGA and time-sensitive animations, while the MCU will manage the actual game logic/state, input handling, and random number generation.</p>
+<p>The system will include: - Three spinning reels rendered on a VGA monitor.</p>
+<ul>
+<li><p>A coin slot, push buttons, and a switch for user interaction:</p></li>
+<li><p>Spin Button — initiates reel animation.</p></li>
+<li><p>Denomination Switch - indicated how much to bet per spin</p></li>
+<li><p>Coin Slot — triggers an interrupt and increments credits using an LED to photo diode monitor</p></li>
+<li><p>5 seven segment displays, 2 for credits won on the previous spin, and 3 for total credits accrued</p></li>
+</ul>
+<p>The design will interface the MCU and FPGA via SPI communication, allowing the FPGA to render and display the visual state based on the game logic computed by the MCU.</p>
 </section>
-<section id="project-current-status" class="level2">
-<h2 class="anchored" data-anchor-id="project-current-status">Project Current Status</h2>
-<p>Currently, the project has the VGA working, with 3 spinning reels and is able to stop dynanamically (reel1 stops, then reel2, and then reel3) based on a counter and FSM. Additionally, the shapes come from BRAM or EBR blocks on the fpga which are loaded with 64x64 pixel resolution images, and then scaled up to 128x128 in the display. We have 7 sprites, which each take up 4 EBR blocks, as the data is distributed amongst these blocks. Currently, we are having issues displaying 2 more sprites on our display, because when we do this, it distorts the rest of the images - this tells that we are having some placement or routing issue, and we are trying to fix it by piplelineing or distributing our mux more, to reduce fan-in’s on the inputs coming in.</p>
-</section>
-<section id="design-and-testing-methodology" class="level2">
-<h2 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h2>
-<p>In terms of the design for this project so far we thought about how we wanted to display the moving reels, and we decided that having an FSM where there is a state for the spinning of each of the reels, and then controls how that reel stops would be the easiest. Therefore, we have states for the spinning of each reel and the stopping condition for each reel as well. We also built our vga controller module, which is in charge of controlling vsync and hsync, and aligning with the internal counter of the VGA to synchronize our signalas. Our biggest issue right now whcih are are working on is the rom wrapper, as going into memory has posed its challenges, as adding more EBR blocks is causing the synthesis tool to place the blocks farther from the outputs than the other, having some parts of logic take in a larger fan-in, likely delaying everything. We are working on find alternatives, such as storing the data in a non EBR block, and delaying the signal in rather than out, or pipelineing and distirbuting our mux. In terms of testing, we had a a test bench that we used in simulation to verify that we were calculating our addresses correctly, and then we were pulling out the correct colors. However, although our testbench shows us that we are doing the right things, the hardware doesn’t seem ot agree due to timing issues that the simulation is not able to catch or show us. We are realy just debugging in hardware, and for the vga we using the o-scope in order to map our signals and make sure we gor the frequency we wanted.</p>
+<section id="project-specifications" class="level2">
+<h2 class="anchored" data-anchor-id="project-specifications">Project Specifications</h2>
+<p>All the specs we defined have been met in our project.</p>
+<ol type="1">
+<li>Starts spinning three reels on a button input</li>
+</ol>
+<ul>
+<li>Yes, this spec is met in our project. When the user presses the SPIN button, if there are enough credits, the MCU will capture the input button press, and send a SPI request to the FPGA. The FPGA will then process this request, extract the spin code and the ending sprites for each reel, and then start the process to spin each of the reels. It will spin all the reels, then start to slow down reel1, stop reel1, then slow down reel2, stop reel2, and finally slow down reel3, and stop reel3.</li>
+</ul>
+<ol start="2" type="1">
+<li>Calculates points and displays credit total</li>
+</ol>
+<ul>
+<li>Yes, this spec is met in our project. On the MCU side, it uses the TRNG to determine where each reel will end, it keeps track of the current credits, and the credit payout based on the spin, and then sends an UPDATE SPI request to the FPGA to udpate the credits appropriately. If the ending sprites corresponds to a WIN, then the MCU will send the FPGA a WIN request, and the FPGA will take the numbers to display, and put them on a seven segment display.</li>
+</ul>
+<ol start="3" type="1">
+<li>Sequentially stops each reel on a centered shape</li>
+</ol>
+<ul>
+<li>Yes, this spec is met in our project. In the FPGA side, based on the sprite to end on, it will calculate the address of that sprite (will account for the unique sprite sequences across the 3 reels), and then use that offset to get to a centering offset, where the final sprite appears in the middle of the reels. Then, in our FSM it will spin all the reels, and as it starts to stop the reels one by one, it will check if the current offset is equal to the ending offset, and if so then it will fully stop the reel movement and lock the reel in place.</li>
+</ul>
+<ol start="4" type="1">
+<li>Displays result on VGA in color</li>
+</ol>
+<ul>
+<li>Yes, this spec is met in our project. We have all our sprites in memory, where for each pixel we store 3 bits - each a bit for color (R, G, B). And when we calculate the address we extract 3 bits to get the RBG values we send to the VGA.</li>
+</ul>
+<ol start="5" type="1">
+<li>Penny input with adjustable bet levels</li>
+</ol>
+<ul>
+<li>Yes, this spec is met in our project. We built a coin detector, which uses photo-transistors to detect an IR drop when a coin passes through it. This then triggers an interrupt which updates the total credit amount calculation. Additionally, we have a rotary switch which allows users to configure their bet level (1x, 2x, 5x, 10x).</li>
+</ul>
+<ol start="6" type="1">
+<li>Only start game if enough credits</li>
+</ol>
+<ul>
+<li>Yes, this spec is met in our project. Based on the number of credits the user has, when the SPIN button is pressed, if there are not enough credits the request will not be sent from the MCU to the FPGA. Only if the user has enough credits, it will send the SPI SPIN request when the user presses the spin button.</li>
+</ul>
+<ol start="7" type="1">
+<li>Cryptographically seeded RNG (using hardware RNG)</li>
+</ol>
+<ul>
+<li>Yes, this spec is met in our project. We are using the TRNG on the MCU in order to determine where the reels should stop after a spin. We enable the peripheral, and we can see that on every spin the ending positions are random.</li>
+</ul>
+<ol start="8" type="1">
+<li>Display credit total and winnings on screen or seven-segment display</li>
+</ol>
+<ul>
+<li>Yes, this spec is met in our project. Whenever the MCU sends the updated credit or win amount to the FPGA, it will take the sent credit amount, store it in registers, and display them on the seven segment display. We display the total number of credits the user has, as well as the amount of credits they won on the most recent spin.</li>
+</ul>
 <section id="block-diagram" class="level3">
 <h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
 <div class="quarto-figure quarto-figure-center">
@@ -179,52 +235,9 @@ ul.task-list li input[type="checkbox"] {
 </figure>
 </div>
 <p>The block diagram in Figure 1 demonstrates the overall design and architecture of the design. We can see there are a variety of control modules to handle the VGA display as well as memory accesses (to display the sprites correctly). We also have ROM blocks, and other elements include a SPI module and 7-segment display for other feautures in our design.</p>
-</section>
-<section id="schematic" class="level3">
-<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/Schematic.png" class="img-fluid figure-img"></p>
-<figcaption>Figure 2: Schematic of the design</figcaption>
-</figure>
-</div>
-<p>The schematic in Figure 2 demonstrates the overall design of how we are connecting the FPGA to the VGA monitor. Because we are only using 3-bit resolution for the pixels, we are scaling the voltage outputs to 0.7 if we want to display a color.</p>
-</section>
-</section>
-<section id="mcu-design-this-is-yet-to-be-implemented-ported-over-from-proposal" class="level2">
-<h2 class="anchored" data-anchor-id="mcu-design-this-is-yet-to-be-implemented-ported-over-from-proposal">MCU Design –&gt; This is yet to be implemented (ported over from proposal)</h2>
-<p>The MCU handles high-level game logic and asynchronous events.</p>
-<p>Core MCU Functions:</p>
-<ul>
-<li><strong>Coin Detection (Interrupt-Driven):</strong>
-<ul>
-<li>External interrupt triggered by photodiode/coin slot.</li>
-<li>Increments credit count</li>
-<li>Denomination dial determines number of credits to “bet”</li>
-<li>Only starts game when denomination is less that or equal to number of credits</li>
-</ul></li>
-<li><strong>Button Handling:</strong>
-<ul>
-<li>Spin button Interrupt triggers START_SPIN sequence and message to FPGA</li>
-</ul></li>
-<li><strong>Game Logic:</strong>
-<ul>
-<li>Tracks credits, bets, and game state (<code>IDLE</code>, <code>SPINNING</code>, <code>RESULT</code>).</li>
-<li>Generates the true random final indices of the displayed icons from within three lists representing the three spinning reels, using these to calculate the player’s winnings and total credits</li>
-<li>Sends a 16 bit SPI packet to the FPGA to indicate where the three reels should stop spinning, then another for how many credits the player won, and a final one for how many credits the player has</li>
-<li>Waits for an ACK between all three</li>
-</ul></li>
-<li><strong>Audio Control (optional):</strong>
-<ul>
-<li>PWM-based simple tone for win/lose feedback.</li>
-</ul></li>
-</ul>
-</section>
-<section id="riskiest-part-of-the-design-done" class="level2">
-<h2 class="anchored" data-anchor-id="riskiest-part-of-the-design-done">Riskiest part of the design –&gt; Done</h2>
-<p>VGA timing precision + display: Sending the correct pixels, at the correct rate, in the expected format, with the expected timing to the VGA from the FPGA</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
