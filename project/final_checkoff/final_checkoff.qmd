@@ -62,4 +62,21 @@ All the specs we defined have been met in our project.
 
 The block diagram in Figure 1 demonstrates the overall design and architecture of the design. We can see there are a variety of control modules to handle the VGA display as well as memory accesses (to display the sprites correctly). We also have ROM blocks, and other elements include a SPI module and 7-segment display for other feautures in our design.
 
+### System-level Block Diagram
+![Figure 2: System-level Block Diagram of the project](images/system_block_diagram.png)
 
+Figure 2 represents the system level block diagram, highlighting how the MCU, VGA, and our external hardware connect using their respective communication protocols.
+
+
+### Schematic
+![Figure 3: Schematic of the design](images/schematic_fp.png)
+
+The schematic in Figure 3 demonstrates the overall design of how we are connecting the FPGA to the VGA monitor. Because we are only using 3-bit resolution for the pixels, we are scaling the voltage outputs to 0.7 if we want to display a color.
+
+
+### Testbenches
+![Figure 4: SPI testbench](images/spi_tb.png)
+
+![Figure 5: VGA testbench](images/vga_tb.png)
+
+Figures 4 and 5 represent some of the testbenches for our design. In Figure 4 we have the SPI module testbench, which starts the reel spinning process, based on SPI codes and values sent by the MCU. And, Figure 5 is our VGA testbench which shows our monitor synchronization signals.
