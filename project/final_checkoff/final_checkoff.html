@@ -129,6 +129,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#project-specifications" id="toc-project-specifications" class="nav-link" data-scroll-target="#project-specifications">Project Specifications</a>
   <ul class="collapse">
   <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
+  <li><a href="#system-level-block-diagram" id="toc-system-level-block-diagram" class="nav-link" data-scroll-target="#system-level-block-diagram">System-level Block Diagram</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  <li><a href="#testbenches" id="toc-testbenches" class="nav-link" data-scroll-target="#testbenches">Testbenches</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -235,6 +238,42 @@ ul.task-list li input[type="checkbox"] {
 </figure>
 </div>
 <p>The block diagram in Figure 1 demonstrates the overall design and architecture of the design. We can see there are a variety of control modules to handle the VGA display as well as memory accesses (to display the sprites correctly). We also have ROM blocks, and other elements include a SPI module and 7-segment display for other feautures in our design.</p>
+</section>
+<section id="system-level-block-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="system-level-block-diagram">System-level Block Diagram</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/system_block_diagram.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 2: System-level Block Diagram of the project</figcaption>
+</figure>
+</div>
+<p>Figure 2 represents the system level block diagram, highlighting how the MCU, VGA, and our external hardware connect using their respective communication protocols.</p>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/schematic_fp.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 3: Schematic of the design</figcaption>
+</figure>
+</div>
+<p>The schematic in Figure 3 demonstrates the overall design of how we are connecting the FPGA to the VGA monitor. Because we are only using 3-bit resolution for the pixels, we are scaling the voltage outputs to 0.7 if we want to display a color.</p>
+</section>
+<section id="testbenches" class="level3">
+<h3 class="anchored" data-anchor-id="testbenches">Testbenches</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/spi_tb.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 4: SPI testbench</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/vga_tb.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 5: VGA testbench</figcaption>
+</figure>
+</div>
+<p>Figures 4 and 5 represent some of the testbenches for our design. In Figure 4 we have the SPI module testbench, which starts the reel spinning process, based on SPI codes and values sent by the MCU. And, Figure 5 is our VGA testbench which shows our monitor synchronization signals.</p>
 
 
 </section>
