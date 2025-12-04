@@ -7,3 +7,6 @@ title: "E155 Project"
 
 ## Midpoint-checkoff
 [Lab Report](project/midpoint_checkoff/midpoint_checkoff.qmd)
+
+## Final-checkoff
+[Lab Report](project/final_checkoff/final_checkoff.qmd)
