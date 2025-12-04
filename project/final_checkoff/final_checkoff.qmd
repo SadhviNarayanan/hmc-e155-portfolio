@@ -72,6 +72,7 @@ Figure 2 represents the system level block diagram, highlighting how the MCU, VG
 ![Figure 3: Schematic of the design](images/schematic_fp.png)
 
 The schematic in Figure 3 demonstrates the overall design of how we are connecting the FPGA to the VGA monitor. Because we are only using 3-bit resolution for the pixels, we are scaling the voltage outputs to 0.7 if we want to display a color.
+NOTE: Any pins with a letter in it corresponds to a pin on the MCU, and any pin with no letters and just a number corresponds to a pin on the FPGA.
 
 
 ### Testbenches
